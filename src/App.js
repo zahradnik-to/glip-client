@@ -1,24 +1,36 @@
-import logo from './logo.svg';
 import './App.css';
+import Modal from 'react-modal'
+import Calendar from "./Components/Calendar";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+} from "react-router-dom";
+import HomePage from "./Routes/HomePage";
+import LoginPage from "./Routes/LoginPage";
+import {Container} from "react-bootstrap";
+import React from "react";
+import UserProfilePage from "./Routes/UserProfilePage";
+import useToken from "./Components/Hooks/useToken";
+
+Modal.setAppElement('#root')
 
 function App() {
+  const {token, setToken} = useToken();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Container className="pt-5">
+        <Router>
+          <Routes>
+            <Route path='/' element={<HomePage/>}/>
+            <Route path='/login' element={<LoginPage setToken={setToken}/>}/>
+            <Route path='/calendar' element={<Calendar/>}/>
+            <Route path='/profile' element={<UserProfilePage token={token} setToken={setToken}/>}/>
+          </Routes>
+        </Router>
+      </Container>
+    </>
   );
 }
 
