@@ -72,6 +72,7 @@ function ReservationForm({typeOfService, saveEvent, freeTimes, setEventTime}) {
       <div className='mb-2'>
         {/* Fixme add unique keys */}
         {freeTimes.map(
+          // eslint-disable-next-line react/jsx-key
           time => <span onClick={e => handleTimeClick(e.target)} className='timePickerEntry me-3 mt-3'>{time}</span>)}
       </div>
       <Button type='submit'>Add event</Button>
