@@ -14,16 +14,26 @@ function LoginForm({ setToken }) {
   async function handleLogin(event) {
     event.preventDefault()
 
-    const result = await axios.post('/user/login', {email: email, password: password})
-    console.log("Token", result.data)
-    setToken(result.data)
+    axios.post('/user/login', {email: email, password: password}).then( res => {
+      setToken(res.data)
+      console.log("Token", res.data)
+    }).catch(err => {
+      console.log(err)
+    })
+  }
+
+  async function handleRegister(event) {
+    event.preventDefault()
+
+    const result = await axios.post('/user/register', {email: email, password: password})
+    console.log("Result ", result.data)
   }
 
 
   return (
     <>
       <h1>Přihlásit se</h1>
-      <Form onSubmit={handleLogin} action='POST'>
+      <Form onSubmit={handleLogin} method='POST'>
         <FloatingLabel controlId="emailLogin" label="Email" className="mb-3">
           <Form.Control
             type="text"
@@ -46,7 +56,7 @@ function LoginForm({ setToken }) {
       <hr/>
 
       <h1>Registrovat</h1>
-      <Form action='POST'> // Todo add submit
+      <Form onSubmit={handleRegister} method='POST'>
         <FloatingLabel
           controlId="emailRegister"
           label="Email"

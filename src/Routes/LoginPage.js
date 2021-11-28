@@ -11,7 +11,7 @@ function LoginPage({setToken}) {
 
   return (
     <>
-      <LinkBanner title="PROFILE" hrefLink="/profile"/>
+      <LinkBanner title="PROFIL" hrefLink="/profile"/>
       <LoginForm setToken={setToken}/>
     </>
   );

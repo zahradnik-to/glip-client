@@ -1,7 +1,7 @@
 import React from "react";
 import LoginPage from "./LoginPage";
 import PropTypes from "prop-types";
-import jwt_decode from "jwt-decode";
+import jwt_decode from "jwt-decode"
 
 UserProfilePage.propTypes = {
   token: PropTypes.string,
@@ -11,6 +11,7 @@ UserProfilePage.propTypes = {
 function UserProfilePage({ token, setToken }) {
 
   if(!token) {
+    console.log(token)
     return <LoginPage setToken={setToken} />
   }
 

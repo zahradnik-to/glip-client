@@ -1,3 +1,26 @@
 .App {
-  text-align: center;
+    text-align: center;
+}
+
+
+/* FullCalendar */
+.fc-day-today {
+    background-color: inherit !important;
+}
+
+.fc a {
+    color: #212529;
+}
+
+.fc a:hover {
+    color: #212529;
+}
+
+.timePickerEntry {
+    cursor: pointer;
+}
+
+.timePickerEntry:nth-child(4n)::after {
+    content: "\a";
+    white-space: pre;
 }

@@ -1,6 +1,4 @@
-import './App.css';
 import Modal from 'react-modal'
-import Calendar from "./Components/Calendar";
 import {
   BrowserRouter as Router,
   Routes,
@@ -12,11 +10,21 @@ import {Container} from "react-bootstrap";
 import React from "react";
 import UserProfilePage from "./Routes/UserProfilePage";
 import useToken from "./Components/Hooks/useToken";
+import ReservationPage from "./Routes/ReservationPage";
+import './App.css';
+import axios from "axios";
 
 Modal.setAppElement('#root')
 
 function App() {
   const {token, setToken} = useToken();
+
+  // Make Axios send token in header
+  if (token) {
+    axios.defaults.headers.common['Authorization'] = token;
+  } else {
+    axios.defaults.headers.common['Authorization'] = null;
+  }
 
   return (
     <>
@@ -25,8 +33,10 @@ function App() {
           <Routes>
             <Route path='/' element={<HomePage/>}/>
             <Route path='/login' element={<LoginPage setToken={setToken}/>}/>
-            <Route path='/calendar' element={<Calendar/>}/>
             <Route path='/profile' element={<UserProfilePage token={token} setToken={setToken}/>}/>
+            <Route path='/kosmetika' element={<ReservationPage typeOfService={"cosmetics"}/>}/>
+            <Route path='/kadernictvi' element={<ReservationPage typeOfService={"hair"}/>}/>
+            <Route path='/masaze' element={<ReservationPage typeOfService={"massage"}/>}/>
           </Routes>
         </Router>
       </Container>

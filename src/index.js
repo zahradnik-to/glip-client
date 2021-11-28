@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import "react-datetime/css/react-datetime.css";
-import 'bootstrap/dist/css/bootstrap.min.css';
-
+import '@fortawesome/fontawesome-free/css/all.css'; // needs additional webpack config!
+import 'bootstrap/dist/css/bootstrap.css';
+import 'react-datetime/css/react-datetime.css';
 ReactDOM.render(
   <React.StrictMode>
     <App />
