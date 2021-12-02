@@ -7,7 +7,7 @@ LoginPage.propTypes = {
   setToken: PropTypes.func.isRequired
 }
 
-function LoginPage({setToken}) {
+function LoginPage({ setToken }) {
 
   return (
     <>

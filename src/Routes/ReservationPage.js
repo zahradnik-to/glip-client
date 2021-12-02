@@ -1,6 +1,6 @@
-import React, {useRef, useState} from "react";
+import React, { useRef, useState } from "react";
 import PropTypes from "prop-types";
-import {Col, Row} from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import axios from "axios";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -11,7 +11,7 @@ ReservationPage.propTypes = {
   typeOfService: PropTypes.string.isRequired
 }
 
-function ReservationPage({typeOfService}) {
+function ReservationPage({ typeOfService }) {
   const [events, setEvents] = useState([]);
   const [freeTimes, setSetFreeTimes] = useState([]);
   const [eventDate, setEventDate] = useState(new Date())

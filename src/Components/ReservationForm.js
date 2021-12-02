@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState, Children } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import PropTypes from "prop-types";
@@ -11,7 +11,7 @@ ReservationForm.propTypes = {
   setEventTime: PropTypes.func,
 }
 
-function ReservationForm({typeOfService, saveEvent, freeTimes, setEventTime}) {
+function ReservationForm({ typeOfService, saveEvent, freeTimes, setEventTime }) {
 
   const [duration, setDuration] = useState(0)
   const [email, setEmail] = useState('')
@@ -71,9 +71,8 @@ function ReservationForm({typeOfService, saveEvent, freeTimes, setEventTime}) {
       </Form.Group>
       <div className='mb-2'>
         {/* Fixme add unique keys */}
-        {freeTimes.map(
-          // eslint-disable-next-line react/jsx-key
-          time => <span onClick={e => handleTimeClick(e.target)} className='timePickerEntry me-3 mt-3'>{time}</span>)}
+        {/* eslint-disable-next-line react/jsx-key */}
+        {Children.toArray(freeTimes.map(time => <span onClick={e => handleTimeClick(e.target)} className='timePickerEntry me-3 mt-3'>{time}</span>))}
       </div>
       <Button type='submit'>Add event</Button>
     </Form>

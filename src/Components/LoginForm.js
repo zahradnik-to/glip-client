@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {Form, Button, FloatingLabel} from "react-bootstrap";
+import React, { useState } from 'react';
+import { Form, Button, FloatingLabel } from "react-bootstrap";
 import axios from "axios";
 import PropTypes from 'prop-types';
 
@@ -14,7 +14,7 @@ function LoginForm({ setToken }) {
   async function handleLogin(event) {
     event.preventDefault()
 
-    axios.post('/user/login', {email: email, password: password}).then( res => {
+    axios.post('/user/login', { email: email, password: password }).then( res => {
       setToken(res.data)
       console.log("Token", res.data)
     }).catch(err => {
@@ -25,7 +25,7 @@ function LoginForm({ setToken }) {
   async function handleRegister(event) {
     event.preventDefault()
 
-    const result = await axios.post('/user/register', {email: email, password: password})
+    const result = await axios.post('/user/register', { email: email, password: password })
     console.log("Result ", result.data)
   }
 

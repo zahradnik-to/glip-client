@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import HomePage from "./Routes/HomePage";
 import LoginPage from "./Routes/LoginPage";
-import {Container} from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import React from "react";
 import UserProfilePage from "./Routes/UserProfilePage";
 import useToken from "./Components/Hooks/useToken";
@@ -17,7 +17,7 @@ import axios from "axios";
 Modal.setAppElement('#root')
 
 function App() {
-  const {token, setToken} = useToken();
+  const { token, setToken } = useToken();
 
   // Make Axios send token in header
   if (token) {
