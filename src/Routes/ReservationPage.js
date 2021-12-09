@@ -29,7 +29,7 @@ function ReservationPage({ typeOfService }) {
   }
 
   /* Saves event to database. Triggered by form. */
-  async function handleSaveEvent(data) {
+  const handleSaveEvent = async (data) => {
     const time = eventTime.split(':')
     eventDate.setHours(Number(time[0]), Number(time[1]));
 
@@ -42,26 +42,16 @@ function ReservationPage({ typeOfService }) {
       .catch(err => console.log(err))
   }
 
-  async function handleDatesSet(data) {
-    await axios
-      .get(`/calendar/get-events?start=${data.start.toISOString()}&end=${data.end.toISOString()}`)
-      .then((res) => {
-        setEvents(res.data)
-      })
-      .catch(err => {
-        console.log(err)
-        Promise.reject(err)
-      })
-
-    await axios
-      .get(`/calendar/get-free-time?date=${eventDate.toISOString()}`)
-      .then((res) => {
-        setSetFreeTimes(res.data)
-      })
-      .catch(err => {
-        console.log(err)
-        Promise.reject(err)
-      })
+  const handleDatesSet = async (data) => {
+    let dates;
+    try {
+      dates = await axios
+        .get(`/calendar/get-events?start=${data.start.toISOString()}&end=${data.end.toISOString()}?typeOfService=${typeOfService}`)
+    } catch (err) {
+      console.log('Getting events failed');
+      console.log(err);
+    }
+    setEvents(dates.data);
   }
 
   /* Forbid selecting range of more than 1 day */
@@ -73,7 +63,15 @@ function ReservationPage({ typeOfService }) {
     return Math.floor((utc2 - utc1) / dayMilliseconds) <= 1;
   }
 
-  const handleDateClick = (event) => {
+  const handleDateClick = async (event) => {
+    let freeTime;
+    try {
+      freeTime = await axios.get(`/calendar/get-free-time?date=${eventDate.toISOString()}`)
+    } catch (err) {
+      console.log(err)
+      throw new Error(err)
+    }
+    setSetFreeTimes(freeTime.data)
     setEventDate(event.date)
     setEventTime('')
   }

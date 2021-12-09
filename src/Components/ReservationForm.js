@@ -48,7 +48,7 @@ function ReservationForm({ typeOfService, saveEvent, freeTimes, setEventTime }) 
         <Form.Label>Příjmení</Form.Label>
         <Form.Control
           type='text'
-          placeholder='Last Name  (if not logged in)'
+          placeholder='Příjmení'
           value={lastname}
           onChange={event => setLastname(event.target.value)}
           required/>
