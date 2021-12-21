@@ -1,8 +1,9 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { Col, Row } from "react-bootstrap";
 import axios from "axios";
 import FullCalendar from "@fullcalendar/react";
+// import timeGridPlugin from '@fullcalendar/timegrid';
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from '@fullcalendar/interaction';
 import ReservationForm from "../Components/ReservationForm";
@@ -13,10 +14,14 @@ ReservationPage.propTypes = {
 
 function ReservationPage({ typeOfService }) {
   const [events, setEvents] = useState([]);
-  const [freeTimes, setSetFreeTimes] = useState([]);
   const [eventDate, setEventDate] = useState(new Date())
+  const [freeTimes, setSetFreeTimes] = useState([]);
   const [eventTime, setEventTime] = useState('08:30')
   const calendarRef = useRef(null);
+
+  useEffect(() => {
+    getFreeTime();
+  }, [eventDate]);
 
   /* Creates event in current calendar */
   const createCalendarEvent = (event) => {
@@ -29,7 +34,7 @@ function ReservationPage({ typeOfService }) {
   }
 
   /* Saves event to database. Triggered by form. */
-  const handleSaveEvent = async (data) => {
+  const handleSaveEvent = (data) => {
     const time = eventTime.split(':')
     eventDate.setHours(Number(time[0]), Number(time[1]));
 
@@ -37,21 +42,19 @@ function ReservationPage({ typeOfService }) {
       start: eventDate,
       ...data
     }
-    await axios.post('/calendar/create-event', dtoIn)
+    console.log(dtoIn)
+    axios.post('/calendar/create-event', dtoIn)
       .then(event => createCalendarEvent(event.data))
       .catch(err => console.log(err))
   }
 
-  const handleDatesSet = async (data) => {
-    let dates;
-    try {
-      dates = await axios
-        .get(`/calendar/get-events?start=${data.start.toISOString()}&end=${data.end.toISOString()}?typeOfService=${typeOfService}`)
-    } catch (err) {
-      console.log('Getting events failed');
-      console.log(err);
-    }
-    setEvents(dates.data);
+  const handleDatesSet = (data) => {
+    axios.get(`/calendar/get-events?start=${data.start.toISOString()}&end=${data.end.toISOString()}&tos=${typeOfService}`)
+      .then( dates => setEvents(dates.data))
+      .catch( err => {
+        console.log('Getting events failed');
+        console.log(err);
+      })
   }
 
   /* Forbid selecting range of more than 1 day */
@@ -63,17 +66,17 @@ function ReservationPage({ typeOfService }) {
     return Math.floor((utc2 - utc1) / dayMilliseconds) <= 1;
   }
 
-  const handleDateClick = async (event) => {
-    let freeTime;
-    try {
-      freeTime = await axios.get(`/calendar/get-free-time?date=${eventDate.toISOString()}`)
-    } catch (err) {
-      console.log(err)
-      throw new Error(err)
-    }
-    setSetFreeTimes(freeTime.data)
+  const handleDateClick = (event) => {
     setEventDate(event.date)
-    setEventTime('')
+  }
+
+  const getFreeTime = () => {
+    axios.get(`/calendar/get-free-time?date=${eventDate.toISOString()}&tos=${typeOfService}`)
+      .then( freeTime => {
+        setSetFreeTimes(freeTime.data)
+        setEventTime('')
+      })
+      .catch(err => console.log(err))
   }
 
 
@@ -84,6 +87,8 @@ function ReservationPage({ typeOfService }) {
           <FullCalendar
             ref={calendarRef}
             events={events}
+            // plugins={[interactionPlugin, timeGridPlugin]}
+            // initialView='timeGridWeek'
             plugins={[interactionPlugin, dayGridPlugin]}
             initialView='dayGridMonth'
             datesSet={date => handleDatesSet(date)}
@@ -95,6 +100,9 @@ function ReservationPage({ typeOfService }) {
             eventClick={(info) => console.log("Event ", info.event.start)}
             dateClick={e => handleDateClick(e)}
             unselectAuto={false}
+            slotMinTime="07:00:00"
+            slotMaxTime="20:00:00"
+            weekends={false}
           />
         </Col>
         <Col md={4} xs={12}>

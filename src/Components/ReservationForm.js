@@ -1,7 +1,8 @@
-import React, { useState, Children } from "react";
+import React, { useState, Children, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import PropTypes from "prop-types";
+import axios from "axios";
 
 
 ReservationForm.propTypes = {
@@ -16,6 +17,21 @@ function ReservationForm({ typeOfService, saveEvent, freeTimes, setEventTime }) 
   const [duration, setDuration] = useState(0)
   const [email, setEmail] = useState('')
   const [lastname, setLastname] = useState('')
+  const [procedures, setProcedures] = useState([])
+
+  useEffect(() => {
+    axios.get(`procedure/get?tos=${typeOfService}`)
+      .then(response => {
+        if (response.status === 200) {
+          return response.data
+        } else throw new Error("Auth failed")
+      })
+      .then( data => {
+        console.log(data)
+        setProcedures(data)
+      })
+      .catch(err => console.log(err))
+  }, []);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -41,7 +57,8 @@ function ReservationForm({ typeOfService, saveEvent, freeTimes, setEventTime }) 
           placeholder='Email'
           value={email}
           onChange={event => setEmail(event.target.value)}
-          required/>
+          // required // Todo
+        />
       </Form.Group>
 
       <Form.Group className='mb-2'>
@@ -51,7 +68,8 @@ function ReservationForm({ typeOfService, saveEvent, freeTimes, setEventTime }) 
           placeholder='Příjmení'
           value={lastname}
           onChange={event => setLastname(event.target.value)}
-          required/>
+          // required //Todo
+        />
       </Form.Group>
 
       <Form.Group className='mb-2'>
@@ -60,12 +78,12 @@ function ReservationForm({ typeOfService, saveEvent, freeTimes, setEventTime }) 
         <Form.Select
           name='duration'
           onChange={e => setDuration(Number(e.target.value))}
-          required
+          // required //Todo
         >
+          {/* Fixme add unique keys */}
           <option value=''>Vyberte službu...</option>
-          <option value='30'>Stříhání páni</option>
-          <option value='45'>Stříhání dámy</option>
-          <option value='60'>Barvení vlasů</option>
+          {/* eslint-disable-next-line react/jsx-key */}
+          {Children.toArray(procedures.map(procedure => <option value={procedure.duration}>{procedure.name}</option>))}
         </Form.Select>
 
       </Form.Group>

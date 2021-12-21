@@ -24,7 +24,7 @@ function TopNav({ user }) {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link href="/kosmetika">Kosmetika</Nav.Link>
-            <Nav.Link href="/kadernictvi">Kosmetika</Nav.Link>
+            <Nav.Link href="/kadernictvi">Kadeřnictví</Nav.Link>
             <Nav.Link href="/masaze">Masáže</Nav.Link>
           </Nav>
           <Nav>

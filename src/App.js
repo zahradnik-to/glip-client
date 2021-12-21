@@ -35,6 +35,8 @@ function App() {
             <Route path='/' element={<HomePage/>}/>
             <Route path='/profile' element={<ProfilePage user={user}/>}/>
             <Route path='/kosmetika' element={<ReservationPage typeOfService={"cosmetics"}/>}/>
+            <Route path='/kadernictvi' element={<ReservationPage typeOfService={"hair"}/>}/>
+            <Route path='/masaze' element={<ReservationPage typeOfService={"massage"}/>}/>
           </Routes>
         </Router>
       </Container>
