@@ -26,6 +26,14 @@ function TopNav({ user }) {
             <Nav.Link href="/kosmetika">Kosmetika</Nav.Link>
             <Nav.Link href="/kadernictvi">Kadeřnictví</Nav.Link>
             <Nav.Link href="/masaze">Masáže</Nav.Link>
+            <NavDropdown title="Administrace" id="collasible-nav-dropdown">
+              <NavDropdown.Item className='disabled' href="#">Objednavky</NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item href="/kosmetika/objednavky">Kosmetika</NavDropdown.Item>
+              <NavDropdown.Item href="/kadernictvi/objednavky">Kadeřnictví</NavDropdown.Item>
+              <NavDropdown.Item href="/masaze/objednavky">Masáže</NavDropdown.Item>
+              <NavDropdown.Divider />
+            </NavDropdown>
           </Nav>
           <Nav>
             { user ? (

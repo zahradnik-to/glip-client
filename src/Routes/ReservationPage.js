@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { Col, Row } from "react-bootstrap";
 import axios from "axios";
 import FullCalendar from "@fullcalendar/react";
-// import timeGridPlugin from '@fullcalendar/timegrid';
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from '@fullcalendar/interaction';
 import ReservationForm from "../Components/ReservationForm";
@@ -23,7 +22,7 @@ function ReservationPage({ typeOfService }) {
     getFreeTime();
   }, [eventDate]);
 
-  /* Creates event in current calendar */
+  /* Creates event in gui calendar */
   const createCalendarEvent = (event) => {
     let calendarApi = calendarRef.current.getApi();
     calendarApi.addEvent({
@@ -87,8 +86,6 @@ function ReservationPage({ typeOfService }) {
           <FullCalendar
             ref={calendarRef}
             events={events}
-            // plugins={[interactionPlugin, timeGridPlugin]}
-            // initialView='timeGridWeek'
             plugins={[interactionPlugin, dayGridPlugin]}
             initialView='dayGridMonth'
             datesSet={date => handleDatesSet(date)}
@@ -103,6 +100,16 @@ function ReservationPage({ typeOfService }) {
             slotMinTime="07:00:00"
             slotMaxTime="20:00:00"
             weekends={false}
+            validRange={{
+              start: new Date().toISOString().slice(0,10)
+            }}
+            buttonText={{
+              today:    'dnes',
+              month:    'měsíc',
+              week:     'týden',
+              day:      'den',
+              list:     'list'
+            }}
           />
         </Col>
         <Col md={4} xs={12}>

@@ -11,6 +11,7 @@ import './App.css';
 import axios from "axios";
 import ProfilePage from "./Routes/ProfilePage";
 import TopNav from "./Components/TopNav";
+import AppointmentsPage from "./Routes/Employee/AppointmentsPage";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -37,6 +38,9 @@ function App() {
             <Route path='/kosmetika' element={<ReservationPage typeOfService={"cosmetics"}/>}/>
             <Route path='/kadernictvi' element={<ReservationPage typeOfService={"hair"}/>}/>
             <Route path='/masaze' element={<ReservationPage typeOfService={"massage"}/>}/>
+            <Route path='/kosmetika/objednavky' element={<AppointmentsPage typeOfService={"cosmetics"}/>}/>
+            <Route path='/kadernictvi/objednavky' element={<AppointmentsPage typeOfService={"hair"}/>}/>
+            <Route path='/masaze/objednavky' element={<AppointmentsPage typeOfService={"massage"}/>}/>
           </Routes>
         </Router>
       </Container>
