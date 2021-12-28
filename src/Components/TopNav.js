@@ -33,6 +33,7 @@ function TopNav({ user }) {
               <NavDropdown.Item href="/kadernictvi/objednavky">Kadeřnictví</NavDropdown.Item>
               <NavDropdown.Item href="/masaze/objednavky">Masáže</NavDropdown.Item>
               <NavDropdown.Divider />
+              <NavDropdown.Item href="/admin/procedury">Procedury</NavDropdown.Item>
             </NavDropdown>
           </Nav>
           <Nav>
