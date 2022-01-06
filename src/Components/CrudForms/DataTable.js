@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
 import PropTypes from 'prop-types';
@@ -21,6 +21,7 @@ function DataTable({ data, dataInfo, handleDelete, handleUpdate }) {
     return (
       <td className={'h-100 d-flex align-items-center justify-content-around actionButtonsCell'}>
         <div className={'h-100'} onClick={() => updateEntry(id)}>Edit</div>
+        {/* Todo create a confirmation dialog to Delete */}
         <div className={'h-100'} onClick={() => handleDelete(id)}>Del</div>
       </td>
     )
