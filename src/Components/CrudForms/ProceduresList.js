@@ -125,7 +125,7 @@ function ProceduresList() {
 
   return (
     <>
-      <Form className='mb-3'>
+      <Form onSubmit={event => handleCreate(event)} className='mb-3'>
         <Row>
           <h1>Přidat proceduru</h1>
           <Form.Group as={Col} md={4} className='mb-2'>
@@ -165,7 +165,7 @@ function ProceduresList() {
             </Form.Select>
           </Form.Group>
         </Row>
-        <Button variant="primary" type="submit" onClick={event => handleCreate(event)}>
+        <Button variant="primary" type="submit">
           Přidat
         </Button>
       </Form>
