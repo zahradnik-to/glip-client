@@ -30,9 +30,18 @@ function App() {
       .catch(err => console.log('getUser error: ', err));
   }, [])
 
+  const logout = () => {
+    axios.post(`/auth/logout`, {})
+    setUser(null)
+  };
+
+  const googleAuth = () => {
+    window.open('http://localhost:5000/auth/google', '_self')
+  }
+
   return (
     <>
-      <TopNav user={user}/>
+      <TopNav user={user} googleAuth={googleAuth} logout={logout}/>
       <Container className="pt-5">
         <Router>
           <Routes>

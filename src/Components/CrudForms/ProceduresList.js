@@ -32,7 +32,6 @@ function ProceduresList() {
 
   const handleCreate = (event) => {
     event.preventDefault();
-    console.log({ name, duration, typeOfService })
     axios.post(`/procedure/create`, { name, duration, typeOfService })
       .then(response => {
         if (response.status === 201) {

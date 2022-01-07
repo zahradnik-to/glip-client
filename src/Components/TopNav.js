@@ -4,19 +4,11 @@ import PropTypes from "prop-types";
 
 TopNav.propTypes = {
   user: PropTypes.object,
+  googleAuth: PropTypes.func,
+  logout: PropTypes.func,
 }
 
-function TopNav({ user }) {
-
-  const googleAuth = () => {
-    window.open('http://localhost:5000/auth/google', '_self')
-  }
-
-  const logout = () => {
-    console.log("logout")
-    window.open("http://localhost:5000/auth/logout", "_self");
-  };
-
+function TopNav({ user, googleAuth, logout }) {
   return(
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
       <Container>
@@ -43,10 +35,10 @@ function TopNav({ user }) {
               <NavDropdown title={user.displayName} id="collasible-nav-dropdown">
                 <NavDropdown.Item href="/profile">Profil</NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item href="/#" onClick={() => logout()}>Odhlásit se</NavDropdown.Item>
+                <NavDropdown.Item href="/#" onClick={logout}>Odhlásit se</NavDropdown.Item>
               </NavDropdown>
               ) : (
-              <Nav.Link href='#' onClick={() => googleAuth()}>
+              <Nav.Link href='#' onClick={googleAuth}>
                 Přihlásit se pomocí Google
               </Nav.Link>
             )}
