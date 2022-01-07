@@ -38,7 +38,6 @@ function DataTable({ data, dataInfo, handleDelete, handleUpdate }) {
 
   /* Adds edited row to array of edited objects. */
   const handleEdit = (id, objProperty, value) => {
-    console.log("Edit this", { id, objProperty, value })
     const newEditedData = [...editedData];
     const existingEdit = newEditedData.find(obj => obj._id === id)
     if (existingEdit) {

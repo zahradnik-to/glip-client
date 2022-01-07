@@ -14,6 +14,7 @@ import TopNav from './Components/TopNav';
 import AppointmentsPage from './Routes/Employee/AppointmentsPage';
 import DataEditPage from './Routes/Employee/DataEditPage';
 import ProceduresList from "./Components/CrudForms/ProceduresList";
+import UserList from "./Components/CrudForms/UserList";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -46,6 +47,7 @@ function App() {
             <Route path='/masaze/objednavky' element={<AppointmentsPage typeOfService={'massage'}/>}/>
             {/* Data edit */}
             <Route path='/admin/procedury' element={<DataEditPage contentForm={<ProceduresList/>}/>}/>
+            <Route path='/admin/uzivatele' element={<DataEditPage contentForm={<UserList/>}/>}/>
           </Routes>
         </Router>
       </Container>

@@ -13,6 +13,7 @@ function TopNav({ user }) {
   }
 
   const logout = () => {
+    console.log("logout")
     window.open("http://localhost:5000/auth/logout", "_self");
   };
 
@@ -34,6 +35,7 @@ function TopNav({ user }) {
               <NavDropdown.Item href="/masaze/objednavky">Masáže</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item href="/admin/procedury">Procedury</NavDropdown.Item>
+              <NavDropdown.Item href="/admin/uzivatele">Uživatelé</NavDropdown.Item>
             </NavDropdown>
           </Nav>
           <Nav>

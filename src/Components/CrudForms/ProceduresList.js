@@ -9,10 +9,10 @@ import ToastContainer from "react-bootstrap/ToastContainer";
 import DataTable from "./DataTable";
 
 function ProceduresList() {
-  const [procedures, setProcedures] = useState([])
-  const [name, setName] = useState("")
+  const [procedures, setProcedures] = useState([]);
+  const [name, setName] = useState("");
   const [duration, setDuration] = useState("");
-  const [typeOfService, setTypeOfService] = useState("")
+  const [typeOfService, setTypeOfService] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [toastContent, setToastContent] = useState({});
   const dataInfo = {
@@ -53,14 +53,14 @@ function ProceduresList() {
     axios.delete(`/procedure/delete`, { data: { id: id } })
       .then(response => {
         if (response.status === 200) {
-          getProcedures()
+          getProcedures();
           setToastContent({
             header: "Smazáno!",
             message: `Položka ${name} byla vymazána.`,
             variant: "warning"
           })
           setShowToast(true);
-          return response.data
+          return response.data;
         } else throw new Error("Auth failed")
       })
       .catch(err => renderToastError(err))
