@@ -8,7 +8,34 @@ TopNav.propTypes = {
   logout: PropTypes.func,
 }
 
+const typeOfServicesEnum = {
+  hair: "kadernictvi",
+  massage: "masaze",
+  cosmetics: "kosmetika",
+}
+
 function TopNav({ user, googleAuth, logout }) {
+  const renderAdminNav = () => {
+    if (user.role === 'admin') {
+      return(
+        <NavDropdown title="Administrace" id="collasible-nav-dropdown">
+          <NavDropdown.Item className='disabled' href="#">Objednavky</NavDropdown.Item>
+          <NavDropdown.Divider />
+          <NavDropdown.Item href="/kosmetika/objednavky">Kosmetika</NavDropdown.Item>
+          <NavDropdown.Item href="/kadernictvi/objednavky">Kadeřnictví</NavDropdown.Item>
+          <NavDropdown.Item href="/masaze/objednavky">Masáže</NavDropdown.Item>
+          <NavDropdown.Divider />
+          <NavDropdown.Item href="/admin/procedury">Procedury</NavDropdown.Item>
+          <NavDropdown.Item href="/admin/uzivatele">Uživatelé</NavDropdown.Item>
+        </NavDropdown>
+      )
+    } else if (Object.keys(typeOfServicesEnum).includes(user.role)) {
+      return (
+        <Nav.Link href={`/${typeOfServicesEnum[user.role]}/objednavky`}>Objednávky</Nav.Link>
+      )
+    }
+  }
+
   return(
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
       <Container>
@@ -19,16 +46,7 @@ function TopNav({ user, googleAuth, logout }) {
             <Nav.Link href="/kosmetika">Kosmetika</Nav.Link>
             <Nav.Link href="/kadernictvi">Kadeřnictví</Nav.Link>
             <Nav.Link href="/masaze">Masáže</Nav.Link>
-            <NavDropdown title="Administrace" id="collasible-nav-dropdown">
-              <NavDropdown.Item className='disabled' href="#">Objednavky</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="/kosmetika/objednavky">Kosmetika</NavDropdown.Item>
-              <NavDropdown.Item href="/kadernictvi/objednavky">Kadeřnictví</NavDropdown.Item>
-              <NavDropdown.Item href="/masaze/objednavky">Masáže</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="/admin/procedury">Procedury</NavDropdown.Item>
-              <NavDropdown.Item href="/admin/uzivatele">Uživatelé</NavDropdown.Item>
-            </NavDropdown>
+            { user && user.role ? renderAdminNav() : <></>}
           </Nav>
           <Nav>
             { user ? (
