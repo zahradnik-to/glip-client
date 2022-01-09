@@ -8,16 +8,19 @@ function UserList() {
   const [users, setUsers] = useState([]);
   const [showToast, setShowToast] = useState(false);
   const [toastContent, setToastContent] = useState({});
+  const [roleOptions, setRoleOptions] = useState([]);
   const dataInfo = {
     headerNames: [
       {
         entryName: "email",
         showName: "Email",
         type: "text",
+        disabled: true
       }, {
         entryName: "role",
         showName: "Role",
-        type: "text",
+        type: "select",
+        options: roleOptions,
       },
     ],
     ignoredDataParams: ["_id", "__v", "googleId"],
@@ -32,6 +35,19 @@ function UserList() {
       })
       .then(data => {
         setUsers(data)
+      })
+      .catch(err => renderToastError(err))
+  }
+
+  const getRoles = () => {
+    axios.get(`/role/get`)
+      .then(response => {
+        if (response.status === 200) {
+          return response.data
+        } else throw new Error("Auth failed")
+      })
+      .then(data => {
+        setRoleOptions(data)
       })
       .catch(err => renderToastError(err))
   }
@@ -96,7 +112,11 @@ function UserList() {
   }
 
   useEffect(() => {
-    return getUsers()
+    return getUsers();
+  }, []);
+
+  useEffect(() => {
+    return getRoles();
   }, []);
 
   return(

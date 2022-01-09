@@ -34,6 +34,7 @@ function TopNav({ user, googleAuth, logout }) {
         <Nav.Link href={`/${typeOfServicesEnum[user.role]}/objednavky`}>Objednávky</Nav.Link>
       )
     }
+    return null;
   }
 
   return(

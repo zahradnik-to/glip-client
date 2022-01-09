@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Children, useState } from 'react';
 import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
 import PropTypes from 'prop-types';
@@ -50,19 +50,50 @@ function DataTable({ data, dataInfo, handleDelete, handleUpdate }) {
     setEditedData(newEditedData);
   };
 
+  const getCorrectFormInput = (object, objProperty, dataInfoOfProperty) => {
+    if (dataInfoOfProperty.type === 'select') {
+      if (object.role === 'admin')
+        return (
+          <td key={`${object._id}_${objProperty}`}>
+            <Form.Control
+              defaultValue={object.role}
+              type="text"
+              disabled
+            />
+          </td>
+        );
+      return (
+        <td key={`${object._id}_${objProperty}`}>
+          <Form.Select
+            defaultValue={object[objProperty]}
+            onChange={e => handleEdit(object._id, objProperty, e.target.value)}
+          >
+            {Children.toArray(dataInfoOfProperty.options
+              .map(role => <option key={role._id} selected={object.role === role.name}
+                                   value={role.name}>{role.name}</option>))}
+          </Form.Select>
+        </td>
+      );
+    }
+    return (
+      <td key={`${object._id}_${objProperty}`}>
+        <Form.Control
+          defaultValue={object[objProperty]}
+          type={dataInfoOfProperty.type}
+          onBlur={e => handleEdit(object._id, objProperty, e.target.value)}
+          disabled={!!dataInfoOfProperty.disabled}
+        />
+      </td>
+    );
+  }
+
   const tableContent = data.map(object => {
       return <tr key={object._id}>
         {Object.keys(object).map(objProperty => {
-          if (!dataInfo.ignoredDataParams.includes(objProperty))
-            return (
-              <td key={`${object._id}_${object[objProperty]}`}>
-                <Form.Control
-                  defaultValue={object[objProperty]}
-                  type={dataInfo.headerNames.find(o => o.entryName === objProperty).type}
-                  onBlur={e => handleEdit(object._id, objProperty, e.target.value)}
-                />
-              </td>
-            )
+          if (!dataInfo.ignoredDataParams.includes(objProperty)) {
+            const dataInfoOfProperty = dataInfo.headerNames.find(o => o.entryName === objProperty)
+            return getCorrectFormInput(object, objProperty, dataInfoOfProperty)
+          }
         })
         }
         {actionButtonsCell(object._id)}
