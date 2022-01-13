@@ -8,10 +8,12 @@ import interactionPlugin from '@fullcalendar/interaction';
 import ReservationForm from "../Components/ReservationForm";
 
 ReservationPage.propTypes = {
-  typeOfService: PropTypes.string.isRequired
+  typeOfService: PropTypes.string.isRequired,
+  logout: PropTypes.func.isRequired,
+  user: PropTypes.object,
 }
 
-function ReservationPage({ typeOfService }) {
+function ReservationPage({ typeOfService, user, logout }) {
   const [events, setEvents] = useState([]);
   const [eventDate, setEventDate] = useState(new Date())
   const [freeTimes, setSetFreeTimes] = useState([]);
@@ -21,16 +23,6 @@ function ReservationPage({ typeOfService }) {
   useEffect(() => {
     getFreeTime();
   }, [eventDate]);
-
-  /* Creates event in gui calendar */
-  const createCalendarEvent = (event) => {
-    let calendarApi = calendarRef.current.getApi();
-    calendarApi.addEvent({
-      start: new Date(event.start),
-      title: `${event.lastname} ${event.duration}min`,
-      allDay: event.allDay,
-    })
-  }
 
   /* Saves event to database. Triggered by form. */
   const handleSaveEvent = (data) => {
@@ -43,11 +35,11 @@ function ReservationPage({ typeOfService }) {
     }
     console.log(dtoIn)
     axios.post('/calendar/create-event', dtoIn)
-      .then(event => createCalendarEvent(event.data))
       .catch(err => console.log(err))
   }
 
   const handleDatesSet = (data) => {
+    console.log("ok")
     axios.get(`/calendar/get-events?start=${data.start.toISOString()}&end=${data.end.toISOString()}&tos=${typeOfService}`)
       .then( dates => setEvents(dates.data))
       .catch( err => {
@@ -70,14 +62,14 @@ function ReservationPage({ typeOfService }) {
   }
 
   const getFreeTime = () => {
+    setSetFreeTimes([]);
     axios.get(`/calendar/get-free-time?date=${eventDate.toISOString()}&tos=${typeOfService}`)
       .then( freeTime => {
         setSetFreeTimes(freeTime.data)
         setEventTime('')
       })
-      .catch(err => console.log(err))
+      .catch(err => console.log(err));
   }
-
 
   return (
     <>
@@ -94,21 +86,15 @@ function ReservationPage({ typeOfService }) {
             firstDay={1}
             selectable={true}
             selectAllow={(e) => handleSelectAllow(e)}
-            eventClick={(info) => console.log("Event ", info.event.start)}
             dateClick={e => handleDateClick(e)}
             unselectAuto={false}
-            slotMinTime="07:00:00"
-            slotMaxTime="20:00:00"
             weekends={false}
-            validRange={{
-              start: new Date().toISOString().slice(0,10)
-            }}
             buttonText={{
-              today:    'dnes',
-              month:    'měsíc',
-              week:     'týden',
-              day:      'den',
-              list:     'list'
+              today: 'dnes',
+              month: 'měsíc',
+              week:  'týden',
+              day:   'den',
+              list:  'list'
             }}
           />
         </Col>
@@ -118,6 +104,8 @@ function ReservationPage({ typeOfService }) {
             saveEvent={handleSaveEvent}
             freeTimes={freeTimes}
             setEventTime={setEventTime}
+            user={user}
+            logout={logout}
           />
         </Col>
       </Row>

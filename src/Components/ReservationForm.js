@@ -3,16 +3,18 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import PropTypes from "prop-types";
 import axios from "axios";
-
+import Spinner from 'react-bootstrap/Spinner';
 
 ReservationForm.propTypes = {
   typeOfService: PropTypes.string.isRequired,
   saveEvent: PropTypes.func.isRequired,
   freeTimes: PropTypes.array,
   setEventTime: PropTypes.func,
+  user: PropTypes.object,
+  logout: PropTypes.func,
 }
 
-function ReservationForm({ typeOfService, saveEvent, freeTimes, setEventTime }) {
+function ReservationForm({ typeOfService, saveEvent, freeTimes, setEventTime, user, logout }) {
 
   const [duration, setDuration] = useState(0)
   const [email, setEmail] = useState('')
@@ -20,6 +22,10 @@ function ReservationForm({ typeOfService, saveEvent, freeTimes, setEventTime }) 
   const [procedures, setProcedures] = useState([])
 
   useEffect(() => {
+    if (user) {
+      setEmail(user.email)
+      setLastname(user.name.familyName)
+    }
     axios.get(`/procedure/get?tos=${typeOfService}`)
       .then(response => {
         if (response.status === 200) {
@@ -47,32 +53,51 @@ function ReservationForm({ typeOfService, saveEvent, freeTimes, setEventTime }) 
     setEventTime(element.innerText)
   }
 
+  const renderCustomerDataInputs = () => {
+    if (user) {
+      return(
+        <>
+          <div className={'text-center'}>
+            <span>Jste přihlášen(a) jako {user.displayName}</span>
+          </div>
+          <div className={'mb-3 text-center'}>
+            <span className={'text-muted'}>Nejste to vy? <span className={'logout-link'} onClick={logout}>Odhlásit</span>.</span>
+          </div>
+        </>
+      );
+    } else {
+      return(
+        <>
+          <Form.Group className='mb-2'>
+            <Form.Label>Email</Form.Label>
+            <Form.Control
+              type='email'
+              placeholder='Email'
+              value={email}
+              onChange={event => setEmail(event.target.value)}
+              required
+            />
+          </Form.Group>
+
+          <Form.Group className='mb-2'>
+            <Form.Label>Příjmení</Form.Label>
+            <Form.Control
+              type='text'
+              placeholder='Příjmení'
+              value={lastname}
+              onChange={event => setLastname(event.target.value)}
+              required
+            />
+          </Form.Group>
+        </>
+      );
+    }
+  }
+
   return (
     <Form onSubmit={handleSubmit} method='POST'>
+      {renderCustomerDataInputs()}
       <Form.Group className='mb-2'>
-        <Form.Label>Email</Form.Label>
-        <Form.Control
-          // type='email' Fixme enable browser email verification
-          placeholder='Email'
-          value={email}
-          onChange={event => setEmail(event.target.value)}
-          required
-        />
-      </Form.Group>
-
-      <Form.Group className='mb-2'>
-        <Form.Label>Příjmení</Form.Label>
-        <Form.Control
-          type='text'
-          placeholder='Příjmení'
-          value={lastname}
-          onChange={event => setLastname(event.target.value)}
-          required
-        />
-      </Form.Group>
-
-      <Form.Group className='mb-2'>
-         {/*Todo list services based on typeOfService */}
         <Form.Label>Úkon</Form.Label>
         <Form.Select
           name='duration'
@@ -84,9 +109,15 @@ function ReservationForm({ typeOfService, saveEvent, freeTimes, setEventTime }) 
         </Form.Select>
 
       </Form.Group>
-      <div className='mb-2'>
-        {Children.toArray(freeTimes.map(time => <span key={time} onClick={e => handleTimeClick(e.target)} className='timePickerEntry me-3 mt-3'>{time}</span>))}
+      <div className='mb-2 text-center'>
+        { freeTimes.length
+          ? Children.toArray(freeTimes.map(time => <span key={time} onClick={e => handleTimeClick(e.target)} className='timePickerEntry me-3 mt-3'>{time}</span>))
+          : <Spinner animation="border" role="status" className={"m-4"}>
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+        }
       </div>
+
       <Button type='submit'>Add event</Button>
     </Form>
   )

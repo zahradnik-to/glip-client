@@ -2,8 +2,12 @@
     text-align: center;
 }
 
+.logout-link {
+    cursor: pointer;
+    text-decoration: underline;
+}
 
-/* FullCalendar */
+/* FullCalendar start */
 .fc-day-today {
     background-color: inherit !important;
 }
@@ -24,3 +28,4 @@
     content: "\a";
     white-space: pre;
 }
+/* FullCalendar end */
