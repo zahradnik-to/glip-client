@@ -12,14 +12,19 @@ ReservationForm.propTypes = {
   setEventTime: PropTypes.func,
   user: PropTypes.object,
   logout: PropTypes.func,
+  eventDate: PropTypes.instanceOf(Date),
 }
 
-function ReservationForm({ typeOfService, saveEvent, freeTimes, setEventTime, user, logout }) {
+ReservationForm.defaultProps = {
+  eventDate: null,
+}
 
+function ReservationForm({ typeOfService, saveEvent, eventDate, setEventTime, user, logout }) {
   const [duration, setDuration] = useState(0)
   const [email, setEmail] = useState('')
   const [lastname, setLastname] = useState('')
   const [procedures, setProcedures] = useState([])
+  const [freeTimes, setSetFreeTimes] = useState([]);
 
   useEffect(() => {
     if (user) {
@@ -36,7 +41,36 @@ function ReservationForm({ typeOfService, saveEvent, freeTimes, setEventTime, us
         setProcedures(data)
       })
       .catch(err => console.log(err))
-  }, []);
+  }, [typeOfService, user]);
+
+  useEffect(() => {
+    if (eventDate !== null) getFreeTime();
+  }, [eventDate]);
+
+  const getFreeTime = () => {
+    setSetFreeTimes([]);
+    axios.get(`/calendar/get-free-time?date=${eventDate.toISOString()}&tos=${typeOfService}`)
+      .then( freeTime => {
+        setSetFreeTimes(freeTime.data)
+        setEventTime('')
+      })
+      .catch(err => console.log(err));
+  }
+
+  const renderFreeTime = () => {
+    if (!eventDate) return(<span>Vyberte datum</span>);
+    if (freeTimes && freeTimes.length) {
+      return(
+        Children.toArray(freeTimes.map(time => <span key={time} onClick={e => handleTimeClick(e.target)} className='timePickerEntry me-3 mt-3'>{time}</span>))
+      )
+    } else {
+      return(
+        <Spinner animation="border" role="status" className={"m-4"}>
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+        )
+    }
+  }
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -110,15 +144,10 @@ function ReservationForm({ typeOfService, saveEvent, freeTimes, setEventTime, us
 
       </Form.Group>
       <div className='mb-2 text-center'>
-        { freeTimes.length
-          ? Children.toArray(freeTimes.map(time => <span key={time} onClick={e => handleTimeClick(e.target)} className='timePickerEntry me-3 mt-3'>{time}</span>))
-          : <Spinner animation="border" role="status" className={"m-4"}>
-              <span className="visually-hidden">Loading...</span>
-            </Spinner>
-        }
+        { renderFreeTime() }
       </div>
 
-      <Button type='submit'>Add event</Button>
+      <Button type='submit'>Vytvořit rezervaci</Button>
     </Form>
   )
 }

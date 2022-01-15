@@ -22,7 +22,8 @@ function App() {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    axios.get('/auth/login/success')
+    axios
+      .get('/auth/login/success', { withCredentials: true })
       .then(response => {
         if (response.data.success) {
           console.log('Logged user: ', response.data.user)
@@ -31,13 +32,14 @@ function App() {
           console.log(response.data.message)
         }
       })
-      .catch(err => console.log('getUser error: ', err))
+      .catch(err => console.error('getUser error: ', err))
       .finally(() => {
         setLoaded(true)
       });
   }, [])
 
   const logout = async () => {
+    console.log("Logout")
     window.open("http://localhost:5000/auth/logout", "_self");
   };
 
@@ -58,9 +60,20 @@ function App() {
             <Route path='/masaze' element={<ReservationPage typeOfService={'massage'} user={user} logout={logout}/>}/>
             {/* Administration */}
             {/* Todo add isUserLogged to all admin pages*/}
-            <Route path='/kosmetika/objednavky' element={<AppointmentsPage typeOfService={'cosmetics'}/>}/>
-            <Route path='/kadernictvi/objednavky' element={<AppointmentsPage typeOfService={'hair'}/>}/>
-            <Route path='/masaze/objednavky' element={<AppointmentsPage typeOfService={'massage'}/>}/>
+            <Route path='/kosmetika/prehled' element={<AppointmentsPage typeOfService={'cosmetics'} page={'prehled'} user={user}/>}/>
+            <Route path='/kosmetika/dovolena' element={<AppointmentsPage typeOfService={'cosmetics'} page={'dovolena'} user={user}/>}/>
+            <Route path='/kosmetika/objednavky' element={<AppointmentsPage typeOfService={'cosmetics'} page={'objednavky'} user={user}/>}/>
+            <Route path='/kosmetika/procedury' element={<AppointmentsPage typeOfService={'cosmetics'} page={'procedury'} user={user}/>}/>
+
+            <Route path='/kadernictvi/prehled' element={<AppointmentsPage typeOfService={'hair'} page={'prehled'} user={user}/>}/>
+            <Route path='/kadernictvi/dovolena' element={<AppointmentsPage typeOfService={'hair'} page={'dovolena'} user={user}/>}/>
+            <Route path='/kadernictvi/objednavky' element={<AppointmentsPage typeOfService={'hair'} page={'objednavky'} user={user}/>}/>
+            <Route path='/kadernictvi/procedury' element={<AppointmentsPage typeOfService={'hair'} page={'procedury'} user={user}/>}/>
+
+            <Route path='/masaze/prehled' element={<AppointmentsPage typeOfService={'massage'} page={'prehled'} user={user}/>}/>
+            <Route path='/masaze/dovolena' element={<AppointmentsPage typeOfService={'massage'} page={'dovolena'} user={user}/>}/>
+            <Route path='/masaze/objednavky' element={<AppointmentsPage typeOfService={'massage'} page={'objednavky'} user={user}/>}/>
+            <Route path='/masaze/procedury' element={<AppointmentsPage typeOfService={'massage'} page={'procedury'} user={user}/>}/>
             {/* Data edit */}
             <Route path='/admin/procedury' element={<DataEditPage contentForm={<ProceduresList/>}/>}/>
             <Route path='/admin/uzivatele' element={<DataEditPage contentForm={<UserList/>}/>}/>

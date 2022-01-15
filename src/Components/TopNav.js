@@ -21,9 +21,9 @@ function TopNav({ user, googleAuth, logout }) {
         <NavDropdown title="Administrace" id="collasible-nav-dropdown">
           <NavDropdown.Item className='disabled' href="#">Objednavky</NavDropdown.Item>
           <NavDropdown.Divider />
-          <NavDropdown.Item href="/kosmetika/objednavky">Kosmetika</NavDropdown.Item>
-          <NavDropdown.Item href="/kadernictvi/objednavky">Kadeřnictví</NavDropdown.Item>
-          <NavDropdown.Item href="/masaze/objednavky">Masáže</NavDropdown.Item>
+          <NavDropdown.Item href="/kosmetika/prehled">Kosmetika</NavDropdown.Item>
+          <NavDropdown.Item href="/kadernictvi/prehled">Kadeřnictví</NavDropdown.Item>
+          <NavDropdown.Item href="/masaze/prehled">Masáže</NavDropdown.Item>
           <NavDropdown.Divider />
           <NavDropdown.Item href="/admin/procedury">Procedury</NavDropdown.Item>
           <NavDropdown.Item href="/admin/uzivatele">Uživatelé</NavDropdown.Item>

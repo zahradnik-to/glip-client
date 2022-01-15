@@ -7,14 +7,26 @@ import Button from "react-bootstrap/Button";
 import Toast from "react-bootstrap/Toast";
 import ToastContainer from "react-bootstrap/ToastContainer";
 import DataTable from "./DataTable";
+import HomePage from "../../Routes/HomePage";
+import PropTypes from "prop-types"
 
-function ProceduresList() {
+ProceduresList.propTypes = {
+  user: PropTypes.object,
+}
+
+function ProceduresList({ user }) {
   const [procedures, setProcedures] = useState([]);
   const [name, setName] = useState("");
   const [duration, setDuration] = useState("");
-  const [typeOfService, setTypeOfService] = useState("");
+  const [typeOfService, setTypeOfService] = useState(user.role);
   const [showToast, setShowToast] = useState(false);
   const [toastContent, setToastContent] = useState({});
+
+  useEffect(() => {
+    if(!user) return <HomePage />
+    return getProcedures()
+  }, []);
+
   const dataInfo = {
     headerNames: [
       {
@@ -117,10 +129,6 @@ function ProceduresList() {
       </ToastContainer>
     )
   }
-
-  useEffect(() => {
-    return getProcedures()
-  }, []);
 
   return (
     <>

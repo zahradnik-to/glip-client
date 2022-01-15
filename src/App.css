@@ -8,10 +8,6 @@
 }
 
 /* FullCalendar start */
-.fc-day-today {
-    background-color: inherit !important;
-}
-
 .fc a {
     color: #212529;
 }

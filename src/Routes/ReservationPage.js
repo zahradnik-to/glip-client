@@ -15,14 +15,9 @@ ReservationPage.propTypes = {
 
 function ReservationPage({ typeOfService, user, logout }) {
   const [events, setEvents] = useState([]);
-  const [eventDate, setEventDate] = useState(new Date())
-  const [freeTimes, setSetFreeTimes] = useState([]);
+  const [eventDate, setEventDate] = useState(null)
   const [eventTime, setEventTime] = useState('08:30')
   const calendarRef = useRef(null);
-
-  useEffect(() => {
-    getFreeTime();
-  }, [eventDate]);
 
   /* Saves event to database. Triggered by form. */
   const handleSaveEvent = (data) => {
@@ -35,6 +30,13 @@ function ReservationPage({ typeOfService, user, logout }) {
     }
     console.log(dtoIn)
     axios.post('/calendar/create-event', dtoIn)
+      .then(result => {
+        if (result.status === 201) {
+          // Todo add confirmation to user
+        } else {
+          // Something went wrong!
+        }
+      })
       .catch(err => console.log(err))
   }
 
@@ -59,16 +61,6 @@ function ReservationPage({ typeOfService, user, logout }) {
 
   const handleDateClick = (event) => {
     setEventDate(event.date)
-  }
-
-  const getFreeTime = () => {
-    setSetFreeTimes([]);
-    axios.get(`/calendar/get-free-time?date=${eventDate.toISOString()}&tos=${typeOfService}`)
-      .then( freeTime => {
-        setSetFreeTimes(freeTime.data)
-        setEventTime('')
-      })
-      .catch(err => console.log(err));
   }
 
   return (
@@ -102,10 +94,10 @@ function ReservationPage({ typeOfService, user, logout }) {
           <ReservationForm
             typeOfService={typeOfService}
             saveEvent={handleSaveEvent}
-            freeTimes={freeTimes}
             setEventTime={setEventTime}
             user={user}
             logout={logout}
+            eventDate={eventDate}
           />
         </Col>
       </Row>
