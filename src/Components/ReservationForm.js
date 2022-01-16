@@ -82,6 +82,7 @@ function ReservationForm({ typeOfService, saveEvent, eventDate, setEventTime, us
       lastname,
       duration,
       typeOfService,
+      eventDate: eventDate.toISOString()
     })
   }
 

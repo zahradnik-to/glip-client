@@ -84,7 +84,6 @@ function Vacation({ typeOfService }) {
           eventClick={(info) => console.log("Event ", info.event)}
           // dateClick={(event) => handleDateClick(event)}
           selectAllow={(e) => handleSelectAllow(e)}
-          editable={true}
           firstDay={1}
           slotMinTime="07:00:00"
           slotMaxTime="20:00:00"

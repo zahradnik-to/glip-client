@@ -23,13 +23,11 @@ function ReservationPage({ typeOfService, user, logout }) {
   /* Saves event to database. Triggered by form. */
   const handleSaveEvent = (data) => {
     const time = eventTime.split(':')
-    eventDate.setHours(Number(time[0]), Number(time[1]));
-
     const dtoIn = {
-      start: eventDate,
+      date: new Date(eventDate).toISOString(),
+      start: eventDate.setHours(Number(time[0]), Number(time[1])),
       ...data
     }
-    console.log(dtoIn)
     axios.post('/calendar/create-event', dtoIn)
       .then(result => {
         if (result.status === 201) {

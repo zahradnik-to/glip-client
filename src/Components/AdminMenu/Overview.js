@@ -38,7 +38,7 @@ function Overview({ typeOfService }) {
       unselectAuto={false}
       firstDay={1}
       slotMinTime="06:00:00"
-      slotMaxTime="21:00:00"
+      slotMaxTime="20:00:00"
       allDayText='Celý den'
       buttonText={{
         today: 'dnes',
