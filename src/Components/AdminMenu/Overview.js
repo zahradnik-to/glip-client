@@ -34,7 +34,7 @@ function Overview({ typeOfService }) {
       locale='cs'
       // Todo show more info on event click(tooltip??)
       eventClick={(info) => console.log("Event ", info.event)}
-      selectable={true}
+      selectable={false}
       unselectAuto={false}
       firstDay={1}
       slotMinTime="06:00:00"

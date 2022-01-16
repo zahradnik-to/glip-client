@@ -6,6 +6,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from '@fullcalendar/interaction';
 import ReservationForm from "../Components/ReservationForm";
+import isPast from 'date-fns/isPast'
 
 ReservationPage.propTypes = {
   typeOfService: PropTypes.string.isRequired,
@@ -60,13 +61,18 @@ function ReservationPage({ typeOfService, user, logout }) {
   }
 
   const handleDateClick = (event) => {
-    setEventDate(event.date)
+    if (!isPast(event.date)) setEventDate(event.date)
+    else {
+      const calendarApi = calendarRef.current.getApi();
+      calendarApi.unselect();
+      return;
+    }
   }
 
   return (
     <>
       <Row>
-        <Col md={8} xs={12} className='mb-3'>
+        <Col md={8} xs={12} className='mb-3 reservation'>
           <FullCalendar
             ref={calendarRef}
             events={events}

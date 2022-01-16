@@ -6,6 +6,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import axios from "axios";
 import { Row, Col } from "react-bootstrap";
 import PropTypes from "prop-types";
+import isPast from 'date-fns/isPast'
 import './Vacation.css'
 
 Vacation.propTypes = {
@@ -62,10 +63,16 @@ function Vacation({ typeOfService }) {
     calendarApi.addEvent(event)
   }
 
+  /* Forbid selecting range in the past */
+  const handleSelectAllow = (data) => {
+    return !(isPast(data.start) || isPast(data.end));
+  }
+
   return(
     <Row>
-      <Col xs={12} className='mb-4'>
+      <Col xs={12} className='mb-4 vacation' id={"vacation"}>
         <FullCalendar
+          className='vacation'
           ref={calendarRef}
           events={events}
           plugins={[interactionPlugin, timeGridPlugin, dayGridPlugin]}
@@ -75,6 +82,9 @@ function Vacation({ typeOfService }) {
           locale='cs'
           // Todo show more info on event click(tooltip??)
           eventClick={(info) => console.log("Event ", info.event)}
+          // dateClick={(event) => handleDateClick(event)}
+          selectAllow={(e) => handleSelectAllow(e)}
+          editable={true}
           firstDay={1}
           slotMinTime="07:00:00"
           slotMaxTime="20:00:00"
@@ -97,7 +107,6 @@ function Vacation({ typeOfService }) {
             right: 'timeGridWeek,dayGridMonth'
           }}
           selectable={true}
-          unselectAuto={false}
           selectMirror={true}
           select={(event) => setVacationEvent(event)}
           selectOverlap={false}
@@ -109,6 +118,8 @@ function Vacation({ typeOfService }) {
               }
             }
           }}
+          eventLimit={true}
+          nowIndicator={true}
         />
       </Col>
     </Row>

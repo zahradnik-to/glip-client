@@ -24,7 +24,7 @@ function ReservationForm({ typeOfService, saveEvent, eventDate, setEventTime, us
   const [email, setEmail] = useState('')
   const [lastname, setLastname] = useState('')
   const [procedures, setProcedures] = useState([])
-  const [freeTimes, setSetFreeTimes] = useState([]);
+  const [freeTimes, setSetFreeTimes] = useState(null);
 
   useEffect(() => {
     if (user) {
@@ -48,7 +48,7 @@ function ReservationForm({ typeOfService, saveEvent, eventDate, setEventTime, us
   }, [eventDate]);
 
   const getFreeTime = () => {
-    setSetFreeTimes([]);
+    setSetFreeTimes(null);
     axios.get(`/calendar/get-free-time?date=${eventDate.toISOString()}&tos=${typeOfService}`)
       .then( freeTime => {
         setSetFreeTimes(freeTime.data)
@@ -58,17 +58,19 @@ function ReservationForm({ typeOfService, saveEvent, eventDate, setEventTime, us
   }
 
   const renderFreeTime = () => {
-    if (!eventDate) return(<span>Vyberte datum</span>);
+    if (!eventDate) return(<span>Vyberte datum.</span>);
+    if (freeTimes === null) { return(
+        <Spinner animation="border" role="status" className={"m-4"}>
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>)
+    }
+
     if (freeTimes && freeTimes.length) {
       return(
         Children.toArray(freeTimes.map(time => <span key={time} onClick={e => handleTimeClick(e.target)} className='timePickerEntry me-3 mt-3'>{time}</span>))
       )
     } else {
-      return(
-        <Spinner animation="border" role="status" className={"m-4"}>
-          <span className="visually-hidden">Loading...</span>
-        </Spinner>
-        )
+      return(<span>Žádné termíny.</span>); // Todo This should not happen. Block date from picking in the first place.
     }
   }
 

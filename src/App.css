@@ -24,4 +24,15 @@
     content: "\a";
     white-space: pre;
 }
+
+.fc-daygrid-day-number {
+    text-decoration: none;
+}
+
+.reservation .fc-day-past:not(#vacation .fc-day-past) ,
+.reservation .fc-event-past:not(#vacation .fc-event-past)  {
+    background-color: rgba(239, 239, 239, 0.6) !important;
+    color: rgb(84, 84, 84) !important;
+    border-color: rgba(118, 118, 118, 0.3) !important;
+}
 /* FullCalendar end */

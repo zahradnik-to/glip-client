@@ -1,8 +1,8 @@
-.fc-event-mirror, .fc-daygrid-bg-harness .fc-highlight {
+#vacation .fc-event-mirror,#vacation .fc-daygrid-bg-harness .fc-highlight {
     background: darkseagreen !important;
 }
 
-.fc-createVacationBtn-button {
+#vacation .fc-createVacationBtn-button {
     background: green !important;
     font-weight: 600;
 }
