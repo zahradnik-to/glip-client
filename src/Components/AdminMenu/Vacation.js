@@ -117,7 +117,6 @@ function Vacation({ typeOfService }) {
               }
             }
           }}
-          eventLimit={true}
           nowIndicator={true}
         />
       </Col>
