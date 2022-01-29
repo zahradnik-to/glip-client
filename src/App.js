@@ -3,6 +3,7 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
+import "react-datepicker/dist/react-datepicker.css";
 import HomePage from "./Routes/HomePage";
 import { Container } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
@@ -16,10 +17,15 @@ import DataEditPage from './Routes/Employee/DataEditPage';
 import ProceduresList from "./Components/CrudForms/ProceduresList";
 import UserList from "./Components/CrudForms/UserList";
 import Spinner from 'react-bootstrap/Spinner';
+import { registerLocale, setDefaultLocale } from  "react-datepicker";
+import cs from 'date-fns/locale/cs';
 
 function App() {
   const [user, setUser] = useState(null);
   const [loaded, setLoaded] = useState(false);
+
+  registerLocale('cs', cs)
+  setDefaultLocale('cs');
 
   useEffect(() => {
     axios

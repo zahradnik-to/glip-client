@@ -24,8 +24,6 @@ function AppointmentsPage({ typeOfService, page, user }) {
         return (<Overview typeOfService={typeOfService}/>);
       case 'dovolena':
         return (<Vacation typeOfService={typeOfService}/>);
-      case 'objednavky':
-        return (<>{page}</>);
       case 'procedury':
         return (<ProceduresList user={user}/>);
     }
@@ -41,10 +39,7 @@ function AppointmentsPage({ typeOfService, page, user }) {
               <Nav.Link eventKey={'prehled'} href='prehled'>Přehled</Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link eventKey={'dovolena'} href='dovolena'>Zadat dovolenou</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey={'objednavky'} href='objednavky' disabled>Objednávky</Nav.Link>
+              <Nav.Link eventKey={'dovolena'} href='dovolena'>Dovolená</Nav.Link>
             </Nav.Item>
             <Nav.Item>
               <Nav.Link eventKey={'procedury'} href='procedury'>Procedury</Nav.Link>

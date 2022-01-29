@@ -19,8 +19,6 @@ function TopNav({ user, googleAuth, logout }) {
     if (user.role === 'admin') {
       return(
         <NavDropdown title="Administrace" id="collasible-nav-dropdown">
-          <NavDropdown.Item className='disabled' href="#">Objednavky</NavDropdown.Item>
-          <NavDropdown.Divider />
           <NavDropdown.Item href="/kosmetika/prehled">Kosmetika</NavDropdown.Item>
           <NavDropdown.Item href="/kadernictvi/prehled">Kadeřnictví</NavDropdown.Item>
           <NavDropdown.Item href="/masaze/prehled">Masáže</NavDropdown.Item>

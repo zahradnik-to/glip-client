@@ -3,10 +3,10 @@ import FullCalendar from "@fullcalendar/react";
 import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import { Col, Row } from "react-bootstrap";
 import axios from "axios";
 import PropTypes from "prop-types";
 import EventModal from "./EventModal";
+import StaffEventModal from "./StaffEventModal";
 
 Overview.propTypes = {
   typeOfService: PropTypes.string.isRequired,
@@ -16,13 +16,33 @@ function Overview({ typeOfService }) {
   const calendarRef = useRef(null);
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState({});
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedStaffEvent, setSelectedStaffEvent] = useState({});
+  const [showEventModal, setShowEventModal] = useState(false);
+  const [showStaffEventModal, setShowStaffEventModal] = useState(false);
   const [procedures, setProcedures] = useState([])
+  const [datesStart, setDatesStart] = useState(new Date())
+  const [datesEnd, setDatesEnd] = useState(new Date())
 
 
   const handleDatesSet = (data) => {
     axios.get(`/calendar/get-events?start=${data.start.toISOString()}&end=${data.end.toISOString()}&tos=${typeOfService}`)
-      .then( dates => setEvents(dates.data))
+      .then( dates => {setEvents(dates.data)})
+      .then(() => {
+        setDatesStart(data.start);
+        setDatesEnd(data.end);
+      })
+      .catch( err => {
+        console.log('Getting events failed');
+        console.log(err);
+      })
+  }
+
+  const getEvents = () => {
+    axios.get(`/calendar/get-events?start=${datesStart.toISOString()}&end=${datesEnd.toISOString()}&tos=${typeOfService}`)
+      .then( dates => {
+        console.log(dates.data)
+        setEvents(dates.data)
+      })
       .catch( err => {
         console.log('Getting events failed');
         console.log(err);
@@ -30,19 +50,73 @@ function Overview({ typeOfService }) {
   }
 
   const openEventModal = (event) => {
-    getProcedures()
-    axios.get(`/calendar/get-event?_id=${event.extendedProps._id}`)
-      .then( event => setSelectedEvent(event.data))
-      .then( setModalIsOpen(true) )
-      .catch( err => {
-        console.log('Getting events failed');
-        console.log(err);
-      })
+    if (event.display === 'background'){
+      axios.get(`/calendar/get-staff-event?_id=${event.extendedProps._id}`)
+        .then( event => setSelectedStaffEvent(event.data))
+        .then( setShowStaffEventModal(true) )
+        .catch( err => {
+          console.warn('Getting staff event failed.');
+          console.error(err);
+        })
+    } else {
+      getProcedures()
+      axios.get(`/calendar/get-event?_id=${event.extendedProps._id}`)
+        .then( event => setSelectedEvent(event.data))
+        .then( setShowEventModal(true) )
+        .catch( err => {
+          console.warn('Getting event failed.');
+          console.error(err);
+        })
+    }
   }
 
-  const handleSubmit = (event) => {
-    setModalIsOpen(false)
-    console.log(event)
+  const handleEventUpdate = (data) => {
+    setShowEventModal(false)
+    if (data.dateChange) {
+      console.log('Selected date',data.date)
+      const time = data.time.split(':')
+      const start = data.date.setHours(Number(time[0]), Number(time[1]))
+      data = {
+        ...data,
+        start: new Date(start).toISOString(),
+      }
+    }
+    console.log("Update this event: ", data)
+    axios.put(`/calendar/update-event`, data)
+      .then(response => {
+        if (response.status === 200) {
+          // setToastContent({
+          //   header: "Upraveno!",
+          //   message: `Položka byla upravena.`,
+          //   variant: "light"
+          // })
+          // setShowToast(true);
+          getEvents();
+          return response.data
+        } else throw new Error("Auth failed")
+      })
+      .catch(err => console.error(err))
+      // .catch(err => renderToastError(err))
+  }
+
+  const handleStaffEventUpdate = (data) => {
+    setShowStaffEventModal(false)
+    console.log(data)
+    axios.put(`/calendar/update-staff-event`, data)
+      .then(response => {
+        if (response.status === 200) {
+          // setToastContent({
+          //   header: "Upraveno!",
+          //   message: `Položka byla upravena.`,
+          //   variant: "light"
+          // })
+          // setShowToast(true);
+          getEvents();
+          return response.data
+        } else throw new Error("Auth failed")
+      })
+      .catch(err => console.error(err))
+    // .catch(err => renderToastError(err))
   }
 
   const getProcedures = () => {
@@ -59,13 +133,15 @@ function Overview({ typeOfService }) {
   }
 
   const handleModalOnClose = () => {
-    setModalIsOpen(false);
     setSelectedEvent({})
+    setSelectedStaffEvent({})
+    setShowEventModal(false);
+    setShowStaffEventModal(false);
   }
 
   return(
     <>
-      <div style={{ position: "relative", zIndex: 0 }}>
+      <div style={{ position: "relative", zIndex: 0 }} className={"mb-4"}>
         <FullCalendar
           ref={calendarRef}
           events={events}
@@ -74,7 +150,6 @@ function Overview({ typeOfService }) {
           datesSet={date => handleDatesSet(date)}
           contentHeight='auto'
           locale='cs'
-          // Todo show more info on event click(tooltip??)
           eventClick={(info) => openEventModal(info.event)}
           selectable={false}
           unselectAuto={false}
@@ -100,9 +175,15 @@ function Overview({ typeOfService }) {
             right: 'timeGridWeek,dayGridMonth'
           }}
           nowIndicator={true}
+          eventDurationEditable={false}
+          eventOverlap={false}
+          eventConstraint={{
+            startTime: new Date().toISOString()
+        }}
         />
       </div>
-      <EventModal isOpen={modalIsOpen} onSubmit={handleSubmit} event={selectedEvent} onClose={handleModalOnClose} procedures={procedures}/>
+      <EventModal isOpen={showEventModal} onSubmit={handleEventUpdate} event={selectedEvent} onClose={handleModalOnClose} procedures={procedures}/>
+      <StaffEventModal isOpen={showStaffEventModal} onSubmit={handleStaffEventUpdate} event={selectedStaffEvent} onClose={handleModalOnClose}/>
     </>
   )
 }

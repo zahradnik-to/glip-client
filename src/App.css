@@ -35,4 +35,8 @@
     color: rgb(84, 84, 84) !important;
     border-color: rgba(118, 118, 118, 0.3) !important;
 }
+
+.fc-event-main {
+    cursor: pointer;
+}
 /* FullCalendar end */

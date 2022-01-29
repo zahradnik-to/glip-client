@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { Col, Row } from "react-bootstrap";
 import axios from "axios";
@@ -6,7 +6,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from '@fullcalendar/interaction';
 import ReservationForm from "../Components/ReservationForm";
-import isPast from 'date-fns/isPast'
+import { isPast, addDays }  from 'date-fns'
 
 ReservationPage.propTypes = {
   typeOfService: PropTypes.string.isRequired,
@@ -59,11 +59,10 @@ function ReservationPage({ typeOfService, user, logout }) {
   }
 
   const handleDateClick = (event) => {
-    if (!isPast(event.date)) setEventDate(event.date)
+    if (!isPast(addDays(new Date(event.date), 1))) setEventDate(event.date)
     else {
       const calendarApi = calendarRef.current.getApi();
       calendarApi.unselect();
-      return;
     }
   }
 

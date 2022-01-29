@@ -80,9 +80,7 @@ function Vacation({ typeOfService }) {
           datesSet={date => handleDatesSet(date)}
           contentHeight='auto'
           locale='cs'
-          // Todo show more info on event click(tooltip??)
-          eventClick={(info) => console.log("Event ", info.event)}
-          // dateClick={(event) => handleDateClick(event)}
+          eventClick={(info) => console.log("Event ", info.event)} // Todo delete
           selectAllow={(e) => handleSelectAllow(e)}
           firstDay={1}
           slotMinTime="07:00:00"

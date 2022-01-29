@@ -22,6 +22,7 @@ ReservationForm.defaultProps = {
 function ReservationForm({ typeOfService, saveEvent, eventDate, setEventTime, user, logout }) {
   const [duration, setDuration] = useState(0)
   const [email, setEmail] = useState('')
+  const [notes, setNotes] = useState('')
   const [lastname, setLastname] = useState('')
   const [procedures, setProcedures] = useState([])
   const [freeTimes, setSetFreeTimes] = useState(null);
@@ -70,7 +71,7 @@ function ReservationForm({ typeOfService, saveEvent, eventDate, setEventTime, us
         Children.toArray(freeTimes.map(time => <span key={time} onClick={e => handleTimeClick(e.target)} className='timePickerEntry me-3 mt-3'>{time}</span>))
       )
     } else {
-      return(<span>Žádné termíny.</span>); // Todo This should not happen. Block date from picking in the first place.
+      return(<span>Žádné termíny.</span>);
     }
   }
 
@@ -82,7 +83,8 @@ function ReservationForm({ typeOfService, saveEvent, eventDate, setEventTime, us
       lastname,
       duration,
       typeOfService,
-      eventDate: eventDate.toISOString()
+      notes,
+      eventDate: eventDate.toISOString(),
     })
   }
 
@@ -134,6 +136,17 @@ function ReservationForm({ typeOfService, saveEvent, eventDate, setEventTime, us
   return (
     <Form onSubmit={handleSubmit} method='POST'>
       {renderCustomerDataInputs()}
+
+      <Form.Group className='mb-4'>
+        <Form.Label>Poznámka</Form.Label>
+        <Form.Control
+          placeholder='Poznámka'
+          as="textarea"
+          defaultValue={""}
+          onChange={event => setNotes(event.target.value)}
+        />
+      </Form.Group>
+
       <Form.Group className='mb-2'>
         <Form.Label>Úkon</Form.Label>
         <Form.Select
