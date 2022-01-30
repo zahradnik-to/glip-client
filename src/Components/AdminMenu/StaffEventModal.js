@@ -11,23 +11,22 @@ StaffEventModal.propTypes = {
   event: PropTypes.object,
   onClose: PropTypes.func,
   onSubmit: PropTypes.func,
+  onDelete: PropTypes.func,
   procedures: PropTypes.array,
 };
 
-function StaffEventModal({ isOpen, event, onClose, onSubmit }) {
+function StaffEventModal({ isOpen, event, onClose, onSubmit, onDelete }) {
   const [title, setTitle] = useState("")
   const [staffNotes, setStaffNotes] = useState("")
 
   useEffect(() => {
     setTitle(event.title)
     setStaffNotes(event.staffNotes)
-    console.log("Reloaded event")
   },[event, isOpen])
 
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(title)
     const modifiedEvent = {
       _id: event._id,
       title,
@@ -84,7 +83,7 @@ function StaffEventModal({ isOpen, event, onClose, onSubmit }) {
             </Modal.Body>
 
             <Modal.Footer>
-              <Button variant="danger" onClick={onClose} className={"me-4"}>Smazat</Button>
+              <Button variant="danger" onClick={() => onDelete(event._id)} className={"me-4"}>Smazat</Button>
               <Button variant="secondary" onClick={onClose}>Zrušit</Button>
               <Button variant="primary"  type='submit'>Uložit</Button>
             </Modal.Footer>

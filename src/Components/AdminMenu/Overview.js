@@ -105,7 +105,7 @@ function Overview({ typeOfService }) {
     axios.put(`/calendar/update-staff-event`, data)
       .then(response => {
         if (response.status === 200) {
-          // setToastContent({
+          // setToastContent({ // todo toaster
           //   header: "Upraveno!",
           //   message: `Položka byla upravena.`,
           //   variant: "light"
@@ -137,6 +137,40 @@ function Overview({ typeOfService }) {
     setSelectedStaffEvent({})
     setShowEventModal(false);
     setShowStaffEventModal(false);
+  }
+
+  const cancelEvent = (dtoIn) => {
+    axios.put(`/calendar/cancel-event`, dtoIn)
+      .then(response => {
+        if (response.status === 200) {
+          setShowEventModal(false);
+          setSelectedEvent({})
+          getEvents();
+          return response.data
+        } else throw new Error("Auth failed")
+      })
+      .catch(err => console.error(err))
+    // .catch(err => renderToastError(err)) // tOdo toaster
+  }
+
+  const deleteStaffEvent = (_id) => {
+    axios.delete(`/calendar/delete-staff-event`, { data: { _id } })
+      .then(response => {
+        if (response.status === 200) {
+          setShowStaffEventModal(false);
+          setSelectedStaffEvent({})
+          getEvents();
+          // setToastContent({
+          //   header: "Smazáno!",
+          //   message: `Položka byla vymazána.`,
+          //   variant: "warning"
+          // })
+          // setShowToast(true);
+          return response.data;
+        } else throw new Error("Auth failed")
+      })
+      .catch(err => console.log(err))
+      // .catch(err => renderToastError(err))
   }
 
   return(
@@ -182,8 +216,8 @@ function Overview({ typeOfService }) {
         }}
         />
       </div>
-      <EventModal isOpen={showEventModal} onSubmit={handleEventUpdate} event={selectedEvent} onClose={handleModalOnClose} procedures={procedures}/>
-      <StaffEventModal isOpen={showStaffEventModal} onSubmit={handleStaffEventUpdate} event={selectedStaffEvent} onClose={handleModalOnClose}/>
+      <EventModal isOpen={showEventModal} onSubmit={handleEventUpdate} event={selectedEvent} onClose={handleModalOnClose} procedures={procedures} onEventCancel={cancelEvent}/>
+      <StaffEventModal isOpen={showStaffEventModal} onSubmit={handleStaffEventUpdate} event={selectedStaffEvent} onClose={handleModalOnClose} onDelete={deleteStaffEvent}/>
     </>
   )
 }

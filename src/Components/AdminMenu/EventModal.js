@@ -16,10 +16,11 @@ EventModal.propTypes = {
   event: PropTypes.object,
   onClose: PropTypes.func,
   onSubmit: PropTypes.func,
+  onEventCancel: PropTypes.func,
   procedures: PropTypes.array,
 };
 
-function EventModal({ isOpen, event, onClose, procedures, onSubmit }) {
+function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCancel }) {
   const [title, setTitle] = useState("")
   const [notes, setNotes] = useState("")
   const [staffNotes, setStaffNotes] = useState("")
@@ -65,6 +66,15 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit }) {
       }
     }
     onSubmit(modifiedEvent);
+  }
+
+  const handleEventCancel = (e) => {
+    e.preventDefault();
+    const dtoIn = {
+      _id: event._id,
+      canceled: true,
+    }
+    onEventCancel(dtoIn);
   }
 
   const getEventTime = () => {
@@ -202,7 +212,7 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit }) {
             </Modal.Body>
             <Modal.Footer>
               { !isEventInPast()
-                ?<Button variant="danger" onClick={onClose} className={"me-4"}>Smazat</Button>
+                ?<Button variant="danger" onClick={handleEventCancel} className={"me-4"}>Stornovat</Button>
                 : <></>
               }
               <Button variant="secondary" onClick={onClose}>Zrušit</Button>
