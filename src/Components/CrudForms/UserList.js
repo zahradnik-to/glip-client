@@ -53,13 +53,12 @@ function UserList() {
   }
 
   const renderToastError = (err) => {
-    console.log(err); // Todo finish toasters
-    // setToastContent({
-    //   header: "Error!",
-    //   message: `Při provádění operace se objevila chyba.`,
-    //   variant: "danger"
-    // });
-    // setShowToast(true);
+    setToastContent({
+      header: "Error!",
+      message: `Při provádění operace se objevila chyba. ${err.toString()}`,
+      variant: "danger"
+    });
+    setShowToast(true);
   }
 
   const handleDelete = (id) => {

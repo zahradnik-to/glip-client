@@ -7,6 +7,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from '@fullcalendar/interaction';
 import ReservationForm from "../Components/ReservationForm";
 import { isPast, addDays }  from 'date-fns'
+import ToastNotification from "../Components/ToastNotification";
 
 ReservationPage.propTypes = {
   typeOfService: PropTypes.string.isRequired,
@@ -18,6 +19,8 @@ function ReservationPage({ typeOfService, user, logout }) {
   const [events, setEvents] = useState([]);
   const [eventDate, setEventDate] = useState(null)
   const [eventTime, setEventTime] = useState('08:30')
+  const [showToast, setShowToast] = useState(false);
+  const [toastContent, setToastContent] = useState({});
   const calendarRef = useRef(null);
 
   /* Saves event to database. Triggered by form. */
@@ -31,12 +34,25 @@ function ReservationPage({ typeOfService, user, logout }) {
     axios.post('/calendar/create-event', dtoIn)
       .then(result => {
         if (result.status === 201) {
-          // Todo add confirmation to user
-        } else {
-          // Something went wrong!
-        }
+          setToastContent({
+            header: "Rezervováno!",
+            message: `Vaše rezervace v ${eventTime} byla zaznamenána.`,
+            variant: "success"
+          })
+          setShowToast(true);
+        } else throw new Error('Rezervace neproběhla.')
       })
-      .catch(err => console.log(err))
+      .catch(err => renderToastError(err))
+  }
+
+  const renderToastError = (err) => {
+    console.log(err);
+    setToastContent({
+      header: "Error!",
+      message: `Při provádění operace se objevila chyba.`,
+      variant: "danger"
+    })
+    setShowToast(true);
   }
 
   const handleDatesSet = (data) => {
@@ -104,6 +120,7 @@ function ReservationPage({ typeOfService, user, logout }) {
           />
         </Col>
       </Row>
+      <ToastNotification showToast={showToast} setShowToast={setShowToast} toastContent={toastContent}/>
     </>
   );
 }

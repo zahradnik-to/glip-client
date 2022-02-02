@@ -4,11 +4,10 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import Toast from "react-bootstrap/Toast";
-import ToastContainer from "react-bootstrap/ToastContainer";
 import DataTable from "./DataTable";
 import HomePage from "../../Routes/HomePage";
 import PropTypes from "prop-types"
+import ToastNotification from "../ToastNotification";
 
 ProceduresList.propTypes = {
   user: PropTypes.object,
@@ -98,7 +97,7 @@ function ProceduresList({ user }) {
       .then(response => {
         if (response.status === 200) {
           return response.data
-        } else throw new Error("Auth failed")
+        } else throw new Error("Nepovedlo se získat události.")
       })
       .then(data => {
         setProcedures(data)
@@ -114,20 +113,6 @@ function ProceduresList({ user }) {
       variant: "danger"
     })
     setShowToast(true);
-  }
-
-  const renderToast = () => {
-    const { header, message, variant } = toastContent;
-    return (
-      <ToastContainer className="p-3" position="bottom-center">
-        <Toast show={showToast} onClose={() => setShowToast(false)} bg={variant} delay={5000} autohide>
-          <Toast.Header>
-            <strong className="me-auto">{header}</strong>
-          </Toast.Header>
-          <Toast.Body>{message}</Toast.Body>
-        </Toast>
-      </ToastContainer>
-    )
   }
 
   return (
@@ -180,7 +165,7 @@ function ProceduresList({ user }) {
         <h1>Procedury</h1>
         <DataTable dataInfo={dataInfo} data={procedures} handleDelete={handleDelete} handleUpdate={handleUpdate}/>
       </Row>
-      {renderToast()}
+      <ToastNotification showToast={showToast} setShowToast={setShowToast} toastContent={toastContent}/>
     </>
   );
 }

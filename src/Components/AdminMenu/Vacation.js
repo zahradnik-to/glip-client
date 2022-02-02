@@ -8,6 +8,7 @@ import { Row, Col } from "react-bootstrap";
 import PropTypes from "prop-types";
 import isPast from 'date-fns/isPast'
 import './Vacation.css'
+import ToastNotification from "../ToastNotification";
 
 Vacation.propTypes = {
   typeOfService: PropTypes.string.isRequired,
@@ -23,6 +24,8 @@ function Vacation({ typeOfService }) {
   const calendarRef = useRef(null);
   const [events, setEvents] = useState([]);
   const [vacationEvent, setVacationEvent] = useState({});
+  const [showToast, setShowToast] = useState(false);
+  const [toastContent, setToastContent] = useState({});
 
   const handleDatesSet = (data) => {
     axios.get(`/calendar/get-events?start=${data.start.toISOString()}&end=${data.end.toISOString()}&tos=${typeOfService}`)
@@ -47,15 +50,28 @@ function Vacation({ typeOfService }) {
     axios.post('/calendar/create-vacation', dtoIn)
       .then(result => {
         if (result.status === 201) {
-          // Todo add confirmation to user
           const calendarApi = calendarRef.current.getApi();
           calendarApi.unselect()
           renderCreatedVacation(dtoIn)
-        } else {
-          // Something went wrong!
-        }
+          setToastContent({
+            header: "Zaznamenáno!",
+            message: `Dovolená dne ${dtoIn.start.split('T')[0]} byla zaznamenána.`,
+            variant: "success"
+          })
+          setShowToast(true);
+        } else throw new Error("Nepovedlo se vytvořit událost.")
       })
-      .catch(err => console.log(err))
+      .catch(err => renderToastError(err))
+  }
+
+  const renderToastError = (err) => {
+    console.log(err);
+    setToastContent({
+      header: "Error!",
+      message: `Při provádění operace se objevila chyba.`,
+      variant: "danger"
+    })
+    setShowToast(true);
   }
 
   const renderCreatedVacation = (event) => {
@@ -69,56 +85,58 @@ function Vacation({ typeOfService }) {
   }
 
   return(
-    <Row>
-      <Col xs={12} className='mb-4 vacation' id={"vacation"}>
-        <FullCalendar
-          className='vacation'
-          ref={calendarRef}
-          events={events}
-          plugins={[interactionPlugin, timeGridPlugin, dayGridPlugin]}
-          initialView='timeGridWeek'
-          datesSet={date => handleDatesSet(date)}
-          contentHeight='auto'
-          locale='cs'
-          eventClick={(info) => console.log("Event ", info.event)} // Todo delete
-          selectAllow={(e) => handleSelectAllow(e)}
-          firstDay={1}
-          slotMinTime="07:00:00"
-          slotMaxTime="20:00:00"
-          allDayText='Celý den'
-          buttonText={{
-            today: 'dnes',
-            month: 'měsíc',
-            week:  'týden',
-            day:   'den',
-            list:  'list'
-          }}
-          businessHours={{
-            daysOfWeek: [ 1, 2, 3, 4, 5 ],
-            startTime: '07:00',
-            endTime: '20:00',
-          }}
-          headerToolbar={{
-            left: 'prev,next today createVacationBtn',
-            center: 'title',
-            right: 'timeGridWeek,dayGridMonth'
-          }}
-          selectable={true}
-          selectMirror={true}
-          select={(event) => setVacationEvent(event)}
-          selectOverlap={false}
-          customButtons={{
-            createVacationBtn: {
-              text: "Vytvořit dovolenou",
-              click: function () {
-                createVacation();
+    <>
+      <Row>
+        <Col xs={12} className='mb-4 vacation' id={"vacation"}>
+          <FullCalendar
+            className='vacation'
+            ref={calendarRef}
+            events={events}
+            plugins={[interactionPlugin, timeGridPlugin, dayGridPlugin]}
+            initialView='timeGridWeek'
+            datesSet={date => handleDatesSet(date)}
+            contentHeight='auto'
+            locale='cs'
+            selectAllow={(e) => handleSelectAllow(e)}
+            firstDay={1}
+            slotMinTime="07:00:00"
+            slotMaxTime="20:00:00"
+            allDayText='Celý den'
+            buttonText={{
+              today: 'dnes',
+              month: 'měsíc',
+              week:  'týden',
+              day:   'den',
+              list:  'list'
+            }}
+            businessHours={{
+              daysOfWeek: [ 1, 2, 3, 4, 5 ],
+              startTime: '07:00',
+              endTime: '20:00',
+            }}
+            headerToolbar={{
+              left: 'prev,next today createVacationBtn',
+              center: 'title',
+              right: 'timeGridWeek,dayGridMonth'
+            }}
+            selectable={true}
+            selectMirror={true}
+            select={(event) => setVacationEvent(event)}
+            selectOverlap={false}
+            customButtons={{
+              createVacationBtn: {
+                text: "Vytvořit dovolenou",
+                click: function () {
+                  createVacation();
+                }
               }
-            }
-          }}
-          nowIndicator={true}
-        />
-      </Col>
-    </Row>
+            }}
+            nowIndicator={true}
+          />
+        </Col>
+      </Row>
+      <ToastNotification showToast={showToast} setShowToast={setShowToast} toastContent={toastContent}/>
+    </>
   )
 }
 

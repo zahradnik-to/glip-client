@@ -39,4 +39,12 @@
 .fc-event-main {
     cursor: pointer;
 }
+
+.toast.bg-success {
+    background-color: #62b062 !important;
+}
+
+.toast {
+    border-radius: 5px;
+}
 /* FullCalendar end */
