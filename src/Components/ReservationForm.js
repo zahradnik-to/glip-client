@@ -25,7 +25,7 @@ function ReservationForm({ typeOfService, saveEvent, eventDate, setEventTime, us
   const [notes, setNotes] = useState('')
   const [lastname, setLastname] = useState('')
   const [procedures, setProcedures] = useState([])
-  const [freeTimes, setSetFreeTimes] = useState(null);
+  const [freeTime, setSetFreeTime] = useState(null);
 
   useEffect(() => {
     if (user) {
@@ -49,26 +49,44 @@ function ReservationForm({ typeOfService, saveEvent, eventDate, setEventTime, us
   }, [eventDate]);
 
   const getFreeTime = () => {
-    setSetFreeTimes(null);
+    setSetFreeTime(null);
     console.log(eventDate.toISOString())
     axios.get(`/calendar/get-free-time?date=${eventDate.toISOString()}&tos=${typeOfService}`)
       .then( freeTime => {
-        setSetFreeTimes(freeTime.data)
+        setSetFreeTime(freeTime.data)
         setEventTime('')
       })
       .catch(err => console.log(err));
   }
 
   const renderFreeTime = () => {
-    if (!eventDate) return(<span>Nejprve vyberte datum.</span>);
-    if (freeTimes === null) { return(
-        <Spinner animation="border" role="status" className={"m-4"}>
+    if (!eventDate) return(
+      <Form.Select
+        name='eventTime'
+        onChange={e => setEventTime(e.target.value)}
+        disabled
+        required
+      >
+        <option value="">Nejprve vyberte datum</option>
+      </Form.Select>
+    );
+    if (freeTime === null) { return(
+      <div style={{ height: "38px" }}>
+        <Spinner animation="border" role="status">
           <span className="visually-hidden">Loading...</span>
-        </Spinner>)
+        </Spinner>
+      </div>)
     }
-    if (freeTimes && freeTimes.length) {
-      return( // Todo Make this into select, copy from administration
-        Children.toArray(freeTimes.map(time => <span key={time} onClick={e => handleTimeClick(e.target)} className='timePickerEntry me-3 mt-3'>{time}</span>))
+    if (freeTime && freeTime.length) {
+      return(
+        <Form.Select
+          name='eventTime'
+          onChange={e => setEventTime(e.target.value)}
+          required
+        >
+          <option value="">Vyberte čas</option>
+          {Children.toArray(freeTime.map(time => <option key={time} value={time}>{time}</option>))}
+        </Form.Select>
       )
     } else {
       return(<span>Žádné termíny.</span>);
@@ -159,10 +177,11 @@ function ReservationForm({ typeOfService, saveEvent, eventDate, setEventTime, us
         </Form.Select>
 
       </Form.Group>
-      <div className='mb-2 text-center'>
-        { renderFreeTime() }
-      </div>
 
+      <Form.Group className='mb-2'>
+        <Form.Label>Čas</Form.Label>
+        { renderFreeTime() }
+      </Form.Group>
       <Button type='submit'>Vytvořit rezervaci</Button>
     </Form>
   )

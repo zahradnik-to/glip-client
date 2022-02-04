@@ -109,6 +109,14 @@ function ReservationPage({ typeOfService, user, logout }) {
             }}
             moreLinkText={'další'}
             dayMaxEvents={2}
+            hour={"numeric"}
+            minute={"2-digit"}
+            eventTimeFormat={{
+              hour: 'numeric',
+              minute: '2-digit',
+              meridiem: false,
+              hour12: false
+            }}
           />
         </Col>
         <Col md={4} xs={12}>
