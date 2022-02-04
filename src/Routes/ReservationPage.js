@@ -93,7 +93,7 @@ function ReservationPage({ typeOfService, user, logout }) {
             initialView='dayGridMonth'
             datesSet={date => handleDatesSet(date)}
             contentHeight='auto'
-            locale='cs'
+            locale={'cs'}
             firstDay={1}
             selectable={true}
             selectAllow={(e) => handleSelectAllow(e)}
@@ -105,8 +105,10 @@ function ReservationPage({ typeOfService, user, logout }) {
               month: 'měsíc',
               week:  'týden',
               day:   'den',
-              list:  'list'
+              list:  'list',
             }}
+            moreLinkText={'další'}
+            dayMaxEvents={2}
           />
         </Col>
         <Col md={4} xs={12}>

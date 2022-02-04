@@ -75,7 +75,7 @@ function Overview({ typeOfService }) {
 
   const handleEventUpdate = (data) => {
     setShowEventModal(false)
-    if (data.dateChange) {
+    if (data.dateTimeChange) {
       const time = data.time.split(':')
       const start = data.date.setHours(Number(time[0]), Number(time[1]))
       data = {

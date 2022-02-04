@@ -50,6 +50,7 @@ function ReservationForm({ typeOfService, saveEvent, eventDate, setEventTime, us
 
   const getFreeTime = () => {
     setSetFreeTimes(null);
+    console.log(eventDate.toISOString())
     axios.get(`/calendar/get-free-time?date=${eventDate.toISOString()}&tos=${typeOfService}`)
       .then( freeTime => {
         setSetFreeTimes(freeTime.data)

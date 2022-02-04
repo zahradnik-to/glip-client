@@ -54,10 +54,10 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
       title,
       procedure,
       staffNotes,
-      dateChange: false,
+      dateTimeChange: false,
     }
     if (!isSelectedDateSameAsOriginal() || getEventTime() !== eventTime) {
-      modifiedEvent.dateChange = true;
+      modifiedEvent.dateTimeChange = true;
       console.log("Use this time: ", eventTime)
       modifiedEvent = {
         ...modifiedEvent,
@@ -90,7 +90,10 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
 
   const getFreeTime = (date) => {
     if (Object.keys(event).length){
-      axios.get(`/calendar/get-free-time?date=${date}&tos=${event.typeOfService}`)
+      const dateObj = new Date(date)
+      console.log(dateObj.toISOString())
+      console.log(date)
+      axios.get(`/calendar/get-free-time?date=${dateObj.toISOString()}&tos=${event.typeOfService}`)
         .then( freeTime => {
           setFreeTime(freeTime.data)
           setEventTime(getEventTime)

@@ -44,6 +44,7 @@ function Vacation({ typeOfService }) {
       end: new Date(vacationEvent.end).toISOString(),
       display: 'background',
       allDay: vacationEvent.allDay,
+      eventType: 'vacation',
       typeOfService,
     }
 
