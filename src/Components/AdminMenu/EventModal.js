@@ -26,7 +26,7 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
   const [staffNotes, setStaffNotes] = useState("")
   const [eventTime, setEventTime] = useState('00:00')
   const [oldEventTime, setOldEventTime] = useState('11:11')
-  const [procedure, setProcedure] = useState("");
+  const [procedureId, setProcedureId] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const [freeTime, setFreeTime] = useState([]);
 
@@ -38,8 +38,9 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
       setTitle(event.title)
       setStaffNotes(event.staffNotes)
       setNotes(event.notes)
-      setProcedure(event.procedure)
+      setProcedureId(event.procedure)
     }
+    console.log(event)
   }, [event])
 
   useEffect(() => {
@@ -52,7 +53,7 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
     let modifiedEvent = {
       _id: event._id,
       title,
-      procedure,
+      procedureId,
       staffNotes,
       dateTimeChange: false,
     }
@@ -91,8 +92,6 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
   const getFreeTime = (date) => {
     if (Object.keys(event).length){
       const dateObj = new Date(date)
-      console.log(dateObj.toISOString())
-      console.log(date)
       axios.get(`/calendar/get-free-time?date=${dateObj.toISOString()}&tos=${event.typeOfService}`)
         .then( freeTime => {
           setFreeTime(freeTime.data)
@@ -133,12 +132,12 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
                 <Form.Label>Úkon</Form.Label>
                 <Form.Select
                   name='procedure'
-                  defaultValue={event.duration}
-                  onChange={e => setProcedure(Number(e.target.value))}
+                  defaultValue={event.procedureId}
+                  onChange={e => setProcedureId(e.target.value)}
                   disabled={isEventInPast()}
                   required>
-                  {Children.toArray(procedures.map(
-                    procedure => <option key={procedure._id} value={procedure.duration}>
+                  {Children.toArray(procedures.map(procedure =>
+                    <option key={procedure._id} selected={event.procedure === procedure.name} value={procedure._id}>
                       {procedure.name}
                     </option>
                   ))}

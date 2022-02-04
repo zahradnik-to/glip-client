@@ -38,7 +38,7 @@ function ProceduresList({ user }) {
         type: "number",
       },
     ],
-    ignoredDataParams: ["_id", "__v", "typeOfService"],
+    ignoredDataParams: ["_id", "__v", "typeOfService", "disabled"],
   }
 
   const handleCreate = (event) => {
@@ -56,11 +56,11 @@ function ProceduresList({ user }) {
           return response.data
         } else throw new Error("Auth failed")
       })
-      .catch(err => renderToastError(err))
+      .catch(err => renderToastError(err, "1qwe"))
   }
 
-  const handleDelete = (id) => {
-    axios.delete(`/procedure/delete`, { data: { id: id } })
+  const handleDelete = (_id) => {
+    axios.delete(`/procedure/delete`, { data: { _id } })
       .then(response => {
         if (response.status === 200) {
           getProcedures();
@@ -73,7 +73,7 @@ function ProceduresList({ user }) {
           return response.data;
         } else throw new Error("Auth failed")
       })
-      .catch(err => renderToastError(err))
+      .catch(err => renderToastError(err, "3"))
   }
 
   const handleUpdate = (object) => {
@@ -89,7 +89,7 @@ function ProceduresList({ user }) {
           return response.data
         } else throw new Error("Auth failed")
       })
-      .catch(err => renderToastError(err))
+      .catch(err => renderToastError(err, "2"))
   }
 
   const getProcedures = () => {
@@ -102,14 +102,14 @@ function ProceduresList({ user }) {
       .then(data => {
         setProcedures(data)
       })
-      .catch(err => renderToastError(err))
+      .catch(err => renderToastError(err, "Nepovedlo se získat události."))
   }
 
-  const renderToastError = (err) => {
+  const renderToastError = (err, message) => {
     console.log(err);
     setToastContent({
       header: "Error!",
-      message: `Při provádění operace se objevila chyba.`,
+      message: message ?? `Při provádění operace se objevila chyba.`,
       variant: "danger"
     })
     setShowToast(true);

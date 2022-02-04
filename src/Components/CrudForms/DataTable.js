@@ -21,7 +21,6 @@ function DataTable({ data, dataInfo, handleDelete, handleUpdate }) {
     return (
       <td className={'h-100 d-flex align-items-center justify-content-around actionButtonsCell'}>
         <div className={'h-100'} onClick={() => updateEntry(id)}>Edit</div>
-        {/* Todo create a confirmation dialog to Delete */}
         <div className={'h-100'} onClick={() => handleDelete(id)}>Del</div>
       </td>
     )
@@ -69,8 +68,10 @@ function DataTable({ data, dataInfo, handleDelete, handleUpdate }) {
             onChange={e => handleEdit(object._id, objProperty, e.target.value)}
           >
             {Children.toArray(dataInfoOfProperty.options
-              .map(role => <option key={role._id} selected={object.role === role.name} // Fixme use only def value
-                                   value={role.name}>{role.name}</option>))}
+              .map(role => // Fixme use only def value
+                <option key={role._id} selected={object.role === role.name} value={role.name}>
+                  {role.name}
+                </option>))}
           </Form.Select>
         </td>
       );

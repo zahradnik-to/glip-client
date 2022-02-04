@@ -79,7 +79,7 @@ function UserList() {
       .catch(err => renderToastError(err))
   }
 
-  const handleUpdate = (object) => {
+  const handleUpdate = (object) => { // Todo user update
     console.log(object)
     // axios.put(`/procedure/update`, object)
     //   .then(response => {

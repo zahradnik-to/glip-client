@@ -96,6 +96,7 @@ function Overview({ typeOfService }) {
           return response.data
         } else throw new Error("Auth failed")
       })
+      .then(setSelectedEvent({}))
       .catch(err => renderToastError(err))
   }
 
@@ -115,6 +116,7 @@ function Overview({ typeOfService }) {
           return response.data
         } else throw new Error("Auth failed")
       })
+      .then(setSelectedStaffEvent({}))
     .catch(err => renderToastError(err))
   }
 

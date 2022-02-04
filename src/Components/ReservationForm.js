@@ -20,7 +20,7 @@ ReservationForm.defaultProps = {
 }
 
 function ReservationForm({ typeOfService, saveEvent, eventDate, setEventTime, user, logout }) {
-  const [duration, setDuration] = useState(0)
+  const [procedureId, setProcedureId] = useState('')
   const [email, setEmail] = useState('')
   const [notes, setNotes] = useState('')
   const [lastname, setLastname] = useState('')
@@ -60,15 +60,14 @@ function ReservationForm({ typeOfService, saveEvent, eventDate, setEventTime, us
   }
 
   const renderFreeTime = () => {
-    if (!eventDate) return(<span>Vyberte datum.</span>);
+    if (!eventDate) return(<span>Nejprve vyberte datum.</span>);
     if (freeTimes === null) { return(
         <Spinner animation="border" role="status" className={"m-4"}>
           <span className="visually-hidden">Loading...</span>
         </Spinner>)
     }
-
     if (freeTimes && freeTimes.length) {
-      return(
+      return( // Todo Make this into select, copy from administration
         Children.toArray(freeTimes.map(time => <span key={time} onClick={e => handleTimeClick(e.target)} className='timePickerEntry me-3 mt-3'>{time}</span>))
       )
     } else {
@@ -82,7 +81,7 @@ function ReservationForm({ typeOfService, saveEvent, eventDate, setEventTime, us
     saveEvent({
       email,
       lastname,
-      duration,
+      procedureId,
       typeOfService,
       notes,
       eventDate: eventDate.toISOString(),
@@ -152,11 +151,11 @@ function ReservationForm({ typeOfService, saveEvent, eventDate, setEventTime, us
         <Form.Label>Úkon</Form.Label>
         <Form.Select
           name='duration'
-          onChange={e => setDuration(Number(e.target.value))}
+          onChange={e => setProcedureId(e.target.value)}
           required
         >
           <option value=''>Vyberte službu...</option>
-          {Children.toArray(procedures.map(procedure => <option key={procedure._id} value={procedure.duration}>{procedure.name}</option>))}
+          {Children.toArray(procedures.map(procedure => <option key={procedure._id} value={procedure._id}>{procedure.name}</option>))}
         </Form.Select>
 
       </Form.Group>
