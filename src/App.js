@@ -28,8 +28,7 @@ function App() {
   setDefaultLocale('cs');
 
   useEffect(() => {
-    axios
-      .get('/auth/login/success', { withCredentials: true })
+    axios.get('/auth/login/success', { withCredentials: true })
       .then(response => {
         if (response.data.success) {
           console.log('Logged user: ', response.data.user)
@@ -45,8 +44,8 @@ function App() {
   }, [])
 
   const logout = async () => {
-    console.log("Logout")
-    window.open("http://localhost:5000/auth/logout", "_self");
+    axios.get(`/auth/logout`)
+      .then(setUser(null))
   };
 
   const googleAuth = () => {
