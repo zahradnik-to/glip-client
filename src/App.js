@@ -14,7 +14,6 @@ import ProfilePage from './Routes/ProfilePage';
 import TopNav from './Components/TopNav';
 import AppointmentsPage from './Routes/Employee/AppointmentsPage';
 import DataEditPage from './Routes/Employee/DataEditPage';
-import ProceduresList from "./Components/CrudForms/ProceduresList";
 import UserList from "./Components/CrudForms/UserList";
 import Spinner from 'react-bootstrap/Spinner';
 import { registerLocale, setDefaultLocale } from  "react-datepicker";

@@ -32,7 +32,6 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
 
   useEffect(() => {
     if (Object.keys(event).length){
-      console.log(event)
       setStartDate(new Date(event.start))
       setOldEventTime(getEventTime());
       setTitle(event.title)
@@ -92,7 +91,7 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
   const getFreeTime = (date) => {
     if (Object.keys(event).length){
       const dateObj = new Date(date)
-      axios.get(`/calendar/get-free-time?date=${dateObj.toISOString()}&tos=${event.typeOfService}`)
+      axios.get(`/calendar/get-free-time?date=${dateObj.toISOString()}&typeOfService=${event.typeOfService}`)
         .then( freeTime => {
           setFreeTime(freeTime.data)
           setEventTime(getEventTime)
@@ -122,7 +121,7 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
                 <Form.Label>Název objenávky</Form.Label>
                 <Form.Control
                   placeholder='Title'
-                  defaultValue={title}
+                  defaultValue={event.title}
                   onChange={event => setTitle(event.target.value)}
                   required
                 />
@@ -137,7 +136,7 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
                   disabled={isEventInPast()}
                   required>
                   {Children.toArray(procedures.map(procedure =>
-                    <option key={procedure._id} selected={event.procedure === procedure.name} value={procedure._id}>
+                    <option key={procedure._id} value={procedure._id}>
                       {procedure.name}
                     </option>
                   ))}

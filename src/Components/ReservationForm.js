@@ -32,7 +32,7 @@ function ReservationForm({ typeOfService, saveEvent, eventDate, setEventTime, us
       setEmail(user.email)
       setLastname(user.name.familyName)
     }
-    axios.get(`/procedure/get?tos=${typeOfService}`)
+    axios.get(`/procedure/get?typeOfService=${typeOfService}`)
       .then(response => {
         if (response.status === 200) {
           return response.data
@@ -51,7 +51,7 @@ function ReservationForm({ typeOfService, saveEvent, eventDate, setEventTime, us
   const getFreeTime = () => {
     setSetFreeTime(null);
     console.log(eventDate.toISOString())
-    axios.get(`/calendar/get-free-time?date=${eventDate.toISOString()}&tos=${typeOfService}`)
+    axios.get(`/calendar/get-free-time?date=${eventDate.toISOString()}&typeOfService=${typeOfService}`)
       .then( freeTime => {
         setSetFreeTime(freeTime.data)
         setEventTime('')
@@ -104,10 +104,6 @@ function ReservationForm({ typeOfService, saveEvent, eventDate, setEventTime, us
       notes,
       eventDate: eventDate.toISOString(),
     })
-  }
-
-  const handleTimeClick = (element) => {
-    setEventTime(element.innerText)
   }
 
   const renderCustomerDataInputs = () => {

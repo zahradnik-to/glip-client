@@ -57,7 +57,7 @@ function ReservationPage({ typeOfService, user, logout }) {
 
   const handleDatesSet = (data) => {
     console.log("ok")
-    axios.get(`/calendar/get-events?start=${data.start.toISOString()}&end=${data.end.toISOString()}&tos=${typeOfService}`)
+    axios.get(`/calendar/get-events?start=${data.start.toISOString()}&end=${data.end.toISOString()}&typeOfService=${typeOfService}`)
       .then( dates => setEvents(dates.data))
       .catch( err => {
         console.log('Getting events failed');
@@ -109,8 +109,6 @@ function ReservationPage({ typeOfService, user, logout }) {
             }}
             moreLinkText={'další'}
             dayMaxEvents={2}
-            hour={"numeric"}
-            minute={"2-digit"}
             eventTimeFormat={{
               hour: 'numeric',
               minute: '2-digit',

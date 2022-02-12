@@ -28,7 +28,7 @@ function Overview({ typeOfService }) {
 
 
   const handleDatesSet = (data) => {
-    axios.get(`/calendar/get-events?start=${data.start.toISOString()}&end=${data.end.toISOString()}&tos=${typeOfService}`)
+    axios.get(`/calendar/get-events?start=${data.start.toISOString()}&end=${data.end.toISOString()}&typeOfService=${typeOfService}`)
       .then( dates => {setEvents(dates.data)})
       .then(() => {
         setDatesStart(data.start);
@@ -41,7 +41,7 @@ function Overview({ typeOfService }) {
   }
 
   const getEvents = () => {
-    axios.get(`/calendar/get-events?start=${datesStart.toISOString()}&end=${datesEnd.toISOString()}&tos=${typeOfService}`)
+    axios.get(`/calendar/get-events?start=${datesStart.toISOString()}&end=${datesEnd.toISOString()}&typeOfService=${typeOfService}`)
       .then( dates => {
         console.log(dates.data)
         setEvents(dates.data)
@@ -121,7 +121,7 @@ function Overview({ typeOfService }) {
   }
 
   const getProcedures = () => {
-    axios.get(`/procedure/get?tos=${typeOfService}`)
+    axios.get(`/procedure/get?typeOfService=${typeOfService}`)
       .then(response => {
         if (response.status === 200) {
           return response.data

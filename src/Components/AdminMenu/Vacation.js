@@ -28,7 +28,7 @@ function Vacation({ typeOfService }) {
   const [toastContent, setToastContent] = useState({});
 
   const handleDatesSet = (data) => {
-    axios.get(`/calendar/get-events?start=${data.start.toISOString()}&end=${data.end.toISOString()}&tos=${typeOfService}`)
+    axios.get(`/calendar/get-events?start=${data.start.toISOString()}&end=${data.end.toISOString()}&typeOfService=${typeOfService}`)
       .then( dates => setEvents(dates.data))
       .catch( err => {
         console.log('Getting events failed');
@@ -88,7 +88,7 @@ function Vacation({ typeOfService }) {
   return(
     <>
       <Row>
-        <Col xs={12} className='mb-4 vacation' id={"vacation"}>
+        <Col xs={12} className='mb-4 vacation' id={"vacation"} style={{ position: "relative", zIndex: 0 }}>
           <FullCalendar
             className='vacation'
             ref={calendarRef}
