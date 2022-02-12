@@ -23,13 +23,12 @@ function TopNav({ user, googleAuth, logout }) {
           <NavDropdown.Item href="/kadernictvi/prehled">Kadeřnictví</NavDropdown.Item>
           <NavDropdown.Item href="/masaze/prehled">Masáže</NavDropdown.Item>
           <NavDropdown.Divider />
-          <NavDropdown.Item href="/admin/procedury">Procedury</NavDropdown.Item>
           <NavDropdown.Item href="/admin/uzivatele">Uživatelé</NavDropdown.Item>
         </NavDropdown>
       )
     } else if (Object.keys(typeOfServicesEnum).includes(user.role)) {
       return (
-        <Nav.Link href={`/${typeOfServicesEnum[user.role]}/objednavky`}>Objednávky</Nav.Link>
+        <Nav.Link href={`/${typeOfServicesEnum[user.role]}/prehled`}>Administrace</Nav.Link>
       )
     }
     return null;
@@ -45,7 +44,7 @@ function TopNav({ user, googleAuth, logout }) {
             <Nav.Link href="/kosmetika">Kosmetika</Nav.Link>
             <Nav.Link href="/kadernictvi">Kadeřnictví</Nav.Link>
             <Nav.Link href="/masaze">Masáže</Nav.Link>
-            { user && user.role ? renderAdminNav() : <></>}
+            { user && user.role !== 'user' ? renderAdminNav() : <></>}
           </Nav>
           <Nav>
             { user ? (

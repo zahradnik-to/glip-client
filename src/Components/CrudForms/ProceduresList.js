@@ -11,13 +11,14 @@ import ToastNotification from "../ToastNotification";
 
 ProceduresList.propTypes = {
   user: PropTypes.object,
+  passedService: PropTypes.string,
 }
 
-function ProceduresList({ user }) {
+function ProceduresList({ user, passedService }) {
   const [procedures, setProcedures] = useState([]);
   const [name, setName] = useState("");
   const [duration, setDuration] = useState("");
-  const [typeOfService, setTypeOfService] = useState(user.role);
+  const [typeOfService, setTypeOfService] = useState(passedService);
   const [showToast, setShowToast] = useState(false);
   const [toastContent, setToastContent] = useState({});
 
@@ -93,7 +94,7 @@ function ProceduresList({ user }) {
   }
 
   const getProcedures = () => {
-    axios.get(`/procedure/get`)
+    axios.get(`/procedure/get?typeOfService=${typeOfService}`)
       .then(response => {
         if (response.status === 200) {
           return response.data
@@ -148,9 +149,9 @@ function ProceduresList({ user }) {
             <Form.Select
               value={typeOfService}
               onChange={event => setTypeOfService(event.target.value)}
+              disabled={!user.isAdmin}
               required
             >
-              <option value="">Vyberte službu</option>
               <option value="hair">Kadeřnictví</option>
               <option value="cosmetics">Kosmetika</option>
               <option value="massage">Masáže</option>

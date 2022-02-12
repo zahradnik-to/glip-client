@@ -23,7 +23,7 @@ function UserList() {
         options: roleOptions,
       },
     ],
-    ignoredDataParams: ["_id", "__v", "googleId"],
+    ignoredDataParams: ["_id", "__v", "googleId", "isAdmin"],
   }
 
   const getUsers = () => {

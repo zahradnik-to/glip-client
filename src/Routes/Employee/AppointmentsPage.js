@@ -16,6 +16,10 @@ function AppointmentsPage({ typeOfService, page, user }) {
 
   if (!user) {
     return <HomePage/>
+  } else {
+    if (user.role !== typeOfService && !user.isAdmin) {
+      return <HomePage/>
+    }
   }
 
   const renderContent = () => {
@@ -25,7 +29,7 @@ function AppointmentsPage({ typeOfService, page, user }) {
       case 'dovolena':
         return (<Vacation typeOfService={typeOfService}/>);
       case 'procedury':
-        return (<ProceduresList user={user}/>);
+        return (<ProceduresList passedService={typeOfService} user={user}/>);
     }
   }
 
