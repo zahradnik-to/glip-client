@@ -7,6 +7,7 @@ import DataTable from "./DataTable";
 function UserList() {
   const [users, setUsers] = useState([]);
   const [showToast, setShowToast] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState(false);
   const [toastContent, setToastContent] = useState({});
   const [roleOptions, setRoleOptions] = useState([]);
   const dataInfo = {
@@ -35,6 +36,7 @@ function UserList() {
       })
       .then(data => {
         setUsers(data)
+        console.log("Got users")
       })
       .catch(err => renderToastError(err))
   }
@@ -48,6 +50,8 @@ function UserList() {
       })
       .then(data => {
         setRoleOptions(data)
+        console.log("Got roles")
+        loadedData()
       })
       .catch(err => renderToastError(err))
   }
@@ -81,19 +85,18 @@ function UserList() {
 
   const handleUpdate = (object) => { // Todo user update
     console.log(object)
-    // axios.put(`/procedure/update`, object)
-    //   .then(response => {
-    //     if (response.status === 200) {
-    //       setToastContent({
-    //         header: "Upraveno!",
-    //         message: `Položka byla upravena.`,
-    //         variant: "light"
-    //       });
-    //       setShowToast(true);
-    //       return response.data;
-    //     } else throw new Error("Auth failed")
-    //   })
-    //   .catch(err => renderToastError(err))
+    axios.put(`/user/update`, object)
+      .then(response => {
+        if (response.status === 200) {
+          setToastContent({
+            header: "Hotovo!",
+            message: `Role změněna na ${object.role}.`,
+            variant: "success"
+          })
+          setShowToast(true);
+        } else throw new Error("Role update failed.")
+      })
+      .catch(err => renderToastError(err))
   }
 
   const renderToast = () => {
@@ -111,16 +114,24 @@ function UserList() {
   }
 
   useEffect(() => {
-    return getUsers();
+   getUsers();
+   getRoles();
   }, []);
 
-  useEffect(() => {
-    return getRoles();
-  }, []);
+  const loadedData = () => {
+    setDataLoaded(true);
+    console.log('data loaded')
+  }
 
-  return(
+
+  return (
     <>
-      <DataTable dataInfo={dataInfo} data={users} handleDelete={handleDelete} handleUpdate={handleUpdate}/>
+      {dataLoaded
+        ?
+        <DataTable dataInfo={dataInfo} data={users} handleDelete={handleDelete} handleUpdate={handleUpdate}/>
+        :
+        <></>
+      }
       {renderToast()}
     </>
   );
