@@ -204,7 +204,7 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
                 >
                   { isSelectedDateSameAsOriginal()
                     ? <option value="sameTime">{oldEventTime} (původní)</option>
-                    : <option value="">Vyberte čas</option>
+                    : <option value="" disabled>Vyberte čas</option>
                   }
                   {Children.toArray(freeTime.map(time => <option key={time} value={time}>{time}</option>))}
                 </Form.Select>

@@ -45,6 +45,6 @@
 }
 
 .toast {
-    border-radius: 5px;
+    border-radius: 5px !important;
 }
 /* FullCalendar end */

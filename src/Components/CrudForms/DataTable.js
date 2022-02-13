@@ -68,10 +68,8 @@ function DataTable({ data, dataInfo, handleDelete, handleUpdate }) {
             onChange={e => handleEdit(object._id, objProperty, e.target.value)}
           >
             {Children.toArray(dataInfoOfProperty.options
-              .map(role => // Fixme use only def value
-                <option key={role._id} selected={object.role === role.name} value={role.name}>
-                  {role.name}
-                </option>))}
+              .map(role =>
+                <option key={role._id} value={role.name}>{role.name}</option>))}
           </Form.Select>
         </td>
       );
