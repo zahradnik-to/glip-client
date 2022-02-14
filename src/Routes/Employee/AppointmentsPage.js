@@ -25,7 +25,7 @@ function AppointmentsPage({ typeOfService, page, user }) {
   const renderContent = () => {
     switch (page) {
       case 'prehled':
-        return (<Overview typeOfService={typeOfService}/>);
+        return (<Overview typeOfService={typeOfService} user={user}/>);
       case 'dovolena':
         return (<Vacation typeOfService={typeOfService}/>);
       case 'procedury':

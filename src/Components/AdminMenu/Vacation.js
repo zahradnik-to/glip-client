@@ -48,7 +48,7 @@ function Vacation({ typeOfService }) {
       typeOfService,
     }
 
-    axios.post('/calendar/create-vacation', dtoIn)
+    axios.post('/calendar/create-staff-event', dtoIn)
       .then(result => {
         if (result.status === 201) {
           const calendarApi = calendarRef.current.getApi();

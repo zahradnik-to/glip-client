@@ -57,7 +57,7 @@ function ProceduresList({ user, passedService }) {
           return response.data
         } else throw new Error("Auth failed")
       })
-      .catch(err => renderToastError(err, "1qwe"))
+      .catch(err => renderToastError(err))
   }
 
   const handleDelete = (_id) => {
@@ -74,7 +74,7 @@ function ProceduresList({ user, passedService }) {
           return response.data;
         } else throw new Error("Auth failed")
       })
-      .catch(err => renderToastError(err, "3"))
+      .catch(err => renderToastError(err))
   }
 
   const handleUpdate = (object) => {
@@ -90,7 +90,7 @@ function ProceduresList({ user, passedService }) {
           return response.data
         } else throw new Error("Auth failed")
       })
-      .catch(err => renderToastError(err, "2"))
+      .catch(err => renderToastError(err))
   }
 
   const getProcedures = () => {
@@ -98,19 +98,18 @@ function ProceduresList({ user, passedService }) {
       .then(response => {
         if (response.status === 200) {
           return response.data
-        } else throw new Error("Nepovedlo se získat události.")
+        } else throw new Error("Nepovedlo se získat procedury.")
       })
       .then(data => {
         setProcedures(data)
       })
-      .catch(err => renderToastError(err, "Nepovedlo se získat události."))
+      .catch(err => renderToastError(err, "Nepovedlo se získat procedury."))
   }
 
-  const renderToastError = (err, message) => {
-    console.log(err);
+  const renderToastError = (err, message = 'Při provádění operace se objevila chyba.') => {
     setToastContent({
       header: "Error!",
-      message: message ?? `Při provádění operace se objevila chyba.`,
+      message: message,
       variant: "danger"
     })
     setShowToast(true);

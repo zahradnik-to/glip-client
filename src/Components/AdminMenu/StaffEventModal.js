@@ -12,10 +12,10 @@ StaffEventModal.propTypes = {
   onClose: PropTypes.func,
   onSubmit: PropTypes.func,
   onDelete: PropTypes.func,
-  procedures: PropTypes.array,
+  user: PropTypes.object,
 };
 
-function StaffEventModal({ isOpen, event, onClose, onSubmit, onDelete }) {
+function StaffEventModal({ isOpen, event, onClose, onSubmit, onDelete, user }) {
   const [title, setTitle] = useState("")
   const [staffNotes, setStaffNotes] = useState("")
 
@@ -51,6 +51,7 @@ function StaffEventModal({ isOpen, event, onClose, onSubmit, onDelete }) {
                   placeholder='Název'
                   defaultValue={title ?? ""}
                   onChange={event => setTitle(event.target.value)}
+                  disabled={!user.isAdmin && event.staffId !== user._id}
                   required
                 />
               </Form.Group>
@@ -78,14 +79,24 @@ function StaffEventModal({ isOpen, event, onClose, onSubmit, onDelete }) {
                   as="textarea"
                   defaultValue={staffNotes ?? ""}
                   onChange={event => setStaffNotes(event.target.value)}
+                  disabled={!user.isAdmin && event.staffId !== user._id}
                 />
               </Form.Group>
             </Modal.Body>
 
             <Modal.Footer>
-              <Button variant="danger" onClick={() => onDelete(event._id)} className={"me-4"}>Smazat</Button>
-              <Button variant="secondary" onClick={onClose}>Zrušit</Button>
-              <Button variant="primary"  type='submit'>Uložit</Button>
+              { user.isAdmin || event.staffId === user._id
+                ? <>
+                  <Button variant="danger" onClick={() => onDelete(event._id)} className={"me-4"}>Smazat</Button>
+                  <Button variant="secondary" onClick={onClose}>Zrušit</Button>
+                  <Button variant="primary" type='submit'>Uložit</Button>
+                </>
+                : <>
+                  <Button variant="danger" disabled className={"me-4"}>Nelze smazat</Button>
+                  <Button variant="secondary" onClick={onClose}>Zrušit</Button>
+                  <Button variant="primary" disabled>Uložit</Button>
+                </>
+              }
             </Modal.Footer>
           </Form>
 

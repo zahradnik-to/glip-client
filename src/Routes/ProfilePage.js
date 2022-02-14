@@ -20,7 +20,8 @@ function ProfilePage({ user }) {
   const [toastContent, setToastContent] = useState({});
 
   useEffect(() => {
-    if (user) return getRoles();
+    if (user.role !== 'user') return getRoles();
+    else setDataLoaded(true)
   }, []);
 
   if (!user) {

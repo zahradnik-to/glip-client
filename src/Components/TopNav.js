@@ -16,7 +16,7 @@ const typeOfServicesEnum = {
 
 function TopNav({ user, googleAuth, logout }) {
   const renderAdminNav = () => {
-    if (user.role === 'admin') {
+    if (user.role === 'admin' && user.isAdmin) {
       return(
         <NavDropdown title="Administrace" id="collasible-nav-dropdown">
           <NavDropdown.Item href="/kosmetika/prehled">Kosmetika</NavDropdown.Item>

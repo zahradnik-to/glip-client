@@ -67,7 +67,7 @@ function ReservationForm({ typeOfService, saveEvent, eventDate, setEventTime, us
         disabled
         required
       >
-        <option value="" disabled>Nejprve vyberte datum</option>
+        <option value="">Nejprve vyberte datum</option>
       </Form.Select>
     );
     if (freeTime === null) { return(
@@ -84,7 +84,7 @@ function ReservationForm({ typeOfService, saveEvent, eventDate, setEventTime, us
           onChange={e => setEventTime(e.target.value)}
           required
         >
-          <option value="" disabled>Vyberte čas</option>
+          <option value="">Vyberte čas</option>
           {Children.toArray(freeTime.map(time => <option key={time} value={time}>{time}</option>))}
         </Form.Select>
       )
@@ -168,7 +168,7 @@ function ReservationForm({ typeOfService, saveEvent, eventDate, setEventTime, us
           onChange={e => setProcedureId(e.target.value)}
           required
         >
-          <option value='' disabled>Vyberte službu...</option>
+          <option value=''>Vyberte službu...</option>
           {Children.toArray(procedures.map(procedure => <option key={procedure._id} value={procedure._id}>{procedure.name}</option>))}
         </Form.Select>
 

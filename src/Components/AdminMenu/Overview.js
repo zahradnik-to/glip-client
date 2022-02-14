@@ -11,9 +11,10 @@ import ToastNotification from "../ToastNotification";
 
 Overview.propTypes = {
   typeOfService: PropTypes.string.isRequired,
+  user: PropTypes.object,
 }
 
-function Overview({ typeOfService }) {
+function Overview({ typeOfService, user }) {
   const calendarRef = useRef(null);
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState({});
@@ -231,8 +232,20 @@ function Overview({ typeOfService }) {
         />
       </div>
       <ToastNotification showToast={showToast} setShowToast={setShowToast} toastContent={toastContent}/>
-      <EventModal isOpen={showEventModal} onSubmit={handleEventUpdate} event={selectedEvent} onClose={handleModalOnClose} procedures={procedures} onEventCancel={cancelEvent}/>
-      <StaffEventModal isOpen={showStaffEventModal} onSubmit={handleStaffEventUpdate} event={selectedStaffEvent} onClose={handleModalOnClose} onDelete={deleteStaffEvent}/>
+      <EventModal
+        isOpen={showEventModal}
+        onSubmit={handleEventUpdate}
+        event={selectedEvent}
+        onClose={handleModalOnClose}
+        procedures={procedures}
+        onEventCancel={cancelEvent} />
+      <StaffEventModal
+        isOpen={showStaffEventModal}
+        onSubmit={handleStaffEventUpdate}
+        event={selectedStaffEvent}
+        onClose={handleModalOnClose}
+        onDelete={deleteStaffEvent}
+        user={user} />
     </>
   )
 }
