@@ -108,7 +108,7 @@ function ProceduresList({ user, passedService }) {
 
   const renderToastError = (err, message = 'Při provádění operace se objevila chyba.') => {
     setToastContent({
-      header: "Error!",
+      header: "Chyba!",
       message: message,
       variant: "danger"
     })
@@ -131,11 +131,11 @@ function ProceduresList({ user, passedService }) {
             />
           </Form.Group>
 
-          {/* Todo make into select? */}
           <Form.Group as={Col} md={4} className='mb-2'>
             <Form.Label>Délka</Form.Label>
             <Form.Control
               type={"number"}
+              step={15}
               placeholder="Délka (minut)"
               value={duration}
               onChange={event => setDuration(event.target.value)}

@@ -58,7 +58,7 @@ function UserList() {
 
   const renderToastError = (err) => {
     setToastContent({
-      header: "Error!",
+      header: "Chyba!",
       message: `Při provádění operace se objevila chyba. ${err.toString()}`,
       variant: "danger"
     });

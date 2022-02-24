@@ -68,7 +68,7 @@ function Vacation({ typeOfService }) {
   const renderToastError = (err) => {
     console.log(err);
     setToastContent({
-      header: "Error!",
+      header: "Chyba!",
       message: `Při provádění operace se objevila chyba.`,
       variant: "danger"
     })

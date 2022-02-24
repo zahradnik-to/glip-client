@@ -23,17 +23,11 @@ function App() {
   const [user, setUser] = useState(null);
   const [loaded, setLoaded] = useState(false);
 
-  registerLocale('cs', cs)
-  setDefaultLocale('cs');
-
   useEffect(() => {
     axios.get('/auth/login/success', { withCredentials: true })
       .then(response => {
         if (response.data.success) {
-          console.log('Logged user: ', response.data.user)
           setUser(response.data.user)
-        } else {
-          console.log(response.data.message)
         }
       })
       .catch(err => console.error('getUser error: ', err))
@@ -43,8 +37,8 @@ function App() {
   }, [])
 
   const logout = async () => {
-    axios.get(`/auth/logout`)
-      .then(setUser(null))
+    await axios.get(`/auth/logout`);
+    setUser(null);
   };
 
   const googleAuth = () => {

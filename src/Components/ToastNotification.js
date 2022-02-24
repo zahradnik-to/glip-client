@@ -23,9 +23,10 @@ ToastNotification.defaultProps = {
 
 function ToastNotification({ showToast, setShowToast, toastContent }) {
   const { header, message, variant } = toastContent
+  const hideDelay = 5000;
   return (
     <ToastContainer className="p-3" position="bottom-center">
-      <Toast show={showToast} onClose={() => setShowToast(false)} bg={variant} delay={5000} autohide>
+      <Toast show={showToast} onClose={() => setShowToast(false)} bg={variant} delay={hideDelay} autohide>
         <Toast.Header>
           <strong className="me-auto">{header}</strong>
         </Toast.Header>

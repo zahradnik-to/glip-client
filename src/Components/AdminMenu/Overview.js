@@ -181,7 +181,7 @@ function Overview({ typeOfService, user }) {
 
   const renderToastError = (err) => {
     setToastContent({
-      header: "Error!",
+      header: "Chyba!",
       message: `Při provádění operace se objevila chyba. ${err.toString()}`,
       variant: "danger"
     });
@@ -225,7 +225,7 @@ function Overview({ typeOfService, user }) {
           }}
           nowIndicator={true}
           eventDurationEditable={false}
-          eventOverlap={false}
+          eventOverlap={true}
           eventConstraint={{
             startTime: new Date().toISOString()
         }}
