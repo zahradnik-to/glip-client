@@ -39,12 +39,11 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
       setNotes(event.notes)
       setProcedureId(event.procedure)
     }
-    console.log(event)
   }, [event])
 
   useEffect(() => {
     getFreeTime(startDate)
-  }, [startDate])
+  }, [startDate, onSubmit])
 
 
   const handleSubmit = (e) => {
@@ -91,7 +90,7 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
   const getFreeTime = (date) => {
     if (Object.keys(event).length){
       const dateObj = new Date(date)
-      axios.get(`/calendar/get-free-time?date=${dateObj.toISOString()}&typeOfService=${event.typeOfService}`)
+      axios.get(`/calendar/get-free-time?date=${dateObj.toISOString()}&typeOfService=${event.typeOfService}&procedureId=${event.procedureId}&eventId=${event._id}`)
         .then( freeTime => {
           setFreeTime(freeTime.data)
           setEventTime(getEventTime)

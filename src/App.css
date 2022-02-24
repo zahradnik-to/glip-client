@@ -29,16 +29,21 @@
     text-decoration: none;
 }
 
-.reservation .fc-day-past:not(#vacation .fc-day-past) ,
-.reservation .fc-event-past:not(#vacation .fc-event-past)  {
+.reservation .fc-day-past:not(#vacation .fc-day-past),
+.reservation .fc-event-past:not(#vacation .fc-event-past) {
     background-color: rgba(239, 239, 239, 0.6) !important;
     color: rgb(84, 84, 84) !important;
     border-color: rgba(118, 118, 118, 0.3) !important;
 }
 
+.reservation .fc-day-past .fc-daygrid-day-bg * {
+    background-color: transparent !important;
+}
+
 .fc-event-main {
     cursor: pointer;
 }
+/* FullCalendar end */
 
 .toast.bg-success {
     background-color: #62b062 !important;
@@ -47,4 +52,3 @@
 .toast {
     border-radius: 5px !important;
 }
-/* FullCalendar end */

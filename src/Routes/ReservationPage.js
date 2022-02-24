@@ -1,34 +1,31 @@
-import React, { useRef, useState } from "react";
+import React, { useState, } from "react";
 import PropTypes from "prop-types";
-import { Col, Row } from "react-bootstrap";
+import Row from "react-bootstrap/Row";
 import axios from "axios";
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import interactionPlugin from '@fullcalendar/interaction';
 import ReservationForm from "../Components/ReservationForm";
-import { isPast, addDays }  from 'date-fns'
 import ToastNotification from "../Components/ToastNotification";
 
 ReservationPage.propTypes = {
   typeOfService: PropTypes.string.isRequired,
-  logout: PropTypes.func.isRequired,
+  logout: PropTypes.func,
   user: PropTypes.object,
 }
 
 function ReservationPage({ typeOfService, user, logout }) {
   const [events, setEvents] = useState([]);
-  const [eventDate, setEventDate] = useState(null)
   const [eventTime, setEventTime] = useState('08:30')
   const [showToast, setShowToast] = useState(false);
   const [toastContent, setToastContent] = useState({});
-  const calendarRef = useRef(null);
 
   /* Saves event to database. Triggered by form. */
   const handleSaveEvent = (data) => {
     const time = eventTime.split(':')
+    const start = new Date(data.eventDate);
+    start.setHours(Number(time[0]), Number(time[1]));
     const dtoIn = {
-      date: new Date(eventDate).toISOString(),
-      start: eventDate.setHours(Number(time[0]), Number(time[1])),
+      date: new Date(data.eventDate).toISOString(),
+      start: start.toISOString(),
+      eventTime,
       ...data
     }
     axios.post('/calendar/create-event', dtoIn)
@@ -40,29 +37,29 @@ function ReservationPage({ typeOfService, user, logout }) {
             variant: "success"
           })
           setShowToast(true);
-        } else throw new Error('Rezervace neproběhla.')
+        } else{
+          throw new Error('Rezervace neproběhla.')
+        }
       })
-      .catch(err => renderToastError(err))
+      .catch((err) => renderToastError(err.response.data))
   }
 
-  const renderToastError = (err) => {
-    console.log(err);
+  const renderToastError = (message) => {
     setToastContent({
-      header: "Error!",
-      message: `Při provádění operace se objevila chyba.`,
+      header: "Chyba!",
+      message: message ?? `Při provádění operace se objevila chyba.`,
       variant: "danger"
     })
     setShowToast(true);
   }
 
+  // Todo get rid of this?
   const handleDatesSet = (data) => {
-    console.log("ok")
+    if (user) {
     axios.get(`/calendar/get-events?start=${data.start.toISOString()}&end=${data.end.toISOString()}&typeOfService=${typeOfService}`)
       .then( dates => setEvents(dates.data))
-      .catch( err => {
-        console.log('Getting events failed');
-        console.log(err);
-      })
+      .catch( () => renderToastError())
+    }
   }
 
   /* Forbid selecting range of more than 1 day */
@@ -74,59 +71,19 @@ function ReservationPage({ typeOfService, user, logout }) {
     return Math.floor((utc2 - utc1) / dayMilliseconds) <= 1;
   }
 
-  const handleDateClick = (event) => {
-    if (!isPast(addDays(new Date(event.date), 1))) setEventDate(event.date)
-    else {
-      const calendarApi = calendarRef.current.getApi();
-      calendarApi.unselect();
-    }
-  }
-
   return (
     <>
       <Row>
-        <Col md={8} xs={12} className='mb-3 reservation'>
-          <FullCalendar
-            ref={calendarRef}
-            events={events}
-            plugins={[interactionPlugin, dayGridPlugin]}
-            initialView='dayGridMonth'
-            datesSet={date => handleDatesSet(date)}
-            contentHeight='auto'
-            locale={'cs'}
-            firstDay={1}
-            selectable={true}
-            selectAllow={(e) => handleSelectAllow(e)}
-            dateClick={e => handleDateClick(e)}
-            unselectAuto={false}
-            weekends={false}
-            buttonText={{
-              today: 'dnes',
-              month: 'měsíc',
-              week:  'týden',
-              day:   'den',
-              list:  'list',
-            }}
-            moreLinkText={'další'}
-            dayMaxEvents={2}
-            eventTimeFormat={{
-              hour: 'numeric',
-              minute: '2-digit',
-              meridiem: false,
-              hour12: false
-            }}
-          />
-        </Col>
-        <Col md={4} xs={12}>
-          <ReservationForm
-            typeOfService={typeOfService}
-            saveEvent={handleSaveEvent}
-            setEventTime={setEventTime}
-            user={user}
-            logout={logout}
-            eventDate={eventDate}
-          />
-        </Col>
+        <ReservationForm
+          typeOfService={typeOfService}
+          saveEvent={handleSaveEvent}
+          setEventTime={setEventTime}
+          user={user}
+          logout={logout}
+          events={events}
+          handleDatesSet={handleDatesSet}
+          handleSelectAllow={handleSelectAllow}
+        />
       </Row>
       <ToastNotification showToast={showToast} setShowToast={setShowToast} toastContent={toastContent}/>
     </>
