@@ -10,9 +10,10 @@ import ToastNotification from "../Components/ToastNotification";
 
 ProfilePage.propTypes = {
   user: PropTypes.object,
+  login: PropTypes.func,
 }
 
-function ProfilePage({ user }) {
+function ProfilePage({ user, login }) {
   const [roleOptions, setRoleOptions] = useState([]);
   const [selectedRole, setSelectedRole] = useState(user.role);
   const [showToast, setShowToast] = useState(false);
@@ -20,8 +21,8 @@ function ProfilePage({ user }) {
   const [toastContent, setToastContent] = useState({});
 
   useEffect(() => {
-    if (user.role !== 'user') return getRoles();
-    else setDataLoaded(true)
+    if (user.isAdmin) return getRoles();
+    else return setDataLoaded(true)
   }, []);
 
   if (!user) {
@@ -36,6 +37,7 @@ function ProfilePage({ user }) {
         } else throw new Error("Auth failed")
       })
       .then(data => {
+        console.log("asdasd")
         setRoleOptions(data)
         setDataLoaded(true)
       })
@@ -58,6 +60,7 @@ function ProfilePage({ user }) {
             variant: "success"
           })
           setShowToast(true);
+          login();
         } else throw new Error("Role update failed.")
       })
       .catch(err => renderToastError(err))

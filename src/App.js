@@ -36,6 +36,17 @@ function App() {
       });
   }, [])
 
+  const login = () => {
+    axios.get('/auth/login/success', { withCredentials: true })
+      .then(response => {
+        if (response.data.success) {
+          setUser(response.data.user)
+        }
+      })
+      .catch(() => console.error("Auth error."))
+      .finally(() => {setLoaded(true)});
+  }
+
   const logout = async () => {
     await axios.get(`/auth/logout`);
     setUser(null);
