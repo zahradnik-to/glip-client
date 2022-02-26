@@ -20,8 +20,8 @@ function DataTable({ data, dataInfo, handleDelete, handleUpdate }) {
   const actionButtonsCell = (id) => {
     return (
       <td className={'h-100 d-flex align-items-center justify-content-around actionButtonsCell'}>
-        <div className={'h-100'} onClick={() => updateEntry(id)}>Edit</div>
-        <div className={'h-100'} onClick={() => handleDelete(id)}>Del</div>
+        <div className={'h-100 tableAction'} onClick={() => updateEntry(id)}>Edit</div>
+        <div className={'h-100 tableAction'} onClick={() => handleDelete(id)}>Del</div>
       </td>
     )
   }

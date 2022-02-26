@@ -34,6 +34,27 @@ function TopNav({ user, googleAuth, logout }) {
     return null;
   }
 
+  const renderLoginNav = () => {
+    if (!user) return (
+      <Nav.Link href='#' onClick={googleAuth}>
+        Přihlásit se pomocí Google
+      </Nav.Link> )
+
+    if (user.role === 'user') return (
+      <NavDropdown title={user.displayName} id="collasible-nav-dropdown">
+        <NavDropdown.Item href="/profil">Profil</NavDropdown.Item>
+        <NavDropdown.Item href="/objednavky/seznam">Moje objednávky</NavDropdown.Item>
+        <NavDropdown.Divider />
+        <NavDropdown.Item href="/#" onClick={logout}>Odhlásit se</NavDropdown.Item>
+      </NavDropdown> )
+    else return (
+      <NavDropdown title={user.displayName} id="collasible-nav-dropdown">
+        <NavDropdown.Item href="/profil">Profil</NavDropdown.Item>
+        <NavDropdown.Divider />
+        <NavDropdown.Item href="/#" onClick={logout}>Odhlásit se</NavDropdown.Item>
+      </NavDropdown> )
+  };
+
   return(
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
       <Container>
@@ -47,17 +68,7 @@ function TopNav({ user, googleAuth, logout }) {
             { user && user.role !== 'user' ? renderAdminNav() : <></>}
           </Nav>
           <Nav>
-            { user ? (
-              <NavDropdown title={user.displayName} id="collasible-nav-dropdown">
-                <NavDropdown.Item href="/profile">Profil</NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item href="/#" onClick={logout}>Odhlásit se</NavDropdown.Item>
-              </NavDropdown>
-              ) : (
-              <Nav.Link href='#' onClick={googleAuth}>
-                Přihlásit se pomocí Google
-              </Nav.Link>
-            )}
+            { renderLoginNav() }
           </Nav>
         </Navbar.Collapse>
       </Container>

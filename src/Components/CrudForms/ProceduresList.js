@@ -134,8 +134,11 @@ function ProceduresList({ user, passedService }) {
           <Form.Group as={Col} md={4} className='mb-2'>
             <Form.Label>Délka</Form.Label>
             <Form.Control
-              type={"number"}
+              type="number"
               step={15}
+              snap
+              min={15}
+              pattern="^[+-]?[012]?\d:[012345]?[15]$"
               placeholder="Délka (minut)"
               value={duration}
               onChange={event => setDuration(event.target.value)}

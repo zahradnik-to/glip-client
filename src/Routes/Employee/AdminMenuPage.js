@@ -6,13 +6,13 @@ import Overview from "../../Components/AdminMenu/Overview";
 import ProceduresList from "../../Components/CrudForms/ProceduresList";
 import Vacation from "../../Components/AdminMenu/Vacation";
 
-AppointmentsPage.propTypes = {
+AdminMenuPage.propTypes = {
   typeOfService: PropTypes.string.isRequired,
   page: PropTypes.string.isRequired,
   user: PropTypes.object,
 }
 
-function AppointmentsPage({ typeOfService, page, user }) {
+function AdminMenuPage({ typeOfService, page, user }) {
 
   if (!user) {
     return <HomePage/>
@@ -56,4 +56,4 @@ function AppointmentsPage({ typeOfService, page, user }) {
   )
 }
 
-export default AppointmentsPage
+export default AdminMenuPage

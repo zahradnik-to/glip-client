@@ -53,13 +53,10 @@ function ReservationPage({ typeOfService, user, logout }) {
     setShowToast(true);
   }
 
-  // Todo get rid of this?
   const handleDatesSet = (data) => {
-    if (user) {
-    axios.get(`/calendar/get-events?start=${data.start.toISOString()}&end=${data.end.toISOString()}&typeOfService=${typeOfService}`)
+    axios.get(`/calendar/get-bg-events?start=${data.start.toISOString()}&end=${data.end.toISOString()}&typeOfService=${typeOfService}`)
       .then( dates => setEvents(dates.data))
       .catch( () => renderToastError())
-    }
   }
 
   /* Forbid selecting range of more than 1 day */

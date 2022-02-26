@@ -16,7 +16,8 @@
     color: #212529;
 }
 
-.timePickerEntry {
+.timePickerEntry,
+.tableAction {
     cursor: pointer;
 }
 
