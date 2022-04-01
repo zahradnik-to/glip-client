@@ -31,6 +31,7 @@ function ReservationForm({ typeOfService, saveEvent, setEventTime, user, logout,
   const calendarRef = useRef(null);
   const [procedureId, setProcedureId] = useState('');
   const [eventDate, setEventDate] = useState(null)
+  const [eventEndTime, setEventEndTime] = useState('')
   const [extraDuration, setExtraDuration] = useState(0); // Todo Extra duration added by checking checkboxes
   const [email, setEmail] = useState('');
   const [notes, setNotes] = useState('');
@@ -73,8 +74,7 @@ function ReservationForm({ typeOfService, saveEvent, setEventTime, user, logout,
     if (!eventDate || !procedureId) return (
       <Form.Select
         name='eventTime'
-        onChange={e => setEventTime(e.target.value)}
-        disabled
+        onChange={e => handleSetEventTime(e.target.value)}
         required
       >
         <option value="">Nejprve vyberte službu a datum</option>
@@ -83,8 +83,7 @@ function ReservationForm({ typeOfService, saveEvent, setEventTime, user, logout,
     if (!eventDate) return (
       <Form.Select
         name='eventTime'
-        onChange={e => setEventTime(e.target.value)}
-        disabled
+        onChange={e => handleSetEventTime(e.target.value)}
         required
       >
         <option value="">Nyní vyberte datum</option>
@@ -100,7 +99,7 @@ function ReservationForm({ typeOfService, saveEvent, setEventTime, user, logout,
     if (freeTime && freeTime.length) {return (
       <Form.Select
         name='eventTime'
-        onChange={e => setEventTime(e.target.value)}
+        onChange={e => handleSetEventTime(e.target.value)}
         required
       >
         <option value="">Vyberte čas</option>
@@ -169,12 +168,30 @@ function ReservationForm({ typeOfService, saveEvent, setEventTime, user, logout,
   }
 
   const handleDateClick = (event) => {
-    console.log(event.date)
-    if (!isPast(addDays(new Date(event.date), 1))) setEventDate(event.date)
-    else {
-      const calendarApi = calendarRef.current.getApi();
-      calendarApi.unselect();
+    if (!isPast(addDays(new Date(event.date), 1))){
+      setEventDate(event.date)
+      setEventEndTime("--:--")
+      return;
     }
+    // If in past, unselect
+    const calendarApi = calendarRef.current.getApi();
+    calendarApi.unselect();
+  }
+
+  const handleSetEventTime = (timeValue) => {
+    setEventTime(timeValue);
+    getEndTime(timeValue);
+  }
+
+  const getEndTime = (timeStartValue) => {
+    const startTime = timeStartValue.split(':').map(e => parseInt(e));
+    let duration = procedures.find(e => e._id === procedureId)?.duration;
+
+    const doubleDigit = (time) => ("0" + time).slice(-2);
+    const endHours = doubleDigit(startTime[0] + Math.floor(duration / 60));
+    const endMins = doubleDigit(startTime[1] + ((duration % 60) * 60));
+
+    setEventEndTime(`${endHours}:${endMins}`)
   }
 
   return (
@@ -191,7 +208,7 @@ function ReservationForm({ typeOfService, saveEvent, setEventTime, user, logout,
             >
               <option value=''>Vyberte službu...</option>
               {Children.toArray(procedures
-                .map(procedure => <option key={procedure._id} value={procedure._id}>{procedure.name}</option>))}
+                .map(procedure => <option key={procedure._id} value={procedure._id}>{procedure.name} ({procedure.duration} minut)</option>))}
             </Form.Select>
           </Form.Group>
         </Col>
@@ -229,16 +246,23 @@ function ReservationForm({ typeOfService, saveEvent, setEventTime, user, logout,
           />
         </Col>
         <Col md={4} sm={12} className='mb-3 reservation'>
-          <br/>
-          <br/>
+          <h4 className="mt-5">Čas</h4>
           <Form.Group className='mb-2'>
-            <Form.Label>Čas</Form.Label>
+            <Form.Label>Začátek</Form.Label>
             {renderFreeTime()}
           </Form.Group>
-          <br/>
-          <br/>
-          <br/>
-          <h1 className="h2 fst-italic">3. Doplňte informace</h1>
+          <Form.Group className='mb-2'>
+            <Form.Label>Konec</Form.Label>
+            <Form.Control
+              type='text'
+              value={eventEndTime}
+              placeholder='--:--'
+              readOnly
+              disabled
+            />
+          </Form.Group>
+
+          <h1 className="h2 fst-italic mt-5">3. Doplňte informace</h1>
           {renderCustomerDataInputs()}
 
           { user ? <>
