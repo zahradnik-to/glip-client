@@ -41,7 +41,7 @@ function ReservationPage({ typeOfService, user, logout }) {
           throw new Error('Rezervace neproběhla.')
         }
       })
-      .catch((err) => renderToastError(err.response.data))
+      .catch((err) => renderToastError(err.response.data.message))
   }
 
   const renderToastError = (message) => {
