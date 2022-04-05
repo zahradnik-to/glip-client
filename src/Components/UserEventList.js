@@ -86,11 +86,11 @@ function UserEventList({ openEventModal, update, setUpdate }) {
         <Table bordered hover responsive="md" size="sm">
           <thead>
           <tr>
-            <th>Den</th>
+            <th>Den 📅</th>
             <th>Začátek</th>
             <th>Konec</th>
             <th>Úkon</th>
-            <th>Detail</th>
+            <th>Akce</th>
           </tr>
           </thead>
           <tbody>
@@ -111,7 +111,7 @@ function UserEventList({ openEventModal, update, setUpdate }) {
               }) }</td>
               <td>{ e.procedureName }</td>
               <td>
-                <span className={'h-100 me-md-3 tableAction'} onClick={() => openEventModal(e)}>🔎</span>
+                <span className={'h-100 me-md-3 tableAction'} onClick={() => openEventModal(e)}>Detail🖊</span>
               </td>
             </tr>
           ))}

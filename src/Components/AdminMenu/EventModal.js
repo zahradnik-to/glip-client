@@ -6,8 +6,9 @@ import PropTypes from 'prop-types';
 import Spinner from 'react-bootstrap/Spinner';
 import axios from 'axios';
 import DatePicker from "react-datepicker";
-import { isPast }  from 'date-fns'
-import isSameDay from 'date-fns/isSameDay'
+import { isPast }  from 'date-fns';
+import isSameDay from 'date-fns/isSameDay';
+import PhoneInput from 'react-phone-input-2';
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -27,6 +28,7 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
   const [eventTime, setEventTime] = useState('00:00')
   const [oldEventTime, setOldEventTime] = useState('11:11')
   const [procedureId, setProcedureId] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const [freeTime, setFreeTime] = useState([]);
 
@@ -53,6 +55,7 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
       title,
       procedureId,
       staffNotes,
+      phoneNumber,
       dateTimeChange: false,
     }
     if (!isSelectedDateSameAsOriginal() || getEventTime() !== eventTime) {
@@ -152,11 +155,18 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
               </Form.Group>
 
               <Form.Group className='mb-2'>
-                <Form.Label>Telefon</Form.Label>
-                <Form.Control
-                  placeholder='Telefon'
-                  value={event.phone ?? ""}
-                  disabled
+                <Form.Label>Telefonní číslo</Form.Label>
+                <PhoneInput
+                  country={'cz'}
+                  onlyCountries={['cz']}
+                  placeholder={"+420 123 123 123"}
+                  countryCodeEditable={false}
+                  onChange={phone => setPhoneNumber(phone)}
+                  value={event.phoneNumber}
+                  inputProps={{
+                    name: 'phone',
+                    required: true,
+                  }}
                 />
               </Form.Group>
 

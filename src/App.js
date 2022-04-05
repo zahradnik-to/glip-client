@@ -3,6 +3,8 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
+import 'react-phone-input-2/lib/high-res.css'
+import 'react-phone-input-2/lib/bootstrap.css'
 import "react-datepicker/dist/react-datepicker.css";
 import HomePage from "./Routes/HomePage";
 import { Container } from "react-bootstrap";

@@ -7,6 +7,10 @@
     text-decoration: underline;
 }
 
+.react-tel-input .form-control {
+    width: 100% !important;
+}
+
 /* FullCalendar start */
 .fc a {
     color: #212529;
@@ -52,4 +56,5 @@
 
 .toast {
     border-radius: 5px !important;
+    z-index: 9999;
 }

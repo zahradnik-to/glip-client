@@ -84,7 +84,7 @@ function ProceduresList({ user, passedService }) {
           setToastContent({
             header: "Upraveno!",
             message: `Položka byla upravena.`,
-            variant: "light"
+            variant: "success"
           })
           setShowToast(true);
           return response.data

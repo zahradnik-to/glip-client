@@ -1,4 +1,4 @@
-import React, { useState, useRef, Children } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
 import ToastNotification from "../Components/ToastNotification";
@@ -23,7 +23,6 @@ function UserOverviewPage({ user, page }) {
   if(!user) return <HomePage />
 
   const openEventModal = (event) => {
-    console.log(event)
     const procedureName = event.procedureName
     axios.get(`/calendar/get-event?_id=${event._id}`)
       .then( foundEvent => setSelectedEvent({ ...foundEvent.data, procedureName }))
@@ -42,7 +41,7 @@ function UserOverviewPage({ user, page }) {
           setToastContent({
             header: "Upraveno!",
             message: `Položka byla upravena.`,
-            variant: "light"
+            variant: "success"
           })
           setShowToast(true);
           return response.data

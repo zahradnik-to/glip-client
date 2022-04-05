@@ -1,13 +1,12 @@
-import React, { Children, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import PropTypes from 'prop-types';
 import Spinner from 'react-bootstrap/Spinner';
-import axios from 'axios';
 import DatePicker from "react-datepicker";
 import { isPast, subHours } from 'date-fns';
-import isSameDay from 'date-fns/isSameDay';
+import PhoneInput from 'react-phone-input-2';
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -18,12 +17,11 @@ UserEventModal.propTypes = {
   onSubmit: PropTypes.func,
   onEventCancel: PropTypes.func,
   procedures: PropTypes.array,
-  setUpdate: PropTypes.func.isRequired,
-  update: PropTypes.bool.isRequired,
 };
 
-function UserEventModal({ isOpen, event, onClose, onSubmit, onEventCancel, update, setUpdate  }) {
+function UserEventModal({ isOpen, event, onClose, onSubmit, onEventCancel }) {
   const [notes, setNotes] = useState("")
+  const [phoneNumber, setPhoneNumber] = useState("")
   const [oldEventTime, setOldEventTime] = useState('11:11')
   const [startDate, setStartDate] = useState(new Date());
 
@@ -39,6 +37,7 @@ function UserEventModal({ isOpen, event, onClose, onSubmit, onEventCancel, updat
     e.preventDefault();
     const modifiedEvent = {
       _id: event._id,
+      phoneNumber,
       notes,
     }
     onSubmit(modifiedEvent);
@@ -64,13 +63,16 @@ function UserEventModal({ isOpen, event, onClose, onSubmit, onEventCancel, updat
     return ("0" + time).slice(-2);
   }
 
-  const isEventInPast = ()=> {
-    return isPast(new Date(event.start));
+  const isEditAllowed = () => {
+    // Returns true if its >24h before start
+    const prevDay = subHours(new Date(event.start), 24)
+    return (!isPast(prevDay))
   }
 
-  const canBeCanceled = ()=> {
-    const prevDay = subHours(new Date(event.start), 24)
-    return !isEventInPast || isPast(prevDay);
+  const renderCancelButton = ()=> {
+    if (event.canceled) return (<Button variant="danger" disabled className={"me-4"}>Stornováno!</Button>)
+    if (isEditAllowed()) return(<Button variant="danger" onClick={handleEventCancel} className={"me-4"}>Stornovat</Button>)
+    return(<Button variant="danger" disabled className={"me-4"}>Nelze stornovat</Button>)
   }
 
   return (
@@ -100,6 +102,23 @@ function UserEventModal({ isOpen, event, onClose, onSubmit, onEventCancel, updat
                   value={event.email}
                   readOnly={true}
                   disabled
+                />
+              </Form.Group>
+
+              <Form.Group className='mb-2'>
+                <Form.Label>Telefonní číslo</Form.Label>
+                <PhoneInput
+                  country={'cz'}
+                  onlyCountries={['cz']}
+                  placeholder={"+420 123 123 123"}
+                  countryCodeEditable={false}
+                  onChange={phone => setPhoneNumber(phone)}
+                  value={event.phoneNumber}
+                  disabled={!isEditAllowed()}
+                  inputProps={{
+                    name: 'phone',
+                    required: true,
+                  }}
                 />
               </Form.Group>
 
@@ -148,15 +167,16 @@ function UserEventModal({ isOpen, event, onClose, onSubmit, onEventCancel, updat
               </Form.Group>
 
               <div className="text-center">
-                <span className="text-muted text-center">Pro další změny objednávky kontaktujte náš personál nebo vytvořte novou objednávku.</span>
+                <span className="text-muted text-center">Objednávku lze stornovat nejpozději 24h před začátkem.</span>
+              </div>
+              <div className="text-center">
+                <span className="text-muted text-center">Pro úpravu objednávky kontaktujte náš personál nebo vytvořte novou objednávku.</span>
               </div>
             </Modal.Body>
             <Modal.Footer>
-              { !canBeCanceled()
-                ?<Button variant="danger" onClick={handleEventCancel} className={"me-4"}>Stornovat</Button>
-                : <></>
-              }
-              <Button variant="secondary" onClick={onClose}>Zrušit</Button>
+              { renderCancelButton() }
+              <Button variant="secondary" onClick={onClose}>Zpět</Button>
+
               <Button variant="primary"  type='submit'>Uložit</Button>
             </Modal.Footer>
           </Form>

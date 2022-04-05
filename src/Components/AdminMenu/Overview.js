@@ -90,7 +90,7 @@ function Overview({ typeOfService, user }) {
           setToastContent({
             header: "Upraveno!",
             message: `Položka byla upravena.`,
-            variant: "light"
+            variant: "success"
           })
           setShowToast(true);
           getEvents();
@@ -110,7 +110,7 @@ function Overview({ typeOfService, user }) {
           setToastContent({
             header: "Upraveno!",
             message: `Položka byla upravena.`,
-            variant: "light"
+            variant: "success"
           })
           setShowToast(true);
           getEvents();

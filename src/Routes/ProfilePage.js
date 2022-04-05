@@ -15,13 +15,13 @@ ProfilePage.propTypes = {
 
 function ProfilePage({ user, login }) {
   const [roleOptions, setRoleOptions] = useState([]);
-  const [selectedRole, setSelectedRole] = useState(user.role);
+  const [selectedRole, setSelectedRole] = useState(user?.role);
   const [showToast, setShowToast] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [toastContent, setToastContent] = useState({});
 
   useEffect(() => {
-    if (user.isAdmin) return getRoles();
+    if (user?.isAdmin) return getRoles();
     else return setDataLoaded(true)
   }, []);
 
@@ -37,7 +37,6 @@ function ProfilePage({ user, login }) {
         } else throw new Error("Auth failed")
       })
       .then(data => {
-        console.log("asdasd")
         setRoleOptions(data)
         setDataLoaded(true)
       })

@@ -88,12 +88,12 @@ function StaffEventModal({ isOpen, event, onClose, onSubmit, onDelete, user }) {
               { user.isAdmin || event.staffId === user._id
                 ? <>
                   <Button variant="danger" onClick={() => onDelete(event._id)} className={"me-4"}>Smazat</Button>
-                  <Button variant="secondary" onClick={onClose}>Zrušit</Button>
+                  <Button variant="secondary" onClick={onClose}>Zpět</Button>
                   <Button variant="primary" type='submit'>Uložit</Button>
                 </>
                 : <>
                   <Button variant="danger" disabled className={"me-4"}>Nelze smazat</Button>
-                  <Button variant="secondary" onClick={onClose}>Zrušit</Button>
+                  <Button variant="secondary" onClick={onClose}>Zpět</Button>
                   <Button variant="primary" disabled>Uložit</Button>
                 </>
               }

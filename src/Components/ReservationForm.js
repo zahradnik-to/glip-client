@@ -10,6 +10,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from '@fullcalendar/interaction';
 import Spinner from 'react-bootstrap/Spinner';
 import { isPast, addDays }  from 'date-fns'
+import PhoneInput from 'react-phone-input-2'
 
 ReservationForm.propTypes = {
   typeOfService: PropTypes.string.isRequired,
@@ -36,6 +37,7 @@ function ReservationForm({ typeOfService, saveEvent, setEventTime, user, logout,
   const [email, setEmail] = useState('');
   const [notes, setNotes] = useState('');
   const [lastname, setLastname] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [procedures, setProcedures] = useState([]);
   const [freeTime, setSetFreeTime] = useState(null);
 
@@ -115,6 +117,7 @@ function ReservationForm({ typeOfService, saveEvent, setEventTime, user, logout,
     saveEvent({
       email,
       lastname,
+      phoneNumber,
       procedureId,
       typeOfService,
       notes,
@@ -124,6 +127,7 @@ function ReservationForm({ typeOfService, saveEvent, setEventTime, user, logout,
     calendarApi.unselect();
 
     setEventTime("");
+    setEventEndTime("--:--");
     setEventDate(null)
   }
 
@@ -154,6 +158,23 @@ function ReservationForm({ typeOfService, saveEvent, setEventTime, user, logout,
             required={!user}
           />
         </Form.Group>
+
+        <Form.Group className='mb-2'>
+          <Form.Label>Telefonní číslo</Form.Label>
+          <PhoneInput
+            country={'cz'}
+            onlyCountries={['cz']}
+            placeholder={"+420 123 123 123"}
+            countryCodeEditable={false}
+            value={phoneNumber}
+            onChange={phone => setPhoneNumber(phone)}
+            inputProps={{
+              name: 'phone',
+              required: true,
+            }}
+          />
+        </Form.Group>
+
         <Form.Group className='mb-4'>
           <Form.Label>Poznámka k objednávce</Form.Label>
           <Form.Control
