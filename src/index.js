@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import "react-datepicker/dist/react-datepicker.css";
 import '@fortawesome/fontawesome-free/css/all.css'; // needs additional webpack config!
 import 'bootstrap/dist/css/bootstrap.css';
 ReactDOM.render(

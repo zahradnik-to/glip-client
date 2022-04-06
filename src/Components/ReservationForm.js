@@ -9,8 +9,8 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from '@fullcalendar/interaction';
 import Spinner from 'react-bootstrap/Spinner';
-import { isPast, addDays }  from 'date-fns'
-import PhoneInput from 'react-phone-input-2'
+import { isPast, addDays }  from 'date-fns';
+import InputGroup from "react-bootstrap/InputGroup";
 
 ReservationForm.propTypes = {
   typeOfService: PropTypes.string.isRequired,
@@ -117,7 +117,7 @@ function ReservationForm({ typeOfService, saveEvent, setEventTime, user, logout,
     saveEvent({
       email,
       lastname,
-      phoneNumber,
+      phoneNumber: `420${phoneNumber}`,
       procedureId,
       typeOfService,
       notes,

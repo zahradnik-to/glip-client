@@ -8,7 +8,7 @@ import axios from 'axios';
 import DatePicker from "react-datepicker";
 import { isPast }  from 'date-fns';
 import isSameDay from 'date-fns/isSameDay';
-import PhoneInput from 'react-phone-input-2';
+import InputGroup from "react-bootstrap/InputGroup";
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -55,7 +55,7 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
       title,
       procedureId,
       staffNotes,
-      phoneNumber,
+      phoneNumber: `420${phoneNumber}`,
       dateTimeChange: false,
     }
     if (!isSelectedDateSameAsOriginal() || getEventTime() !== eventTime) {
@@ -156,18 +156,19 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
 
               <Form.Group className='mb-2'>
                 <Form.Label>Telefonní číslo</Form.Label>
-                <PhoneInput
-                  country={'cz'}
-                  onlyCountries={['cz']}
-                  placeholder={"+420 123 123 123"}
-                  countryCodeEditable={false}
-                  onChange={phone => setPhoneNumber(phone)}
-                  value={event.phoneNumber}
-                  inputProps={{
-                    name: 'phone',
-                    required: true,
-                  }}
-                />
+                <InputGroup>
+                  <InputGroup.Text>+420</InputGroup.Text>
+                  <Form.Control
+                    type="tel"
+                    placeholder='111222333'
+                    pattern="^\b\d{9}\b$"
+                    minLength={9}
+                    maxLength={9}
+                    defaultValue={event.phoneNumber.split("420")[1]}
+                    onChange={event => setPhoneNumber(event.target.value)}
+                    required={true}
+                  />
+                </InputGroup>
               </Form.Group>
 
               <Form.Group className='mb-2'>

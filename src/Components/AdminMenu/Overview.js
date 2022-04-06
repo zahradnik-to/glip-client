@@ -44,11 +44,9 @@ function Overview({ typeOfService, user }) {
   const getEvents = () => {
     axios.get(`/calendar/get-events?start=${datesStart.toISOString()}&end=${datesEnd.toISOString()}&typeOfService=${typeOfService}`)
       .then( dates => {
-        console.log(dates.data)
         setEvents(dates.data)
       })
       .catch( err => {
-        console.log('Getting events failed');
         console.log(err);
       })
   }
