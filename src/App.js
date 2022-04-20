@@ -15,24 +15,14 @@ import AdminMenuPage from './Routes/Employee/AdminMenuPage';
 import DataEditPage from './Routes/Employee/DataEditPage';
 import UserList from "./Components/CrudForms/UserList";
 import Spinner from 'react-bootstrap/Spinner';
-import { registerLocale, setDefaultLocale } from  "react-datepicker";
-import cs from 'date-fns/locale/cs';
+import UserOverviewPage from "./Routes/UserOverviewPage";
 
 function App() {
   const [user, setUser] = useState(null);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    axios.get('/auth/login/success', { withCredentials: true })
-      .then(response => {
-        if (response.data.success) {
-          setUser(response.data.user)
-        }
-      })
-      .catch(err => console.error('getUser error: ', err))
-      .finally(() => {
-        setLoaded(true)
-      });
+    login()
   }, [])
 
   const login = () => {

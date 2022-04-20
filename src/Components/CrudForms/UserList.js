@@ -50,13 +50,12 @@ function UserList() {
       })
       .then(data => {
         setRoleOptions(data)
-        console.log("Got roles")
-        loadedData()
+        setDataLoaded(true);
       })
       .catch(err => renderToastError(err))
   }
 
-  const renderToastError = (err) => {
+  const renderToastError = (err = "") => {
     setToastContent({
       header: "Chyba!",
       message: `Při provádění operace se objevila chyba. ${err.toString()}`,
@@ -117,12 +116,6 @@ function UserList() {
    getUsers();
    getRoles();
   }, []);
-
-  const loadedData = () => {
-    setDataLoaded(true);
-    console.log('data loaded')
-  }
-
 
   return (
     <>

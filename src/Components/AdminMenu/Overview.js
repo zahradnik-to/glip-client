@@ -201,8 +201,8 @@ function Overview({ typeOfService, user }) {
           selectable={false}
           unselectAuto={false}
           firstDay={1}
-          slotMinTime="06:00:00"
-          slotMaxTime="20:00:00"
+          slotMinTime="07:00:00"
+          slotMaxTime="17:00:00"
           allDayText='Celý den'
           buttonText={{
             today: 'dnes',
@@ -214,7 +214,7 @@ function Overview({ typeOfService, user }) {
           businessHours={{
             daysOfWeek: [ 1, 2, 3, 4, 5 ],
             startTime: '07:00',
-            endTime: '20:00',
+            endTime: '17:00',
           }}
           headerToolbar={{
             left: 'prev,next today',

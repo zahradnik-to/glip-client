@@ -108,7 +108,14 @@ function ReservationForm({ typeOfService, saveEvent, setEventTime, user, logout,
         {Children.toArray(freeTime.map(time => <option key={time} value={time}>{time}</option>))}
       </Form.Select>)
     } else {
-      return (<><br/><span>Žádné termíny.</span></>);
+      return (
+        <Form.Control
+          type='text'
+          value={"Žádné volné termíny"}
+          readOnly={true}
+          disabled={true}
+        />
+      );
     }
   }
 
@@ -161,18 +168,19 @@ function ReservationForm({ typeOfService, saveEvent, setEventTime, user, logout,
 
         <Form.Group className='mb-2'>
           <Form.Label>Telefonní číslo</Form.Label>
-          <PhoneInput
-            country={'cz'}
-            onlyCountries={['cz']}
-            placeholder={"+420 123 123 123"}
-            countryCodeEditable={false}
-            value={phoneNumber}
-            onChange={phone => setPhoneNumber(phone)}
-            inputProps={{
-              name: 'phone',
-              required: true,
-            }}
-          />
+            <InputGroup>
+            <InputGroup.Text>+420</InputGroup.Text>
+            <Form.Control
+              type="tel"
+              placeholder='111222333'
+              pattern="^\b\d{9}\b$"
+              minLength={9}
+              maxLength={9}
+              value={phoneNumber}
+              onChange={event => setPhoneNumber(event.target.value)}
+              required={true}
+            />
+          </InputGroup>
         </Form.Group>
 
         <Form.Group className='mb-4'>
@@ -227,7 +235,7 @@ function ReservationForm({ typeOfService, saveEvent, setEventTime, user, logout,
               onChange={e => setProcedureId(e.target.value)}
               required
             >
-              <option value=''>Vyberte službu...</option>
+              <option value=''>Vyberte službu</option>
               {Children.toArray(procedures
                 .map(procedure => <option key={procedure._id} value={procedure._id}>{procedure.name} ({procedure.duration} minut)</option>))}
             </Form.Select>

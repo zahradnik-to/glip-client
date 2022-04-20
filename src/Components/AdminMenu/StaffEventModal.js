@@ -38,7 +38,7 @@ function StaffEventModal({ isOpen, event, onClose, onSubmit, onDelete, user }) {
   return (
     <Modal show={isOpen} onHide={onClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Objednávka</Modal.Title>
+        <Modal.Title>Událost</Modal.Title>
       </Modal.Header>
 
       { Object.keys(event).length !== 0
