@@ -11,12 +11,13 @@ LinkBanner.propTypes = {
 
 function LinkBanner({ hrefLink, title }) {
   return (
-    <Row>
-      <Col sm={12} style={{ height: "4em" }}
-           className="d-flex justify-content-center align-items-center">
-        <Link to={hrefLink}>{title}</Link>
-      </Col>
-    </Row>
+    <Link to={hrefLink} className={"link-banner-wrapper d-block justify-content-center align-items-center mb-2"}>
+      <div className={"link-banner d-flex justify-content-center align-items-center"}>
+        <span className={"link-banner-title"}>
+          {title}
+        </span>
+      </div>
+    </Link>
   )
 }
 

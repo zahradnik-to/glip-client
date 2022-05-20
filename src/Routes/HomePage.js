@@ -1,17 +1,27 @@
-import React from "react";
+import React, { Children } from "react";
 import LinkBanner from "../Components/LinkBanner";
-import { Container } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
+import PropTypes from "prop-types";
 
-function HomePage() {
+
+HomePage.propTypes = {
+  services: PropTypes.array,
+}
+
+function HomePage({ services }) {
 
   return (
     <>
-      <Container className="pt-5">
-        <h1 className="text-center mt-3">OBJEDNÁVKY</h1>
-        <LinkBanner title="KOSMETIKA" hrefLink="/kosmetika"/>
-        <LinkBanner title="KADERNICTV" hrefLink="/kadernictvi"/>
-        <LinkBanner title="MASÁŽE" hrefLink="/masaze"/>
-      </Container>
+      <Row className="pt-5">
+        <Col>
+          <h1 className="text-center mt-3">OBJEDNÁVKY</h1>
+          <div className={"d-flex flex-column align-items-center"}>
+            {Children.toArray(services.map(service =>
+              <LinkBanner title={service.displayName} key={service._id + "-hp"} hrefLink={"/" + service.name}/>))
+            }
+          </div>
+        </Col>
+      </Row>
     </>
   )
 }

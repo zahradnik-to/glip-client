@@ -58,3 +58,21 @@
     border-radius: 5px !important;
     z-index: 9999;
 }
+
+.link-banner-wrapper {
+    border: 1px black solid;
+    min-width: 40%;
+    text-align: center;
+    text-decoration: none;
+}
+
+.link-banner {
+    min-height: 64px;
+    min-width: 180px;
+}
+
+.link-banner-title {
+    color: black;
+    font-family: Calibri, sans-serif;
+    font-size: 2em;
+}
