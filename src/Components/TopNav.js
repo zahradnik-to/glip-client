@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Children } from "react";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import PropTypes from "prop-types";
 
@@ -6,6 +6,7 @@ TopNav.propTypes = {
   user: PropTypes.object,
   googleAuth: PropTypes.func,
   logout: PropTypes.func,
+  services: PropTypes.array,
 }
 
 const typeOfServicesEnum = {
@@ -14,14 +15,14 @@ const typeOfServicesEnum = {
   cosmetics: "kosmetika",
 }
 
-function TopNav({ user, googleAuth, logout }) {
+function TopNav({ user, googleAuth, logout, services }) {
   const renderAdminNav = () => {
     if (user.role === 'admin' && user.isAdmin) {
       return(
         <NavDropdown title="Administrace" id="collasible-nav-dropdown">
-          <NavDropdown.Item href="/kosmetika/prehled">Kosmetika</NavDropdown.Item>
-          <NavDropdown.Item href="/kadernictvi/prehled">Kadeřnictví</NavDropdown.Item>
-          <NavDropdown.Item href="/masaze/prehled">Masáže</NavDropdown.Item>
+          {Children.toArray(services.map(service =>
+            <NavDropdown.Item href={"/" + service.name + "/prehled"} key={service._id + "-admNav"}>{service.displayName}</NavDropdown.Item>))
+          }
           <NavDropdown.Divider />
           <NavDropdown.Item href="/admin/uzivatele">Uživatelé</NavDropdown.Item>
         </NavDropdown>
@@ -62,9 +63,9 @@ function TopNav({ user, googleAuth, logout }) {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="/kosmetika">Kosmetika</Nav.Link>
-            <Nav.Link href="/kadernictvi">Kadeřnictví</Nav.Link>
-            <Nav.Link href="/masaze">Masáže</Nav.Link>
+            {Children.toArray(services.map(service =>
+              <Nav.Link href={"/" + service.name} key={service._id}>{service.displayName}</Nav.Link>))
+            }
             { user && user.role !== 'user' ? renderAdminNav() : <></>}
           </Nav>
           <Nav>
