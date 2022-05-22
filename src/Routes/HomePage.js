@@ -3,7 +3,6 @@ import LinkBanner from "../Components/LinkBanner";
 import { Row, Col } from "react-bootstrap";
 import PropTypes from "prop-types";
 
-
 HomePage.propTypes = {
   services: PropTypes.array,
 }

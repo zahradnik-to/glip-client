@@ -1,7 +1,7 @@
 import {
   BrowserRouter as Router,
   Routes,
-  Route,
+  Route, Link,
 } from "react-router-dom";
 import HomePage from "./Routes/HomePage";
 import { Container } from "react-bootstrap";
@@ -54,10 +54,9 @@ function App() {
   }
 
   if (loaded) return (
-    <>
-      <TopNav user={user} googleAuth={googleAuth} logout={logout} services={services}/>
-      <Container className="pt-5">
-        <Router>
+      <Router>
+        <TopNav user={user} googleAuth={googleAuth} logout={logout} services={services}/>
+        <Container className="pt-5">
           <Routes>
             <Route path='/' element={<HomePage services={services}/>}/>
             <Route path='/profil' element={<ProfilePage user={user} login={login}/>}/>
@@ -76,9 +75,8 @@ function App() {
               </>))
             }
           </Routes>
-        </Router>
-      </Container>
-    </>
+        </Container>
+      </Router>
   );
   else return(
     <Spinner animation="border" role="status">

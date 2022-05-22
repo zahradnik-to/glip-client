@@ -1,4 +1,5 @@
 import React, { Children } from "react";
+import { Link } from "react-router-dom";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import PropTypes from "prop-types";
 
@@ -7,12 +8,6 @@ TopNav.propTypes = {
   googleAuth: PropTypes.func,
   logout: PropTypes.func,
   services: PropTypes.array,
-}
-
-const typeOfServicesEnum = {
-  hair: "kadernictvi",
-  massage: "masaze",
-  cosmetics: "kosmetika",
 }
 
 function TopNav({ user, googleAuth, logout, services }) {
@@ -27,12 +22,13 @@ function TopNav({ user, googleAuth, logout, services }) {
           <NavDropdown.Item href="/admin/uzivatele">Uživatelé</NavDropdown.Item>
         </NavDropdown>
       )
-    } else if (Object.keys(typeOfServicesEnum).includes(user.role)) {
+    } else {
+      const service = services.find(s => s.name === user?.role);
+      if (!service) return null;
       return (
-        <Nav.Link href={`/${typeOfServicesEnum[user.role]}/prehled`}>Administrace</Nav.Link>
+        <Nav.Link as={Link} to={`/${service.name}/prehled`}>{service.displayName}</Nav.Link>
       )
     }
-    return null;
   }
 
   const renderLoginNav = () => {
@@ -50,21 +46,22 @@ function TopNav({ user, googleAuth, logout, services }) {
       </NavDropdown> )
     else return (
       <NavDropdown title={user.displayName} id="collasible-nav-dropdown">
-        <NavDropdown.Item href="/profil">Profil</NavDropdown.Item>
+        <NavDropdown.Item as={Link} to="/profil">Profil</NavDropdown.Item>
         <NavDropdown.Divider />
-        <NavDropdown.Item href="/#" onClick={logout}>Odhlásit se</NavDropdown.Item>
+        <NavDropdown.Item as={Link} to="/" onClick={logout}>Odhlásit se</NavDropdown.Item>
       </NavDropdown> )
   };
 
   return(
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
       <Container>
-        <Navbar.Brand href="/">Salon GLIP</Navbar.Brand>
+        <Navbar.Brand as={Link} to="/">Salon GLIP</Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
             {Children.toArray(services.map(service =>
-              <Nav.Link href={"/" + service.name} key={service._id}>{service.displayName}</Nav.Link>))
+              <Nav.Link as={Link} to={"/" + service.name} key={service._id}>{service.displayName}</Nav.Link>
+              ))
             }
             { user && user.role !== 'user' ? renderAdminNav() : <></>}
           </Nav>
