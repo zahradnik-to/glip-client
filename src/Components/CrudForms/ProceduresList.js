@@ -136,7 +136,7 @@ function ProceduresList({ user, passedService }) {
             <Form.Control
               type="number"
               step={15}
-              snap
+              snap={"true"}
               min={15}
               pattern="^[+-]?[012]?\d:[012345]?[15]$"
               placeholder="Délka (minut)"

@@ -1,8 +1,4 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route, Link,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./Routes/HomePage";
 import { Container } from "react-bootstrap";
 import React, { useEffect, useState, Children } from "react";
@@ -67,11 +63,11 @@ function App() {
 
             {Children.toArray(services.map(service =>
               <>
-                <Route path={"/" + service.name} element={<ReservationPage typeOfService={service.name} user={user} logout={logout}/>}/>
+                <Route path={`/${service.name}`} element={<ReservationPage typeOfService={service.name} user={user} logout={logout}/>}/>
                 {/* Administration */}
-                <Route path={service.name + "/prehled"} element={<AdminMenuPage typeOfService={service.name} page={'prehled'} user={user}/>}/>
-                <Route path={service.name + "/dovolena"} element={<AdminMenuPage typeOfService={service.name} page={'dovolena'} user={user}/>}/>
-                <Route path={service.name + "/procedury"} element={<AdminMenuPage typeOfService={service.name} page={'procedury'} user={user}/>}/>
+                <Route path={`/${service.name}/prehled`} element={<AdminMenuPage typeOfService={service} page={'prehled'} user={user}/>}/>
+                <Route path={`/${service.name}/dovolena`} element={<AdminMenuPage typeOfService={service} page={'dovolena'} user={user}/>}/>
+                <Route path={`/${service.name}/procedury`} element={<AdminMenuPage typeOfService={service} page={'procedury'} user={user}/>}/>
               </>))
             }
           </Routes>
@@ -79,9 +75,12 @@ function App() {
       </Router>
   );
   else return(
-    <Spinner animation="border" role="status">
-      <span className="visually-hidden">Loading...</span>
-    </Spinner>
+    <>
+      <TopNav/>
+      <Spinner animation="border" role="status">
+         <span className="visually-hidden">Loading...</span>
+       </Spinner>
+    </>
   )
 
 }

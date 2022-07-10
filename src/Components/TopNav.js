@@ -16,10 +16,10 @@ function TopNav({ user, googleAuth, logout, services }) {
       return(
         <NavDropdown title="Administrace" id="collasible-nav-dropdown">
           {Children.toArray(services.map(service =>
-            <NavDropdown.Item href={"/" + service.name + "/prehled"} key={service._id + "-admNav"}>{service.displayName}</NavDropdown.Item>))
+            <NavDropdown.Item as={Link} to={`/${service.name}/prehled`} key={service._id + "-admNav"}>{service.displayName}</NavDropdown.Item>) )
           }
           <NavDropdown.Divider />
-          <NavDropdown.Item href="/admin/uzivatele">Uživatelé</NavDropdown.Item>
+          <NavDropdown.Item as={Link} to="/admin/uzivatele">Uživatelé</NavDropdown.Item>
         </NavDropdown>
       )
     } else {
@@ -52,7 +52,7 @@ function TopNav({ user, googleAuth, logout, services }) {
       </NavDropdown> )
   };
 
-  return(
+  if (services)  return(
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
       <Container>
         <Navbar.Brand as={Link} to="/">Salon GLIP</Navbar.Brand>
@@ -71,6 +71,16 @@ function TopNav({ user, googleAuth, logout, services }) {
         </Navbar.Collapse>
       </Container>
     </Navbar>
+  )
+  else return (
+      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+        <Container>
+          <Navbar.Brand to="/">Salon GLIP</Navbar.Brand>
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+          <Navbar.Collapse id="responsive-navbar-nav">
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
   )
 }
 

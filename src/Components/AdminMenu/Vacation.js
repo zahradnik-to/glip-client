@@ -90,7 +90,6 @@ function Vacation({ typeOfService }) {
       <Row>
         <Col xs={12} className='mb-4 vacation' id={"vacation"} style={{ position: "relative", zIndex: 0 }}>
           <FullCalendar
-            className='vacation'
             ref={calendarRef}
             events={events}
             plugins={[interactionPlugin, timeGridPlugin, dayGridPlugin]}
