@@ -70,6 +70,9 @@ function App() {
                 <Route path={`/${service.name}/procedury`} element={<AdminMenuPage typeOfService={service} page={'procedury'} user={user}/>}/>
               </>))
             }
+
+            {/* Default for non existing pages */}
+            <Route path="*" element={<HomePage services={services}/>}/>
           </Routes>
         </Container>
       </Router>
