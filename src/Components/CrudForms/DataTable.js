@@ -55,7 +55,7 @@ function DataTable({ data, dataInfo, handleDelete, handleUpdate }) {
         return (
           <td key={`${object._id}_${objProperty}`}>
             <Form.Control
-              defaultValue={object.role}
+              defaultValue={dataInfoOfProperty.options.find(roleOpt => roleOpt.name === 'admin').displayName}
               type="text"
               disabled
             />
@@ -67,9 +67,8 @@ function DataTable({ data, dataInfo, handleDelete, handleUpdate }) {
             defaultValue={object[objProperty]}
             onChange={e => handleEdit(object._id, objProperty, e.target.value)}
           >
-            {Children.toArray(dataInfoOfProperty.options
-              .map(role =>
-                <option key={role._id} value={role.name}>{role.name}</option>))}
+            {dataInfoOfProperty.options.map(role =>
+                <option key={role._id} value={role._id}>{role.displayName}</option>)}
           </Form.Select>
         </td>
       );
