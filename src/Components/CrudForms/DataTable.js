@@ -88,12 +88,11 @@ function DataTable({ data, dataInfo, handleDelete, handleUpdate }) {
 
   const tableContent = data.map(object => {
       return <tr key={object._id}>
-        {Object.keys(object).map(objProperty => {
-          if (!dataInfo.ignoredDataParams.includes(objProperty)) {
+        {
+          Object.keys(object).map(objProperty => {
             const dataInfoOfProperty = dataInfo.headerNames.find(o => o.entryName === objProperty)
-            return getCorrectFormInput(object, objProperty, dataInfoOfProperty)
-          }
-        })
+            if (dataInfoOfProperty) return getCorrectFormInput(object, objProperty, dataInfoOfProperty)
+          })
         }
         {actionButtonsCell(object._id)}
       </tr>

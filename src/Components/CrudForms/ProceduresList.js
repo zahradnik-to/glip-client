@@ -39,7 +39,6 @@ function ProceduresList({ user, passedService }) {
         type: "number",
       },
     ],
-    ignoredDataParams: ["_id", "__v", "typeOfService", "disabled"],
   }
 
   const handleCreate = (event) => {

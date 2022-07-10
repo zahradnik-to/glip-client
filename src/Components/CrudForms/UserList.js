@@ -13,18 +13,24 @@ function UserList() {
   const dataInfo = {
     headerNames: [
       {
+        entryName: "displayName",
+        showName: "Jméno",
+        type: "text",
+        disabled: true,
+      },
+      {
         entryName: "email",
         showName: "Email",
         type: "text",
         disabled: true
-      }, {
+      },
+      {
         entryName: "role",
         showName: "Role",
         type: "select",
         options: roleOptions,
       },
     ],
-    ignoredDataParams: ["_id", "__v", "googleId", "isAdmin"],
   }
 
   const getUsers = () => {
