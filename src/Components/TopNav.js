@@ -26,7 +26,7 @@ function TopNav({ user, googleAuth, logout, services }) {
       const service = services.find(s => s.name === user?.role);
       if (!service) return null;
       return (
-        <Nav.Link as={Link} to={`/${service.name}/prehled`}>{service.displayName}</Nav.Link>
+        <Nav.Link as={Link} to={`/${service.name}/prehled`}>Administrace</Nav.Link>
       )
     }
   }

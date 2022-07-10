@@ -95,8 +95,7 @@ function ProfilePage({ user, login }) {
                   onChange={e => setSelectedRole(e.target.value)}
                   required
                 >
-                  <option value="admin">admin</option>
-                  {Children.toArray(roleOptions.map(role => <option key={role._id} value={role.name}>{role.name}</option>))}
+                  {Children.toArray(roleOptions.map(role => <option key={role._id} value={role._id}>{role.displayName}</option>))}
                 </Form.Select>
               </Col>
             </Form.Group>

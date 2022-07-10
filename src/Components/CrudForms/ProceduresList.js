@@ -153,7 +153,8 @@ function ProceduresList({ user, passedService }) {
               disabled={!user.isAdmin}
               required
             >
-              <option value="hair">Kadeřnictví</option>
+              {/* Todo Fixme load services instead of hardcode */}
+              <option value="kadernictvi">Kadeřnictví</option>
               <option value="cosmetics">Kosmetika</option>
               <option value="massage">Masáže</option>
             </Form.Select>

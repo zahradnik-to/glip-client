@@ -201,6 +201,7 @@ function Overview({ typeOfService, user }) {
           selectable={false}
           unselectAuto={false}
           firstDay={1}
+          weekends={false}
           slotMinTime="07:00:00"
           slotMaxTime="17:00:00"
           allDayText='Celý den'

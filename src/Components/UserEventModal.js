@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import Spinner from 'react-bootstrap/Spinner';
 import DatePicker from "react-datepicker";
 import { isPast, subHours } from 'date-fns';
-import PhoneInput from 'react-phone-input-2';
+import InputGroup from "react-bootstrap/InputGroup";
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -107,19 +107,19 @@ function UserEventModal({ isOpen, event, onClose, onSubmit, onEventCancel }) {
 
               <Form.Group className='mb-2'>
                 <Form.Label>Telefonní číslo</Form.Label>
-                <PhoneInput
-                  country={'cz'}
-                  onlyCountries={['cz']}
-                  placeholder={"+420 123 123 123"}
-                  countryCodeEditable={false}
-                  onChange={phone => setPhoneNumber(phone)}
-                  value={event.phoneNumber}
-                  disabled={!isEditAllowed()}
-                  inputProps={{
-                    name: 'phone',
-                    required: true,
-                  }}
-                />
+                <InputGroup>
+                  <InputGroup.Text>+420</InputGroup.Text>
+                  <Form.Control
+                    type="tel"
+                    placeholder='111222333'
+                    pattern="^\b\d{9}\b$"
+                    minLength={9}
+                    maxLength={9}
+                    value={phoneNumber}
+                    onChange={event => setPhoneNumber(event.target.value)}
+                    required={true}
+                  />
+                </InputGroup>
               </Form.Group>
 
               <Form.Group className='mb-2'>

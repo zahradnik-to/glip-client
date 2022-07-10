@@ -14,11 +14,7 @@ Vacation.propTypes = {
   typeOfService: PropTypes.string.isRequired,
 }
 
-const typeOfServicesEnum = {
-  hair: "Kadeřnictví",
-  massage: "Masáže",
-  cosmetics: "Kosmetika",
-}
+// Todo Fixme Merge Vacation to overview
 
 function Vacation({ typeOfService }) {
   const calendarRef = useRef(null);
@@ -37,9 +33,8 @@ function Vacation({ typeOfService }) {
   }
 
   const createVacation = () => {
-    console.log(vacationEvent)
     const dtoIn = {
-      title: `${typeOfServicesEnum[typeOfService]} dovolená`,
+      title: `${typeOfService} dovolená`,
       start: new Date(vacationEvent.start).toISOString(),
       end: new Date(vacationEvent.end).toISOString(),
       display: 'background',

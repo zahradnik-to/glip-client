@@ -212,6 +212,7 @@ function ReservationForm({ typeOfService, saveEvent, setEventTime, user, logout,
     getEndTime(timeValue);
   }
 
+  // Todo fixme does not work properly, with ex 30 min
   const getEndTime = (timeStartValue) => {
     const startTime = timeStartValue.split(':').map(e => parseInt(e));
     let duration = procedures.find(e => e._id === procedureId)?.duration;

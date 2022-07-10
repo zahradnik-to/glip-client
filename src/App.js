@@ -45,7 +45,7 @@ function App() {
   }
 
   const getServices = async () => {
-    const services = await axios.get("role/get?type=staffRole");
+    const services = await axios.get("/role/get?type=staffRole");
     setServices(services.data);
   }
 

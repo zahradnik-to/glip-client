@@ -8,7 +8,7 @@ HomePage.propTypes = {
 }
 
 function HomePage({ services }) {
-
+  // Todo fixme when redirected here after ex. no login, services do not exist and crash happens
   return (
     <>
       <Row className="pt-5">

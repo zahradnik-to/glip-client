@@ -48,6 +48,7 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
   }, [startDate, onSubmit])
 
 
+  // Todo Fixme on order update, tel number gets deleted
   const handleSubmit = (e) => {
     e.preventDefault();
     let modifiedEvent = {
