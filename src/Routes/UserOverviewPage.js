@@ -7,6 +7,7 @@ import { Col, Row, Nav } from "react-bootstrap";
 import UserEventList from "../Components/UserEventList";
 import UserEventCalendar from "../Components/UserEventCalendar";
 import ErrorPage from "./ErrorPage";
+import { Link } from "react-router-dom";
 
 UserOverviewPage.propTypes = {
   user: PropTypes.object,
@@ -100,10 +101,10 @@ function UserOverviewPage({ user, page }) {
           <h1>Menu</h1>
           <Nav variant="pills" defaultActiveKey={page} className="justify-content-center">
             <Nav.Item>
-              <Nav.Link eventKey={'/objednavky/seznam'} href='/objednavky/seznam'>Seznam</Nav.Link>
+              <Nav.Link eventKey={'/objednavky/seznam'} as={Link} to='/objednavky/seznam'>Seznam</Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link eventKey={'/objednavky/kalendar'} href='/objednavky/kalendar'>Kalendář</Nav.Link>
+              <Nav.Link eventKey={'/objednavky/kalendar'} as={Link} to='/objednavky/kalendar'>Kalendář</Nav.Link>
             </Nav.Item>
           </Nav>
         </Col>
