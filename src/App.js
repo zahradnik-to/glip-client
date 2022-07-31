@@ -19,10 +19,12 @@ function App() {
   const [services, setServices] = useState([]);
   const [loaded, setLoaded] = useState(false);
 
-  useEffect(async () => {
-    await login();
-    await getServices();
-    setLoaded(true);
+  useEffect(() => {
+    async function prepareApp() {
+      await login();
+      await getServices();
+    }
+    prepareApp().then(() => setLoaded(true));
   }, [])
 
   const login = async () => {
