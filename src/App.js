@@ -83,9 +83,11 @@ function App() {
   else return(
     <>
       <TopNav/>
-      <Spinner animation="border" role="status">
+      <Container className={"d-flex flex-column align-items-center mt-5 pt-5"}>
+        <Spinner animation="border" role="status" style={{ width: "4rem", height: "4rem", animationDuration: "1.7s" }}>
          <span className="visually-hidden">Loading...</span>
        </Spinner>
+      </Container>
     </>
   )
 
