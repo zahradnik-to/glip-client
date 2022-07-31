@@ -94,6 +94,7 @@ function Vacation({ typeOfService }) {
             locale='cs'
             selectAllow={(e) => handleSelectAllow(e)}
             firstDay={1}
+            slotDuration="00:15:00"
             slotMinTime="07:00:00"
             slotMaxTime="17:00:00"
             allDayText='Celý den'

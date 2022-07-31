@@ -89,13 +89,13 @@ function UserList() {
   }
 
   const handleUpdate = (object) => { // Todo user update
-    console.log(object)
+    const roleObj = roleOptions.find(r => r._id === object.role);
     axios.put(`/user/update`, object)
       .then(response => {
         if (response.status === 200) {
           setToastContent({
             header: "Hotovo!",
-            message: `Role změněna na ${object.role}.`,
+            message: `Role změněna na ${roleObj.displayName}.`,
             variant: "success"
           })
           setShowToast(true);
@@ -127,7 +127,7 @@ function UserList() {
     <>
       {dataLoaded
         ?
-        <DataTable dataInfo={dataInfo} data={users} handleDelete={handleDelete} handleUpdate={handleUpdate}/>
+        <DataTable mapConfig={dataInfo} data={users} handleDelete={handleDelete} handleUpdate={handleUpdate}/>
         :
         <></>
       }

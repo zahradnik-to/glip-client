@@ -4,16 +4,16 @@ import Form from "react-bootstrap/Form";
 import PropTypes from 'prop-types';
 
 DataTable.propTypes = {
-  dataInfo: PropTypes.object.isRequired,
+  mapConfig: PropTypes.object.isRequired,
   data: PropTypes.array.isRequired,
   handleDelete: PropTypes.func.isRequired,
   handleUpdate: PropTypes.func.isRequired,
 }
 
-function DataTable({ data, dataInfo, handleDelete, handleUpdate }) {
+function DataTable({ data, mapConfig, handleDelete, handleUpdate }) {
   const [editedData, setEditedData] = useState([]);
 
-  const tableHeader = dataInfo.headerNames.map((name) =>
+  const tableHeader = mapConfig.headerNames.map((name) =>
     <th key={name.entryName}>{name.showName}</th>
   )
 
@@ -49,13 +49,13 @@ function DataTable({ data, dataInfo, handleDelete, handleUpdate }) {
     setEditedData(newEditedData);
   };
 
-  const getCorrectFormInput = (object, objProperty, dataInfoOfProperty) => {
-    if (dataInfoOfProperty.type === 'select') {
+  const getCorrectFormInput = (object, objProperty, mapConfigOfProperty) => {
+    if (mapConfigOfProperty.type === 'select') {
       if (object.role === 'admin')
         return (
           <td key={`${object._id}_${objProperty}`}>
             <Form.Control
-              defaultValue={dataInfoOfProperty.options.find(roleOpt => roleOpt.name === 'admin').displayName}
+              defaultValue={mapConfigOfProperty.options.find(roleOpt => roleOpt.name === 'admin').displayName}
               type="text"
               disabled
             />
@@ -67,7 +67,7 @@ function DataTable({ data, dataInfo, handleDelete, handleUpdate }) {
             defaultValue={object[objProperty]}
             onChange={e => handleEdit(object._id, objProperty, e.target.value)}
           >
-            {dataInfoOfProperty.options.map(role =>
+            {mapConfigOfProperty.options.map(role =>
                 <option key={role._id} value={role._id}>{role.displayName}</option>)}
           </Form.Select>
         </td>
@@ -77,9 +77,9 @@ function DataTable({ data, dataInfo, handleDelete, handleUpdate }) {
       <td key={`${object._id}_${objProperty}`}>
         <Form.Control
           defaultValue={object[objProperty]}
-          type={dataInfoOfProperty.type}
+          type={mapConfigOfProperty.type}
           onBlur={e => handleEdit(object._id, objProperty, e.target.value)}
-          disabled={!!dataInfoOfProperty.disabled}
+          disabled={!!mapConfigOfProperty.disabled}
         />
       </td>
     );
@@ -89,8 +89,8 @@ function DataTable({ data, dataInfo, handleDelete, handleUpdate }) {
       return <tr key={object._id}>
         {
           Object.keys(object).map(objProperty => {
-            const dataInfoOfProperty = dataInfo.headerNames.find(o => o.entryName === objProperty)
-            if (dataInfoOfProperty) return getCorrectFormInput(object, objProperty, dataInfoOfProperty)
+            const mapConfigOfProperty = mapConfig.headerNames.find(o => o.entryName === objProperty)
+            if (mapConfigOfProperty) return getCorrectFormInput(object, objProperty, mapConfigOfProperty)
           })
         }
         {actionButtonsCell(object._id)}

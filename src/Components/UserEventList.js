@@ -34,7 +34,7 @@ function UserEventList({ openEventModal, update, setUpdate }) {
   }, [update])
 
   const getEvents = (page = pagination.page) => {
-    axios.get(`/calendar/get-events-list?page=${page}`)
+    axios.get(`/calendar/get-events-page?page=${page}`)
       .then( result => {
         const { events, ...pagination } = result.data
         setEvents(events)
@@ -96,15 +96,18 @@ function UserEventList({ openEventModal, update, setUpdate }) {
           <tbody>
           {Children.toArray(events.map(e =>
             <tr key={e._id} className={ e.canceled ? "bg-warning" : ""}>
+              {/* Day */}
               <td>{ new Date(e.start).toLocaleString('cs', {
                 month: 'numeric',
                 day: 'numeric',
                 year: '2-digit',
               }) }</td>
+              {/* Beginning */}
               <td>{ new Date(e.start).toLocaleString('cs', {
                 hour: '2-digit',
                 minute: 'numeric',
               }) }</td>
+              {/* End */}
               <td>{ new Date(e.end).toLocaleString('cs', {
                 hour: '2-digit',
                 minute: 'numeric',

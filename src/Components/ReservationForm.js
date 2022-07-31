@@ -9,7 +9,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from '@fullcalendar/interaction';
 import Spinner from 'react-bootstrap/Spinner';
-import { isPast, addDays }  from 'date-fns';
+import { isPast, addDays, addMinutes }  from 'date-fns';
 import InputGroup from "react-bootstrap/InputGroup";
 
 ReservationForm.propTypes = {
@@ -212,16 +212,25 @@ function ReservationForm({ typeOfService, saveEvent, setEventTime, user, logout,
     getEndTime(timeValue);
   }
 
-  // Todo fixme does not work properly, with ex 30 min
   const getEndTime = (timeStartValue) => {
     const startTime = timeStartValue.split(':').map(e => parseInt(e));
-    let duration = procedures.find(e => e._id === procedureId)?.duration;
+    const startDate = new Date(eventDate);
+    const duration = procedures.find(e => e._id === procedureId)?.duration;
+    startDate.setHours(startTime[0]);
+    startDate.setMinutes(startTime[1]);
+
+    const endDate = new Date(addMinutes(startDate, duration))
 
     const doubleDigit = (time) => ("0" + time).slice(-2);
-    const endHours = doubleDigit(startTime[0] + Math.floor(duration / 60));
-    const endMins = doubleDigit(startTime[1] + ((duration % 60) * 60));
+    const endHours = doubleDigit(endDate.getHours());
+    const endMins = doubleDigit(endDate.getMinutes());
 
     setEventEndTime(`${endHours}:${endMins}`)
+  }
+
+  const handleSetProcedureId = (procedureId) => {
+    setProcedureId(procedureId);
+    setEventEndTime("--:--");
   }
 
   return (
@@ -233,7 +242,7 @@ function ReservationForm({ typeOfService, saveEvent, setEventTime, user, logout,
             <Form.Label>Úkon</Form.Label>
             <Form.Select
               name='procedure'
-              onChange={e => setProcedureId(e.target.value)}
+              onChange={e => handleSetProcedureId(e.target.value)}
               required
             >
               <option value=''>Vyberte službu</option>

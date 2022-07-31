@@ -15,7 +15,7 @@ ProfilePage.propTypes = {
 
 function ProfilePage({ user, login }) {
   const [roleOptions, setRoleOptions] = useState([]);
-  const [selectedRole, setSelectedRole] = useState(user?.role);
+  const [selectedRole, setSelectedRole] = useState({});
   const [showToast, setShowToast] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [toastContent, setToastContent] = useState({});
@@ -47,15 +47,15 @@ function ProfilePage({ user, login }) {
     e.preventDefault();
     const dtoIn = {
       _id: user._id,
-      role: selectedRole
+      role: selectedRole._id
     }
     axios.put(`/user/update`, dtoIn)
       .then(response => {
         if (response.status === 200) {
-          user.role = selectedRole;
+          user.role = selectedRole.name;
           setToastContent({
             header: "Hotovo!",
-            message: `Role změněna na ${selectedRole}.`,
+            message: `Role změněna na ${selectedRole.displayName}.`,
             variant: "success"
           })
           setShowToast(true);
@@ -74,6 +74,11 @@ function ProfilePage({ user, login }) {
     setShowToast(true);
   }
 
+  const handleSetRole = (roleId) => {
+    const roleObj = roleOptions.find(r => r._id === roleId);
+    setSelectedRole(roleObj)
+  }
+
   return (
     <>
       <h1>Profil</h1>
@@ -90,9 +95,9 @@ function ProfilePage({ user, login }) {
               <Form.Label as={"dt"}>Role</Form.Label>
               <Col sm={12} md={3}>
                 <Form.Select
-                  defaultValue={user.role}
+                  defaultValue={roleOptions.find(r=> r.name === user.role)._id}
                   name='role'
-                  onChange={e => setSelectedRole(e.target.value)}
+                  onChange={e => handleSetRole(e.target.value)}
                   required
                 >
                   {Children.toArray(roleOptions.map(role => <option key={role._id} value={role._id}>{role.displayName}</option>))}

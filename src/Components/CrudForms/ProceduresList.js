@@ -166,7 +166,7 @@ function ProceduresList({ user, passedService }) {
       </Form>
       <Row>
         <h1>Procedury</h1>
-        <DataTable dataInfo={dataInfo} data={procedures} handleDelete={handleDelete} handleUpdate={handleUpdate}/>
+        <DataTable mapConfig={dataInfo} data={procedures} handleDelete={handleDelete} handleUpdate={handleUpdate}/>
       </Row>
       <ToastNotification showToast={showToast} setShowToast={setShowToast} toastContent={toastContent}/>
     </>
