@@ -3,10 +3,10 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import ToastNotification from "../Components/ToastNotification";
 import UserEventModal from "../Components/UserEventModal";
-import HomePage from "./HomePage";
 import { Col, Row, Nav } from "react-bootstrap";
 import UserEventList from "../Components/UserEventList";
 import UserEventCalendar from "../Components/UserEventCalendar";
+import ErrorPage from "./ErrorPage";
 
 UserOverviewPage.propTypes = {
   user: PropTypes.object,
@@ -20,8 +20,7 @@ function UserOverviewPage({ user, page }) {
   const [toastContent, setToastContent] = useState({});
   const [updateRequired, setUpdateRequired] = useState(false);
 
-  if(!user) return <HomePage />
-
+  if(!user) return <ErrorPage err={{ status:403 }}/>
   const openEventModal = (event) => {
     const procedureName = event.procedureName
     axios.get(`/calendar/get-event?_id=${event._id}`)

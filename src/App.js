@@ -12,6 +12,7 @@ import DataEditPage from './Routes/Employee/DataEditPage';
 import UserList from "./Components/CrudForms/UserList";
 import Spinner from 'react-bootstrap/Spinner';
 import UserOverviewPage from "./Routes/UserOverviewPage";
+import ErrorPage from "./Routes/ErrorPage";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -27,11 +28,10 @@ function App() {
   const login = async () => {
     try {
       const response = await axios.get('/auth/login/success', { withCredentials: true });
-      if (response.data.success) {
-        setUser(response.data.user)
-      }
+      setUser(response.data.user)
     } catch (e) {
       console.error("Auth error.")
+      setUser(null)
     }
   }
 
@@ -58,6 +58,7 @@ function App() {
             <Route path='/profil' element={<ProfilePage user={user} login={login}/>}/>
             <Route path='/objednavky/seznam' element={<UserOverviewPage user={user} page={'/objednavky/seznam'}/>}/>
             <Route path='/objednavky/kalendar' element={<UserOverviewPage user={user} page={'/objednavky/kalendar'}/>}/>
+            <Route path="/error" element={<ErrorPage/>}/>
 
             <Route path='/admin/uzivatele' element={<DataEditPage contentForm={<UserList/>} user={user}/>}/>
 
