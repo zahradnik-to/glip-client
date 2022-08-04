@@ -36,8 +36,9 @@ function ProfilePage({ user, login }) {
           return response.data
         } else throw new Error("Auth failed")
       })
-      .then(data => {
-        setRoleOptions(data)
+      .then(roleList => {
+        setRoleOptions(roleList)
+        setSelectedRole(roleList.find(r=> r.name === user.role))
         setDataLoaded(true)
       })
       .catch(err => console.error(err))
