@@ -7,15 +7,15 @@ TopNav.propTypes = {
   user: PropTypes.object,
   googleAuth: PropTypes.func,
   logout: PropTypes.func,
-  services: PropTypes.array,
+  serviceList: PropTypes.array,
 }
 
-function TopNav({ user, googleAuth, logout, services }) {
+function TopNav({ user, googleAuth, logout, serviceList }) {
   const renderAdminNav = () => {
     if (user.role === 'admin' && user.isAdmin) {
       return(
         <NavDropdown title="Administrace" id="collasible-nav-dropdown">
-          {Children.toArray(services.map(service =>
+          {Children.toArray(serviceList.map(service =>
             <NavDropdown.Item as={Link} to={`/${service.name}/prehled`} key={service._id + "-admNav"}>{service.displayName}</NavDropdown.Item>) )
           }
           <NavDropdown.Divider />
@@ -23,7 +23,7 @@ function TopNav({ user, googleAuth, logout, services }) {
         </NavDropdown>
       )
     } else {
-      const service = services.find(s => s.name === user?.role);
+      const service = serviceList.find(s => s.name === user?.role);
       if (!service) return null;
       return (
         <Nav.Link as={Link} to={`/${service.name}/prehled`}>Administrace</Nav.Link>
@@ -52,7 +52,7 @@ function TopNav({ user, googleAuth, logout, services }) {
       </NavDropdown> )
   };
 
-  if (services)  return(
+  if (serviceList)  return(
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
       <Container>
         <Navbar.Brand as={Link} to="/">Salon GLIP</Navbar.Brand>

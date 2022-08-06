@@ -13,16 +13,17 @@ import UserList from "./Components/CrudForms/UserList";
 import Spinner from 'react-bootstrap/Spinner';
 import UserOverviewPage from "./Routes/UserOverviewPage";
 import ErrorPage from "./Routes/ErrorPage";
+import { getServices } from "./Utils/ServicesHelper";
 
 function App() {
   const [user, setUser] = useState(null);
-  const [services, setServices] = useState([]);
+  const [serviceList, setServiceList] = useState([]);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     async function prepareApp() {
       await login();
-      await getServices();
+      await prepareGlipServices();
     }
     prepareApp().then(() => setLoaded(true));
   }, [])
@@ -46,17 +47,17 @@ function App() {
     window.open('http://localhost:5000/auth/google', '_self');
   }
 
-  const getServices = async () => {
-    const services = await axios.get("/role/get?type=staffRole");
-    setServices(services.data);
+  const prepareGlipServices = async () => {
+    const services = await getServices();
+    setServiceList(services);
   }
 
   if (loaded) return (
       <Router>
-        <TopNav user={user} googleAuth={googleAuth} logout={logout} services={services}/>
+        <TopNav user={user} googleAuth={googleAuth} logout={logout} serviceList={serviceList}/>
         <Container className="pt-5">
           <Routes>
-            <Route path='/' element={<HomePage services={services}/>}/>
+            <Route path='/' element={<HomePage services={serviceList}/>}/>
             <Route path='/profil' element={<ProfilePage user={user} login={login}/>}/>
             <Route path='/objednavky/seznam' element={<UserOverviewPage user={user} page={'/objednavky/seznam'}/>}/>
             <Route path='/objednavky/kalendar' element={<UserOverviewPage user={user} page={'/objednavky/kalendar'}/>}/>
@@ -64,7 +65,7 @@ function App() {
 
             <Route path='/admin/uzivatele' element={<DataEditPage contentForm={<UserList/>} user={user}/>}/>
 
-            {Children.toArray(services.map(service =>
+            {Children.toArray(serviceList.map(service =>
               <>
                 <Route path={`/${service.name}`} element={<ReservationPage typeOfService={service.name} user={user} logout={logout}/>}/>
                 {/* Administration */}

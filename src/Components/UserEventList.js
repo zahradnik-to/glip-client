@@ -9,6 +9,7 @@ import Form from "react-bootstrap/Form";
 import Pagination from "react-bootstrap/Pagination";
 import PropTypes from 'prop-types';
 import axios from "axios";
+import { formatDateToLocaleString, formatTimeToLocaleString } from "../Utils/UserEventListHelper";
 
 UserEventList.propTypes = {
   openEventModal: PropTypes.func.isRequired,
@@ -87,8 +88,8 @@ function UserEventList({ openEventModal, update, setUpdate }) {
           <thead>
           <tr>
             <th>Den 📅</th>
-            <th>Začátek</th>
-            <th>Konec</th>
+            <th>Trvání</th>
+            <th>Studio</th>
             <th>Úkon</th>
             <th>Akce</th>
           </tr>
@@ -97,21 +98,13 @@ function UserEventList({ openEventModal, update, setUpdate }) {
           {Children.toArray(events.map(e =>
             <tr key={e._id} className={ e.canceled ? "bg-warning" : ""}>
               {/* Day */}
-              <td>{ new Date(e.start).toLocaleString('cs', {
-                month: 'numeric',
-                day: 'numeric',
-                year: '2-digit',
-              }) }</td>
-              {/* Beginning */}
-              <td>{ new Date(e.start).toLocaleString('cs', {
-                hour: '2-digit',
-                minute: 'numeric',
-              }) }</td>
+              <td>{ formatDateToLocaleString(e.start) }</td>
+              {/* Beginning - End*/}
+              <td>
+                { formatTimeToLocaleString(e.start) } - { formatTimeToLocaleString(e.end) }
+              </td>
               {/* End */}
-              <td>{ new Date(e.end).toLocaleString('cs', {
-                hour: '2-digit',
-                minute: 'numeric',
-              }) }</td>
+              <td>{ e.typeOfServiceName }</td>
               <td>{ e.procedureName }</td>
               <td>
                 <span className={'h-100 me-md-3 tableAction'} onClick={() => openEventModal(e)}>Detail🖊</span>
