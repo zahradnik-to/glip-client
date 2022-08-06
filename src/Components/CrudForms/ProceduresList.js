@@ -5,9 +5,9 @@ import Row from "react-bootstrap/Row";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import DataTable from "./DataTable";
-import HomePage from "../../Routes/HomePage";
 import PropTypes from "prop-types"
 import ToastNotification from "../ToastNotification";
+import ErrorPage from "../../Routes/ErrorPage";
 
 ProceduresList.propTypes = {
   user: PropTypes.object,
@@ -23,7 +23,7 @@ function ProceduresList({ user, passedService }) {
   const [toastContent, setToastContent] = useState({});
 
   useEffect(() => {
-    if(!user) return <HomePage />
+    if(!user) return <ErrorPage err={{ status:403 }}/>
     return getProcedures()
   }, []);
 

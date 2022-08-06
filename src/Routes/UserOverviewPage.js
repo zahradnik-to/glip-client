@@ -21,7 +21,7 @@ function UserOverviewPage({ user, page }) {
   const [toastContent, setToastContent] = useState({});
   const [updateRequired, setUpdateRequired] = useState(false);
 
-  if(!user) return <ErrorPage err={{ status:403 }}/>
+  if (!user) return <ErrorPage err={{ status:403 }}/>
   const openEventModal = (event) => {
     const procedureName = event.procedureName
     axios.get(`/calendar/get-event?_id=${event._id}`)

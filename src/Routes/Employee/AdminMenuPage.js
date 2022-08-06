@@ -6,6 +6,7 @@ import Overview from "../../Components/AdminMenu/Overview";
 import ProceduresList from "../../Components/CrudForms/ProceduresList";
 import Vacation from "../../Components/AdminMenu/Vacation";
 import { Link } from "react-router-dom";
+import ErrorPage from "../ErrorPage";
 
 AdminMenuPage.propTypes = {
   typeOfService: PropTypes.object.isRequired,
@@ -15,10 +16,10 @@ AdminMenuPage.propTypes = {
 
 function AdminMenuPage({ typeOfService, page, user }) {
   if (!user) {
-    return <HomePage/>
+    return <ErrorPage err={{ status:403 }}/>
   } else {
     if (user.role !== typeOfService && !user.isAdmin) {
-      return <HomePage/>
+      return <ErrorPage err={{ status:403 }}/>
     }
   }
 

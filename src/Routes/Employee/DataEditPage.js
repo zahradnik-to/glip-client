@@ -2,7 +2,7 @@ import React from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import PropTypes from "prop-types";
-import HomePage from "../HomePage";
+import ErrorPage from "../ErrorPage";
 
 DataEditPage.propTypes = {
   contentForm: PropTypes.object,
@@ -11,13 +11,7 @@ DataEditPage.propTypes = {
 
 function DataEditPage({ contentForm, user }) {
 
-  if (!user) {
-    return <HomePage/>
-  } else { // Fixme authentication
-    // if (user.role !== typeOfService && !user.isAdmin) {
-    //   return <HomePage/>
-    // }
-  }
+  if (!user) return <ErrorPage err={{ status:403 }}/>
 
   return(
     <>
