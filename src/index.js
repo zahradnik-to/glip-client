@@ -7,9 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import '@fortawesome/fontawesome-free/css/all.css'; // needs additional webpack config!
 import 'bootstrap/dist/css/bootstrap.css';
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+    <App />,
   document.getElementById('root')
 );
 

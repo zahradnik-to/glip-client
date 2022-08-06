@@ -42,7 +42,6 @@ function UserList() {
       })
       .then(data => {
         setUsers(data)
-        console.log("Got users")
       })
       .catch(err => renderToastError(err))
   }
@@ -71,7 +70,6 @@ function UserList() {
   }
 
   const handleDelete = (id) => {
-    console.log(id)
     axios.delete(`/user/delete`, { data: { id: id } })
       .then(response => {
         if (response.status === 200) {

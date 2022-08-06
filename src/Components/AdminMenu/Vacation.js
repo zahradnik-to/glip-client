@@ -14,8 +14,6 @@ Vacation.propTypes = {
   typeOfService: PropTypes.string.isRequired,
 }
 
-// Todo Fixme Merge Vacation to overview
-
 function Vacation({ typeOfService }) {
   const calendarRef = useRef(null);
   const [events, setEvents] = useState([]);

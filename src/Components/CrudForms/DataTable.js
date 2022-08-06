@@ -1,4 +1,4 @@
-import React, { Children, useState } from 'react';
+import React, { useState } from 'react';
 import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
 import PropTypes from 'prop-types';
@@ -49,11 +49,11 @@ function DataTable({ data, mapConfig, handleDelete, handleUpdate }) {
     setEditedData(newEditedData);
   };
 
-  const getCorrectFormInput = (object, objProperty, mapConfigOfProperty) => {
+  const getCorrectFormInput = (dbObject, objProperty, mapConfigOfProperty) => {
     if (mapConfigOfProperty.type === 'select') {
-      if (object.role === 'admin')
+      if (dbObject.role === 'admin')
         return (
-          <td key={`${object._id}_${objProperty}`}>
+          <td key={`${dbObject._id}_${objProperty}`}>
             <Form.Control
               defaultValue={mapConfigOfProperty.options.find(roleOpt => roleOpt.name === 'admin').displayName}
               type="text"
@@ -62,10 +62,10 @@ function DataTable({ data, mapConfig, handleDelete, handleUpdate }) {
           </td>
         );
       return (
-        <td key={`${object._id}_${objProperty}`}>
+        <td key={`${dbObject._id}_${objProperty}`}>
           <Form.Select
-            defaultValue={object[objProperty]}
-            onChange={e => handleEdit(object._id, objProperty, e.target.value)}
+            defaultValue={dbObject[objProperty]}
+            onChange={e => handleEdit(dbObject._id, objProperty, e.target.value)}
           >
             {mapConfigOfProperty.options.map(role =>
                 <option key={role._id} value={role._id}>{role.displayName}</option>)}
@@ -74,29 +74,31 @@ function DataTable({ data, mapConfig, handleDelete, handleUpdate }) {
       );
     }
     return (
-      <td key={`${object._id}_${objProperty}`}>
+      <td key={`${dbObject._id}_${objProperty}`}>
         <Form.Control
-          defaultValue={object[objProperty]}
+          defaultValue={dbObject[objProperty]}
           type={mapConfigOfProperty.type}
-          onBlur={e => handleEdit(object._id, objProperty, e.target.value)}
+          onChange={e => handleEdit(dbObject._id, objProperty, e.target.value)}
           disabled={!!mapConfigOfProperty.disabled}
         />
       </td>
     );
   }
 
-  const tableContent = data.map(object => {
-      return <tr key={object._id}>
-        {
-          Object.keys(object).map(objProperty => {
-            const mapConfigOfProperty = mapConfig.headerNames.find(o => o.entryName === objProperty)
-            if (mapConfigOfProperty) return getCorrectFormInput(object, objProperty, mapConfigOfProperty)
-          })
-        }
-        {actionButtonsCell(object._id)}
-      </tr>
-    }
-  )
+  /**
+   * Creates a row for every db record stored in data variable
+   * Creates a column from every entry in mapConfig.headerNames - dbObject[mapConfig.headerNames.entryName]
+   */
+  const tableContent = data.map(dbObject => {
+    return <tr key={dbObject._id}>
+      {
+        mapConfig.headerNames.map(objProperty => {
+          return getCorrectFormInput(dbObject, objProperty.entryName, objProperty)
+        })
+      }
+      {actionButtonsCell(dbObject._id)}
+    </tr>
+  })
 
   return (
     <Form>

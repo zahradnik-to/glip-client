@@ -14,6 +14,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import UserOverviewPage from "./Routes/UserOverviewPage";
 import ErrorPage from "./Routes/ErrorPage";
 import { getServices } from "./Utils/ServicesHelper";
+import RoleList from "./Components/CrudForms/RoleList";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -23,7 +24,7 @@ function App() {
   useEffect(() => {
     async function prepareApp() {
       await login();
-      await prepareGlipServices();
+      await getGlipServices();
     }
     prepareApp().then(() => setLoaded(true));
   }, [])
@@ -47,7 +48,7 @@ function App() {
     window.open('http://localhost:5000/auth/google', '_self');
   }
 
-  const prepareGlipServices = async () => {
+  const getGlipServices = async () => {
     const services = await getServices();
     setServiceList(services);
   }
@@ -64,6 +65,8 @@ function App() {
             <Route path="/error" element={<ErrorPage/>}/>
 
             <Route path='/admin/uzivatele' element={<DataEditPage contentForm={<UserList/>} user={user}/>}/>
+            <Route path='/admin/role' element={<DataEditPage contentForm={<RoleList reloadRoles={getGlipServices} roleList={serviceList}/>} user={user}/>}/>
+            {/* Pass roles here */}
 
             {Children.toArray(serviceList.map(service =>
               <>

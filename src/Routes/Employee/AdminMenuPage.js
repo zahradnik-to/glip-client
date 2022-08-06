@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Col, Row, Nav } from "react-bootstrap";
 import PropTypes from "prop-types";
-import HomePage from "../HomePage";
 import Overview from "../../Components/AdminMenu/Overview";
 import ProceduresList from "../../Components/CrudForms/ProceduresList";
 import Vacation from "../../Components/AdminMenu/Vacation";
@@ -30,7 +29,7 @@ function AdminMenuPage({ typeOfService, page, user }) {
       case 'dovolena':
         return (<Vacation typeOfService={typeOfService.name}/>);
       case 'procedury':
-        return (<ProceduresList passedService={typeOfService.name} user={user}/>);
+        return (<ProceduresList typeOfService={typeOfService.name}/>);
     }
   }
 

@@ -54,6 +54,10 @@
     background-color: #62b062 !important;
 }
 
+.toast-container{
+    z-index: 9999;
+}
+
 .toast {
     border-radius: 5px !important;
     z-index: 9999;

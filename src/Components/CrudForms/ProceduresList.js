@@ -7,23 +7,19 @@ import Button from "react-bootstrap/Button";
 import DataTable from "./DataTable";
 import PropTypes from "prop-types"
 import ToastNotification from "../ToastNotification";
-import ErrorPage from "../../Routes/ErrorPage";
 
 ProceduresList.propTypes = {
-  user: PropTypes.object,
-  passedService: PropTypes.string,
+  typeOfService: PropTypes.string,
 }
 
-function ProceduresList({ user, passedService }) {
+function ProceduresList({ typeOfService }) {
   const [procedures, setProcedures] = useState([]);
   const [name, setName] = useState("");
   const [duration, setDuration] = useState("");
-  const [typeOfService, setTypeOfService] = useState(passedService);
   const [showToast, setShowToast] = useState(false);
   const [toastContent, setToastContent] = useState({});
 
   useEffect(() => {
-    if(!user) return <ErrorPage err={{ status:403 }}/>
     return getProcedures()
   }, []);
 
@@ -143,21 +139,6 @@ function ProceduresList({ user, passedService }) {
               onChange={event => setDuration(event.target.value)}
               required
             />
-          </Form.Group>
-
-          <Form.Group as={Col} md={4} className='mb-2'>
-            <Form.Label>Služba</Form.Label>
-            <Form.Select
-              value={typeOfService}
-              onChange={event => setTypeOfService(event.target.value)}
-              disabled={!user.isAdmin}
-              required
-            >
-              {/* Todo Fixme load services instead of hardcode */}
-              <option value="kadernictvi">Kadeřnictví</option>
-              <option value="cosmetics">Kosmetika</option>
-              <option value="massage">Masáže</option>
-            </Form.Select>
           </Form.Group>
         </Row>
         <Button variant="primary" type="submit">

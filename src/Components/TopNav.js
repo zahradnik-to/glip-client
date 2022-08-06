@@ -19,6 +19,7 @@ function TopNav({ user, googleAuth, logout, serviceList }) {
             <NavDropdown.Item as={Link} to={`/${service.name}/prehled`} key={service._id + "-admNav"}>{service.displayName}</NavDropdown.Item>) )
           }
           <NavDropdown.Divider />
+          <NavDropdown.Item as={Link} to="/admin/role">Role</NavDropdown.Item>
           <NavDropdown.Item as={Link} to="/admin/uzivatele">Uživatelé</NavDropdown.Item>
         </NavDropdown>
       )
