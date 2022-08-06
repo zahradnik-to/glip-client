@@ -59,8 +59,8 @@ function App() {
           <Routes>
             <Route path='/' element={<HomePage services={serviceList}/>}/>
             <Route path='/profil' element={<ProfilePage user={user} login={login}/>}/>
-            <Route path='/objednavky/seznam' element={<UserOverviewPage user={user} page={'/objednavky/seznam'}/>}/>
-            <Route path='/objednavky/kalendar' element={<UserOverviewPage user={user} page={'/objednavky/kalendar'}/>}/>
+            <Route path='/rezervace/seznam' element={<UserOverviewPage user={user} page={'/rezervace/seznam'}/>}/>
+            <Route path='/rezervace/kalendar' element={<UserOverviewPage user={user} page={'/rezervace/kalendar'}/>}/>
             <Route path="/error" element={<ErrorPage/>}/>
 
             <Route path='/admin/uzivatele' element={<DataEditPage contentForm={<UserList/>} user={user}/>}/>
@@ -76,7 +76,7 @@ function App() {
             }
 
             {/* Default for non existing pages */}
-            <Route path="*" element={<HomePage services={services}/>}/>
+            <Route path="*" element={<ErrorPage err={{ status: 404 }}/>}/>
           </Routes>
         </Container>
       </Router>

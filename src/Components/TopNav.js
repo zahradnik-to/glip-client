@@ -37,19 +37,14 @@ function TopNav({ user, googleAuth, logout, serviceList }) {
         Přihlásit se pomocí Google
       </Nav.Link> )
 
-    if (user.role === 'user') return (
+    return (
       <NavDropdown title={user.displayName} id="collasible-nav-dropdown">
         <NavDropdown.Item href="/profil">Profil</NavDropdown.Item>
-        <NavDropdown.Item href="/objednavky/seznam">Moje objednávky</NavDropdown.Item>
+        <NavDropdown.Item href="/rezervace/seznam">Moje rezervace</NavDropdown.Item>
         <NavDropdown.Divider />
         <NavDropdown.Item href="/#" onClick={logout}>Odhlásit se</NavDropdown.Item>
-      </NavDropdown> )
-    else return (
-      <NavDropdown title={user.displayName} id="collasible-nav-dropdown">
-        <NavDropdown.Item as={Link} to="/profil">Profil</NavDropdown.Item>
-        <NavDropdown.Divider />
-        <NavDropdown.Item as={Link} to="/" onClick={logout}>Odhlásit se</NavDropdown.Item>
-      </NavDropdown> )
+      </NavDropdown>
+    )
   };
 
   if (serviceList)  return(
@@ -59,7 +54,7 @@ function TopNav({ user, googleAuth, logout, serviceList }) {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
-            {Children.toArray(services.map(service =>
+            {Children.toArray(serviceList.map(service =>
               <Nav.Link as={Link} to={"/" + service.name} key={service._id}>{service.displayName}</Nav.Link>
               ))
             }

@@ -63,7 +63,6 @@ function UserOverviewPage({ user, page }) {
         if (response.status === 200) {
           setShowEventModal(false);
           setSelectedEvent({})
-          // getEvents();
           setToastContent({
             header: "Stornováno!",
             message: `Událost byla stornována.`,
@@ -87,9 +86,9 @@ function UserOverviewPage({ user, page }) {
 
   const renderContent = () => {
     switch (page) {
-      case '/objednavky/seznam':
+      case '/rezervace/seznam':
         return (<UserEventList openEventModal={openEventModal} update={updateRequired} setUpdate={setUpdateRequired}/>);
-      case '/objednavky/kalendar':
+      case '/rezervace/kalendar':
         return (<UserEventCalendar openEventModal={openEventModal} update={updateRequired} setUpdate={setUpdateRequired}/>);
     }
   }
@@ -98,13 +97,13 @@ function UserOverviewPage({ user, page }) {
     <>
       <Row>
         <Col xs={12} className='mb-3 text-center'>
-          <h1>Menu</h1>
+          <h1>Rezervace</h1>
           <Nav variant="pills" defaultActiveKey={page} className="justify-content-center">
             <Nav.Item>
-              <Nav.Link eventKey={'/objednavky/seznam'} as={Link} to='/objednavky/seznam'>Seznam</Nav.Link>
+              <Nav.Link eventKey={'/rezervace/seznam'} as={Link} to='/rezervace/seznam'>Seznam</Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link eventKey={'/objednavky/kalendar'} as={Link} to='/objednavky/kalendar'>Kalendář</Nav.Link>
+              <Nav.Link eventKey={'/rezervace/kalendar'} as={Link} to='/rezervace/kalendar'>Kalendář</Nav.Link>
             </Nav.Item>
           </Nav>
         </Col>

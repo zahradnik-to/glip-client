@@ -24,7 +24,7 @@ function ErrorPage({ err }) {
     <>
       <Row className="pt-5">
         <Col>
-          <h1 className="text-center mt-3">Objevila se chyba... {err?.status}</h1>
+          <h1 className="text-center mt-3">Objevila se chyba... <span className={"h3"}>({err?.status})</span></h1>
           <div className={"d-flex flex-column align-items-center"}>
             <span className={"h3"}>{err.message}</span>
           </div>

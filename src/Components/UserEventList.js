@@ -51,27 +51,27 @@ function UserEventList({ openEventModal, update, setUpdate }) {
   }
 
   const renderPagination = () => {
-    const num = [];
+    const pageNumberList = [];
     const { page, totalPages } = pagination
     let elipsisFlag = false;
     for (let i = 1; i <= totalPages; i++) {
       if (i <= 3 || Math.abs(i - page) <= 2 || i >= totalPages - 2 ) {
         elipsisFlag = false;
-        num.push(<Pagination.Item active={i === pagination.page} onClick={() => getEvents(i)} key={i}>{i}</Pagination.Item>)
+        pageNumberList.push(<Pagination.Item active={i === pagination.page} onClick={() => getEvents(i)} key={i}>{i}</Pagination.Item>)
       } else {
-        if (!elipsisFlag) num.push(<Pagination.Ellipsis key={i} disabled/>)
+        if (!elipsisFlag) pageNumberList.push(<Pagination.Ellipsis key={i} disabled/>)
         elipsisFlag = true;
       }
     }
-    const result =
+    return(
       <Pagination>
         <Pagination.First disabled={!pagination.hasPrevPage} onClick={() => getEvents(1)}/>
         <Pagination.Prev  disabled={!pagination.hasPrevPage} onClick={() => getEvents(pagination.page - 1)}/>
-        { num }
+        { pageNumberList }
         <Pagination.Next disabled={!pagination.hasNextPage} onClick={() => getEvents(pagination.page + 1)}/>
         <Pagination.Last disabled={!pagination.hasNextPage} onClick={() => getEvents(pagination.totalPages)}/>
       </Pagination>
-    return result;
+    )
   }
 
   const goToPage = (ev) => {
@@ -81,7 +81,6 @@ function UserEventList({ openEventModal, update, setUpdate }) {
 
   return (
     <div>
-      <h1 className="mb-3">Objednávky</h1>
       { loaded
       ? <Form>
         <Table bordered hover responsive="md" size="sm">
