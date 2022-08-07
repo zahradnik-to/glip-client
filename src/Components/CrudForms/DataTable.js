@@ -42,9 +42,10 @@ function DataTable({ data, mapConfig, handleDelete, handleUpdate }) {
     if (existingEdit) {
       existingEdit[objProperty] = value;
     } else {
-      const object = data.find(obj => obj._id === id)
-      object[objProperty] = value;
-      newEditedData.push(object)
+      const originalObject = data.find(obj => obj._id === id)
+      const copyObject =JSON.parse(JSON.stringify(originalObject));
+      copyObject[objProperty] = value;
+      newEditedData.push(copyObject)
     }
     setEditedData(newEditedData);
   };
@@ -64,6 +65,7 @@ function DataTable({ data, mapConfig, handleDelete, handleUpdate }) {
       return (
         <td key={`${dbObject._id}_${objProperty}`}>
           <Form.Select
+            required={true}
             defaultValue={dbObject[objProperty]}
             onChange={e => handleEdit(dbObject._id, objProperty, e.target.value)}
           >
@@ -73,13 +75,16 @@ function DataTable({ data, mapConfig, handleDelete, handleUpdate }) {
         </td>
       );
     }
+    console.log(dbObject)
     return (
       <td key={`${dbObject._id}_${objProperty}`}>
         <Form.Control
+          placeholder={dbObject[objProperty]}
           defaultValue={dbObject[objProperty]}
           type={mapConfigOfProperty.type}
           onChange={e => handleEdit(dbObject._id, objProperty, e.target.value)}
           disabled={!!mapConfigOfProperty.disabled}
+          required={true}
         />
       </td>
     );
@@ -90,18 +95,20 @@ function DataTable({ data, mapConfig, handleDelete, handleUpdate }) {
    * Creates a column from every entry in mapConfig.headerNames - dbObject[mapConfig.headerNames.entryName]
    */
   const tableContent = data.map(dbObject => {
-    return <tr key={dbObject._id}>
-      {
-        mapConfig.headerNames.map(objProperty => {
-          return getCorrectFormInput(dbObject, objProperty.entryName, objProperty)
-        })
-      }
-      {actionButtonsCell(dbObject._id)}
-    </tr>
+    return(
+      <tr key={dbObject._id}>
+          {
+            mapConfig.headerNames.map(objProperty => {
+              return getCorrectFormInput(dbObject, objProperty.entryName, objProperty)
+            })
+          }
+          {actionButtonsCell(dbObject._id)}
+      </tr>
+    )
   })
 
   return (
-    <Form>
+    // <Form>
       <Table bordered hover>
         <thead>
         <tr>
@@ -113,7 +120,7 @@ function DataTable({ data, mapConfig, handleDelete, handleUpdate }) {
         {tableContent}
         </tbody>
       </Table>
-    </Form>
+    // </Form>
   );
 }
 

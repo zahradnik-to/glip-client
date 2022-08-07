@@ -247,7 +247,7 @@ function ReservationForm({ typeOfService, saveEvent, setEventTime, user, logout,
             >
               <option value=''>Vyberte službu</option>
               {Children.toArray(procedures
-                .map(procedure => <option key={procedure._id} value={procedure._id}>{procedure.name} ({procedure.duration} minut)</option>))}
+                .map(procedure => <option key={procedure._id} value={procedure._id}>{procedure.name} ({procedure.duration} minut) - {procedure.price}Kč</option>))}
             </Form.Select>
           </Form.Group>
         </Col>

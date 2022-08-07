@@ -16,6 +16,7 @@ function ProceduresList({ typeOfService }) {
   const [procedures, setProcedures] = useState([]);
   const [name, setName] = useState("");
   const [duration, setDuration] = useState("");
+  const [price, setPrice] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [toastContent, setToastContent] = useState({});
 
@@ -32,6 +33,11 @@ function ProceduresList({ typeOfService }) {
       }, {
         entryName: "duration",
         showName: "Délka (minuty)",
+        type: "number",
+      },
+      {
+        entryName: "price",
+        showName: "Cena",
         type: "number",
       },
     ],
@@ -109,13 +115,15 @@ function ProceduresList({ typeOfService }) {
     })
     setShowToast(true);
   }
+  
+  const DIVISIBLE_BY_15_PATTERN = '^[+-]?[012]?\\d:[012345]?[15]$';
 
   return (
     <>
       <Form onSubmit={event => handleCreate(event)} className='mb-3'>
         <Row>
           <h1>Přidat proceduru</h1>
-          <Form.Group as={Col} md={4} className='mb-2'>
+          <Form.Group as={Col} md={4} sm={12} className='mb-2'>
             <Form.Label>Název</Form.Label>
             <Form.Control
               type={"text"}
@@ -126,18 +134,30 @@ function ProceduresList({ typeOfService }) {
             />
           </Form.Group>
 
-          <Form.Group as={Col} md={4} className='mb-2'>
+          <Form.Group as={Col} md={4} sm={12} className='mb-2'>
             <Form.Label>Délka</Form.Label>
             <Form.Control
               type="number"
               step={15}
               snap={"true"}
               min={15}
-              pattern="^[+-]?[012]?\d:[012345]?[15]$"
+              pattern={DIVISIBLE_BY_15_PATTERN}
               placeholder="Délka (minut)"
               value={duration}
               onChange={event => setDuration(event.target.value)}
               required
+            />
+          </Form.Group>
+
+          <Form.Group as={Col} md={4} sm={12} className='mb-2'>
+            <Form.Label>Cena (Kč)</Form.Label>
+            <Form.Control
+                type="number"
+                min={0}
+                placeholder="Cena (Kč)"
+                value={price}
+                onChange={event => setPrice(event.target.value)}
+                required
             />
           </Form.Group>
         </Row>
