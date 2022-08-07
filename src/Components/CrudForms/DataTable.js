@@ -50,9 +50,9 @@ function DataTable({ data, mapConfig, handleDelete, handleUpdate }) {
   };
 
   const getCorrectFormInput = (dbObject, objProperty, mapConfigOfProperty) => {
-    if (mapConfigOfProperty.type === 'select') {
+    if (mapConfigOfProperty.type === 'select' && mapConfigOfProperty.entryName === 'role') {
       if (dbObject.role === 'admin')
-        return (
+        return ( // If user role is admin, render disabled input
           <td key={`${dbObject._id}_${objProperty}`}>
             <Form.Control
               defaultValue={mapConfigOfProperty.options.find(roleOpt => roleOpt.name === 'admin').displayName}
@@ -68,7 +68,7 @@ function DataTable({ data, mapConfig, handleDelete, handleUpdate }) {
             onChange={e => handleEdit(dbObject._id, objProperty, e.target.value)}
           >
             {mapConfigOfProperty.options.map(role =>
-                <option key={role._id} value={role._id}>{role.displayName}</option>)}
+                <option key={role._id} value={role.name} hidden={role.name === 'admin'}>{role.displayName}</option>)}
           </Form.Select>
         </td>
       );

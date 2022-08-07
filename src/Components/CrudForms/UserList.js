@@ -33,6 +33,11 @@ function UserList() {
     ],
   }
 
+  useEffect(() => {
+    getUsers();
+    getRoles();
+  }, []);
+
   const getUsers = () => {
     axios.get(`/user/get-many`)
       .then(response => {
@@ -86,14 +91,13 @@ function UserList() {
       .catch(err => renderToastError(err))
   }
 
-  const handleUpdate = (object) => { // Todo user update
-    const roleObj = roleOptions.find(r => r._id === object.role);
+  const handleUpdate = (object) => {
     axios.put(`/user/update`, object)
       .then(response => {
         if (response.status === 200) {
           setToastContent({
             header: "Hotovo!",
-            message: `Role změněna na ${roleObj.displayName}.`,
+            message: `Role změněna.`,
             variant: "success"
           })
           setShowToast(true);
@@ -115,11 +119,6 @@ function UserList() {
       </ToastContainer>
     )
   }
-
-  useEffect(() => {
-   getUsers();
-   getRoles();
-  }, []);
 
   return (
     <>

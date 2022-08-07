@@ -102,9 +102,10 @@ function UserEventList({ openEventModal, update, setUpdate }) {
               <td>
                 { formatTimeToLocaleString(e.start) } - { formatTimeToLocaleString(e.end) }
               </td>
-              {/* End */}
+              {/* Studio */}
               <td>{ e.typeOfService }</td>
-              <td>{ e.procedureName }</td>
+              {/* Procedure */}
+              <td>{ e.title }</td>
               <td>
                 <span className={'h-100 me-md-3 tableAction'} onClick={() => openEventModal(e)}>Detail🖊</span>
               </td>
