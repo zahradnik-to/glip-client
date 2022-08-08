@@ -6,6 +6,7 @@ import axios from "axios";
 import Col from "react-bootstrap/Col"
 import Row from "react-bootstrap/Row"
 import Button from "react-bootstrap/Button"
+import InputGroup from "react-bootstrap/InputGroup";
 import ToastNotification from "../Components/ToastNotification";
 
 ProfilePage.propTypes = {
@@ -16,6 +17,7 @@ ProfilePage.propTypes = {
 function ProfilePage({ user, login }) {
   const [roleOptions, setRoleOptions] = useState([]);
   const [selectedRole, setSelectedRole] = useState({});
+  const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber?.slice(3));
   const [showToast, setShowToast] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [toastContent, setToastContent] = useState({});
@@ -44,11 +46,12 @@ function ProfilePage({ user, login }) {
       .catch(err => console.error(err))
   }
 
-  const updateAdminRole = (e) => {
+  const handleUpdate = (e) => {
     e.preventDefault();
     const dtoIn = {
       _id: user._id,
-      role: selectedRole._id
+      phoneNumber: `420${phoneNumber}`,
+      role: user.isAdmin ? selectedRole._id : undefined
     }
     axios.put(`/user/update`, dtoIn)
       .then(response => {
@@ -56,7 +59,7 @@ function ProfilePage({ user, login }) {
           user.role = selectedRole.name;
           setToastContent({
             header: "Hotovo!",
-            message: `Role změněna na ${selectedRole.displayName}.`,
+            message: `Změny uloženy.`,
             variant: "success"
           })
           setShowToast(true);
@@ -89,26 +92,44 @@ function ProfilePage({ user, login }) {
 
         <dt>Jméno</dt>
         <dd>{user.displayName}</dd>
-        {user.isAdmin && dataLoaded
-          ?
-          <Form onSubmit={updateAdminRole}>
-            <Form.Group as={Row} className='mb-2'>
-              <Form.Label as={"dt"}>Role</Form.Label>
-              <Col sm={12} md={3}>
-                <Form.Select
-                  defaultValue={roleOptions.find(r=> r.name === user.role)._id}
-                  name='role'
-                  onChange={e => handleSetRole(e.target.value)}
-                  required
-                >
-                  {Children.toArray(roleOptions.map(role => <option key={role._id} value={role._id}>{role.displayName}</option>))}
-                </Form.Select>
-              </Col>
-            </Form.Group>
-            <Button variant="primary"  type='submit'>Změnit roli</Button>
-          </Form>
-          : <></>
-        }
+        <Form onSubmit={handleUpdate}>
+          <Form.Group as={Row} className='mb-2'>
+            <Form.Label as={"dt"}>Telefonní číslo</Form.Label>
+            <Col sm={12} md={3}>
+              <InputGroup>
+                <InputGroup.Text>+420</InputGroup.Text>
+                <Form.Control
+                    type="tel"
+                    placeholder='111222333'
+                    pattern="^\b\d{9}\b$"
+                    minLength={9}
+                    maxLength={9}
+                    value={phoneNumber}
+                    onChange={event => setPhoneNumber(event.target.value)}
+                    required={true}
+                />
+              </InputGroup>
+            </Col>
+          </Form.Group>
+          {user.isAdmin && dataLoaded
+            ?
+              <Form.Group as={Row} className='mb-2'>
+                <Form.Label as={"dt"}>Role</Form.Label>
+                <Col sm={12} md={3}>
+                  <Form.Select
+                    defaultValue={roleOptions.find(r=> r.name === user.role)._id}
+                    name='role'
+                    onChange={e => handleSetRole(e.target.value)}
+                    required
+                  >
+                    {Children.toArray(roleOptions.map(role => <option key={role._id} value={role._id}>{role.displayName}</option>))}
+                  </Form.Select>
+                </Col>
+              </Form.Group>
+            : <></>
+          }
+        <Button variant="primary"  type='submit'>Uložit změny</Button>
+        </Form>
       </dl>
       <ToastNotification showToast={showToast} setShowToast={setShowToast} toastContent={toastContent}/>
     </>

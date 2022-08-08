@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Col, Row, Nav } from "react-bootstrap";
 import PropTypes from "prop-types";
 import Overview from "../../Components/AdminMenu/Overview";
@@ -38,15 +38,15 @@ function AdminMenuPage({ typeOfService, page, user }) {
       <Row>
         <Col xs={12} className='mb-3 text-center'>
           <h1>{typeOfService.displayName}</h1>
-          <Nav variant="pills" defaultActiveKey={page} className="justify-content-center">
+          <Nav variant="pills" className="justify-content-center">
             <Nav.Item>
-              <Nav.Link eventKey={'prehled'} as={Link} to={`/${typeOfService.name}/prehled`}>Přehled</Nav.Link>
+              <Nav.Link as={Link} active={page === "prehled"} to={`/${typeOfService.name}/prehled`}>Přehled</Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link eventKey={'dovolena'} as={Link} to={`/${typeOfService.name}/dovolena`}>Dovolená</Nav.Link>
+              <Nav.Link as={Link} active={page === "dovolena"} to={`/${typeOfService.name}/dovolena`}>Dovolená</Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link eventKey={'procedury'} as={Link} to={`/${typeOfService.name}/procedury`}>Procedury</Nav.Link>
+              <Nav.Link as={Link} active={page === "procedury"} to={`/${typeOfService.name}/procedury`}>Procedury</Nav.Link>
             </Nav.Item>
           </Nav>
         </Col>

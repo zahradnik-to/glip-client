@@ -30,6 +30,7 @@ function UserEventModal({ isOpen, event, onClose, onSubmit, onEventCancel }) {
       setStartDate(new Date(event.start))
       setOldEventTime(getEventTime());
       setNotes(event.notes)
+      setPhoneNumber(event.phoneNumber.slice(3))
     }
   }, [event])
 
@@ -37,7 +38,7 @@ function UserEventModal({ isOpen, event, onClose, onSubmit, onEventCancel }) {
     e.preventDefault();
     const modifiedEvent = {
       _id: event._id,
-      phoneNumber,
+      phoneNumber: `420${phoneNumber}`,
       notes,
     }
     onSubmit(modifiedEvent);

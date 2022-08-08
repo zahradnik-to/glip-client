@@ -45,6 +45,7 @@ function ReservationForm({ typeOfService, saveEvent, setEventTime, user, logout,
     if (user) {
       setEmail(user.email)
       setLastname(user.name.familyName)
+      setPhoneNumber(user.phoneNumber.slice(3))
     }
     axios.get(`/procedure/get?typeOfService=${typeOfService}`)
       .then(response => {
