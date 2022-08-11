@@ -1,9 +1,10 @@
-import React, { useState, } from "react";
+import React, { useEffect, useState, } from "react";
 import PropTypes from "prop-types";
 import Row from "react-bootstrap/Row";
 import axios from "axios";
 import ReservationForm from "../Components/ReservationForm";
 import ToastNotification from "../Components/ToastNotification";
+import { formatDateToLocaleString } from "../Utils/DateTimeHelper";
 
 ReservationPage.propTypes = {
   typeOfService: PropTypes.string.isRequired,
@@ -13,7 +14,7 @@ ReservationPage.propTypes = {
 
 function ReservationPage({ typeOfService, user, logout }) {
   const [events, setEvents] = useState([]);
-  const [eventTime, setEventTime] = useState('08:30')
+  const [eventTime, setEventTime] = useState('')
   const [showToast, setShowToast] = useState(false);
   const [toastContent, setToastContent] = useState({});
 
@@ -31,9 +32,11 @@ function ReservationPage({ typeOfService, user, logout }) {
     axios.post('/calendar/create-event', dtoIn)
       .then(result => {
         if (result.status === 201) {
+          const event = result.data;
+          const eventDate = formatDateToLocaleString(event.date)
           setToastContent({
             header: "Rezervováno!",
-            message: `Vaše rezervace v ${eventTime} byla zaznamenána.`,
+            message: `Vaše rezervace ${eventDate} v ${event.eventTime} byla zaznamenána.`,
             variant: "success"
           })
           setShowToast(true);
@@ -71,9 +74,11 @@ function ReservationPage({ typeOfService, user, logout }) {
   return (
     <>
       <Row>
+        <h1 className={"mb-3 text-center"}><u>{typeOfService.displayName}</u></h1>
         <ReservationForm
-          typeOfService={typeOfService}
+          typeOfService={typeOfService.name}
           saveEvent={handleSaveEvent}
+          eventTime={eventTime}
           setEventTime={setEventTime}
           user={user}
           logout={logout}

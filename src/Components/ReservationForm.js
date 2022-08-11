@@ -9,12 +9,15 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from '@fullcalendar/interaction';
 import Spinner from 'react-bootstrap/Spinner';
-import { isPast, addDays, addMinutes }  from 'date-fns';
+import { isPast, addDays, addMinutes, addMonths, subMonths, startOfMonth, endOfMonth, startOfToday }  from 'date-fns';
 import InputGroup from "react-bootstrap/InputGroup";
+import AdditionalProceduresAccordion from "./AdditionalProceduresAccordion";
+import { formatTimeToLocaleString } from "../Utils/DateTimeHelper";
 
 ReservationForm.propTypes = {
   typeOfService: PropTypes.string.isRequired,
   saveEvent: PropTypes.func.isRequired,
+  eventTime: PropTypes.string.isRequired,
   setEventTime: PropTypes.func.isRequired,
   handleDatesSet: PropTypes.func.isRequired,
   handleSelectAllow: PropTypes.func.isRequired,
@@ -27,47 +30,61 @@ ReservationForm.defaultProps = {
   eventDate: null,
 }
 
-function ReservationForm({ typeOfService, saveEvent, setEventTime, user, logout, events, handleDatesSet, handleSelectAllow,
+function ReservationForm({ typeOfService, saveEvent, eventTime ,setEventTime, user, logout, events, handleDatesSet, handleSelectAllow,
 }) {
   const calendarRef = useRef(null);
   const [procedureId, setProcedureId] = useState('');
   const [eventDate, setEventDate] = useState(null)
   const [eventEndTime, setEventEndTime] = useState('')
-  const [extraDuration, setExtraDuration] = useState(0); // Todo Extra duration added by checking checkboxes
-  const [email, setEmail] = useState('');
+  const [selectedAddProcList, setSelectedAddProcList] = useState([]);
+  const [extraDuration, setExtraDuration] = useState(0);
+  const [email, setEmail] = useState(user?.email);
   const [notes, setNotes] = useState('');
-  const [lastname, setLastname] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [lastname, setLastname] = useState(user?.name?.familyName);
+  const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber?.slice(3));
   const [procedures, setProcedures] = useState([]);
-  const [freeTime, setSetFreeTime] = useState(null);
+  const [additionalProcedures, setAdditionalProcedures] = useState([]);
+  const [freeTime, setFreeTime] = useState(null);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [extraPrice, setExtraPrice] = useState(0);
+  const [totalDuration, setTotalDuration] = useState(0);
 
   useEffect(() => {
-    if (user) {
-      setEmail(user.email)
-      setLastname(user.name.familyName)
-      setPhoneNumber(user.phoneNumber.slice(3))
-    }
-    axios.get(`/procedure/get?typeOfService=${typeOfService}`)
+    axios.get(`/procedure/get?typeOfService=${typeOfService}&type=full`)
       .then(response => {
         if (response.status === 200) {
           return response.data
-        } else throw new Error("Auth failed")
+        } else throw new Error("Nepovedlo se získat procedury.")
       })
       .then(data => {
         setProcedures(data)
+        getAdditionalProcedures()
       })
       .catch(err => console.log(err))
   }, [typeOfService, user]);
 
   useEffect(() => {
     if (eventDate !== null && procedureId) getFreeTime();
-  }, [eventDate, procedureId]);
+  }, [eventDate, procedureId, extraDuration]);
+
+  const getAdditionalProcedures = () => {
+    axios.get(`/procedure/get?typeOfService=${typeOfService}&type=additional`)
+    .then(response => {
+      if (response.status === 200) {
+        return response.data
+      } else throw new Error("Nepovedlo se získat procedury.")
+    })
+    .then(data => {
+      setAdditionalProcedures(data)
+    })
+    .catch(err => console.log(err))
+  }
 
   const getFreeTime = () => {
-    setSetFreeTime(null);
-    axios.get(`/calendar/get-free-time?date=${eventDate.toISOString()}&typeOfService=${typeOfService}&procedureId=${procedureId}`)
-      .then(freeTime => {
-        setSetFreeTime(freeTime.data)
+    setFreeTime(null);
+    axios.get(`/calendar/get-free-time?date=${eventDate.toISOString()}&typeOfService=${typeOfService}&procedureId=${procedureId}&duration=${totalDuration}`)
+      .then(response => {
+        setFreeTime(response.data)
         setEventTime('')
       })
       .catch(err => console.log(err));
@@ -130,6 +147,7 @@ function ReservationForm({ typeOfService, saveEvent, setEventTime, user, logout,
       typeOfService,
       notes,
       eventDate: eventDate.toISOString(),
+      selectedAddProcList
     })
     const calendarApi = calendarRef.current.getApi();
     calendarApi.unselect();
@@ -208,30 +226,70 @@ function ReservationForm({ typeOfService, saveEvent, setEventTime, user, logout,
     calendarApi.unselect();
   }
 
-  const handleSetEventTime = (timeValue) => {
-    setEventTime(timeValue);
-    getEndTime(timeValue);
-  }
-
-  const getEndTime = (timeStartValue) => {
-    const startTime = timeStartValue.split(':').map(e => parseInt(e));
-    const startDate = new Date(eventDate);
-    const duration = procedures.find(e => e._id === procedureId)?.duration;
-    startDate.setHours(startTime[0]);
-    startDate.setMinutes(startTime[1]);
-
-    const endDate = new Date(addMinutes(startDate, duration))
-
-    const doubleDigit = (time) => ("0" + time).slice(-2);
-    const endHours = doubleDigit(endDate.getHours());
-    const endMins = doubleDigit(endDate.getMinutes());
-
-    setEventEndTime(`${endHours}:${endMins}`)
-  }
-
   const handleSetProcedureId = (procedureId) => {
     setProcedureId(procedureId);
+    const { price, duration } = procedures.find(p => p._id === procedureId)
+    setTotalPrice(price + extraPrice)
+    setTotalDuration(duration + extraDuration)
+    resetEventEndTime();
+  }
+
+  const resetEventEndTime = () => {
+    console.log("reseting")
     setEventEndTime("--:--");
+  }
+
+  const handleSetEventTime = (timeValue) => {
+    setEventTime(timeValue);
+    calculateEndTime(timeValue);
+  }
+
+  const calculateEndTime = (timeValue) => {
+    const startTime = timeValue || eventTime;
+    if (!startTime) return;
+    const [startHour, startMin] = startTime.split(':').map(e => parseInt(e));
+    const startDate = new Date(eventDate);
+    startDate.setHours(startHour);
+    startDate.setMinutes(startMin);
+
+    const duration = procedures.find(e => e._id === procedureId)?.duration;
+    const endDate = new Date(addMinutes(startDate, duration + extraDuration))
+
+    setEventEndTime(formatTimeToLocaleString(endDate))
+  }
+
+  const handleAdditionalProcSelect = (chBox) => {
+    const isCheckboxChecked = chBox.checked;
+    const triggeredProcedureId = chBox.id;
+    const procObj = additionalProcedures.find(p => p._id === triggeredProcedureId);
+    if (isCheckboxChecked){
+      setSelectedAddProcList([...selectedAddProcList, procObj])
+
+      setExtraDuration(extraDuration + procObj.duration)
+      setTotalDuration(totalDuration + procObj.duration)
+
+      setExtraPrice(extraPrice + procObj.price)
+      setTotalPrice(totalPrice + procObj.price)
+    } else {
+      const listWithRemovedProc = selectedAddProcList.filter(p => p._id !== triggeredProcedureId)
+      setSelectedAddProcList(listWithRemovedProc)
+
+      setExtraDuration(extraDuration - procObj.duration)
+      setTotalDuration(totalDuration - procObj.duration)
+
+      setExtraPrice(extraPrice - procObj.price)
+      setTotalPrice(totalPrice - procObj.price)
+    }
+    resetEventEndTime()
+  }
+
+  // useEffect(() => {
+  //   calculateEndTime()
+  //   resetEventEndTime();
+  // }, [handleAdditionalProcSelect])
+
+  const validRangeObj = {
+    start: "2022-08-10T07:43:32.998Z",
   }
 
   return (
@@ -240,7 +298,7 @@ function ReservationForm({ typeOfService, saveEvent, setEventTime, user, logout,
         <Col md={12} sm={12} className='mb-3 reservation'>
           <h1 className="h2 fst-italic">1. Vyberte službu</h1>
           <Form.Group className='mb-2'>
-            <Form.Label>Úkon</Form.Label>
+            <Form.Label visuallyHidden={true}>Služba</Form.Label>
             <Form.Select
               name='procedure'
               onChange={e => handleSetProcedureId(e.target.value)}
@@ -248,9 +306,14 @@ function ReservationForm({ typeOfService, saveEvent, setEventTime, user, logout,
             >
               <option value=''>Vyberte službu</option>
               {Children.toArray(procedures
-                .map(procedure => <option key={procedure._id} value={procedure._id}>{procedure.name} ({procedure.duration} minut) - {procedure.price}Kč</option>))}
+                .map(procedure => <option
+                    key={procedure._id}
+                    value={procedure._id}>
+                  {procedure.name} ({procedure.duration} minut) - {procedure.price} Kč
+                </option>))}
             </Form.Select>
           </Form.Group>
+          <AdditionalProceduresAccordion addProcList={additionalProcedures} handleAddProcedureSelect={handleAdditionalProcSelect}/>
         </Col>
         <Col md={8} sm={12} className='mb-3 reservation'>
           <h1 className="h2 fst-italic">2. Vyberte datum a čas</h1>
@@ -276,7 +339,6 @@ function ReservationForm({ typeOfService, saveEvent, setEventTime, user, logout,
               list:  'list',
             }}
             moreLinkText={'další'}
-            dayMaxEvents={2}
             eventTimeFormat={{
               hour: 'numeric',
               minute: '2-digit',
@@ -291,17 +353,28 @@ function ReservationForm({ typeOfService, saveEvent, setEventTime, user, logout,
             <Form.Label>Začátek</Form.Label>
             {renderFreeTime()}
           </Form.Group>
-          <Form.Group className='mb-2'>
-            <Form.Label>Konec</Form.Label>
-            <Form.Control
-              type='text'
-              value={eventEndTime}
-              placeholder='--:--'
-              readOnly
-              disabled
-            />
-          </Form.Group>
-
+          <Row>
+            <Form.Group as={Col} xs={12} sm={6} className='mb-2'>
+              <Form.Label>Konec</Form.Label>
+              <Form.Control
+                type='text'
+                defaultValue={eventEndTime}
+                placeholder='--:--'
+                readOnly
+                disabled
+              />
+            </Form.Group>
+            <Form.Group as={Col} xs={12} sm={6} className='mb-2'>
+              <Form.Label>Celková cena</Form.Label>
+              <Form.Control
+                  type='text'
+                  value={`${totalPrice} Kč`}
+                  placeholder='0'
+                  readOnly
+                  disabled
+              />
+            </Form.Group>
+          </Row>
           <h1 className="h2 fst-italic mt-5">3. Doplňte informace</h1>
           {renderCustomerDataInputs()}
 

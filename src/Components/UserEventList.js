@@ -9,7 +9,7 @@ import Form from "react-bootstrap/Form";
 import Pagination from "react-bootstrap/Pagination";
 import PropTypes from 'prop-types';
 import axios from "axios";
-import { formatDateToLocaleString, formatTimeToLocaleString } from "../Utils/UserEventListHelper";
+import { formatDateToLocaleString, formatTimeToLocaleString } from "../Utils/DateTimeHelper";
 
 UserEventList.propTypes = {
   openEventModal: PropTypes.func.isRequired,

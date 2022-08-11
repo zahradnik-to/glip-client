@@ -9,6 +9,7 @@ import { isPast, subHours } from 'date-fns';
 import InputGroup from "react-bootstrap/InputGroup";
 
 import "react-datepicker/dist/react-datepicker.css";
+import { formatTimeToLocaleString } from "../Utils/DateTimeHelper";
 
 UserEventModal.propTypes = {
   isOpen: PropTypes.bool,
@@ -28,7 +29,7 @@ function UserEventModal({ isOpen, event, onClose, onSubmit, onEventCancel }) {
   useEffect(() => {
     if (Object.keys(event).length){
       setStartDate(new Date(event.start))
-      setOldEventTime(getEventTime());
+      setOldEventTime(formatTimeToLocaleString(event.start));
       setNotes(event.notes)
       setPhoneNumber(event.phoneNumber.slice(3))
     }
@@ -51,17 +52,6 @@ function UserEventModal({ isOpen, event, onClose, onSubmit, onEventCancel }) {
       canceled: true,
     }
     onEventCancel(dtoIn);
-  }
-
-  const getEventTime = () => {
-    const eventDate = new Date(event.start);
-    const hours = makeTimeDoubleDigit(eventDate.getHours());
-    const minutes = makeTimeDoubleDigit(eventDate.getMinutes());
-    return `${hours}:${minutes}`
-  }
-
-  const makeTimeDoubleDigit = (time) => {
-    return ("0" + time).slice(-2);
   }
 
   const isEditAllowed = () => {
@@ -154,6 +144,15 @@ function UserEventModal({ isOpen, event, onClose, onSubmit, onEventCancel }) {
                     })
                   }
                   readOnly
+                />
+              </Form.Group>
+
+              <Form.Group className='mb-2'>
+                <Form.Label>Cena</Form.Label>
+                <Form.Control
+                    name='eventPrice'
+                    value={`${event.price + event.extraPrice}Kč`}
+                    readOnly
                 />
               </Form.Group>
 

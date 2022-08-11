@@ -34,9 +34,17 @@
     text-decoration: none;
 }
 
+.fc .fc-day-today {
+    background-color: white !important;
+}
+
+.fc .fc-highlight {
+    background: rgba(255, 143, 251, 0.4) !important;
+}
+
 .reservation .fc-day-past:not(#vacation .fc-day-past),
 .reservation .fc-event-past:not(#vacation .fc-event-past) {
-    background-color: rgba(239, 239, 239, 0.6) !important;
+    background-color: rgb(220, 220, 220) !important;
     color: rgb(84, 84, 84) !important;
     border-color: rgba(118, 118, 118, 0.3) !important;
 }
@@ -54,13 +62,14 @@
     background-color: #62b062 !important;
 }
 
-.toast-container{
-    z-index: 9999;
+#root .toast-container{
+    position: fixed !important;
+    bottom: 2rem !important;
+    z-index: 9999 !important;
 }
 
 .toast {
     border-radius: 5px !important;
-    z-index: 9999;
 }
 
 .link-banner-wrapper {
@@ -79,4 +88,12 @@
     color: black;
     font-family: Calibri, sans-serif;
     font-size: 2em;
+}
+
+.accordion-button {
+    padding: 8px 12px !important;
+}
+
+.accordion-button::after {
+    padding: 8px 12px !important;
 }

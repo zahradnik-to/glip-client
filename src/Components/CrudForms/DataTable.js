@@ -30,8 +30,6 @@ function DataTable({ data, mapConfig, handleDelete, handleUpdate }) {
     const entryToUpdate = editedData.find(obj => obj._id === id)
     if (entryToUpdate) {
       handleUpdate( entryToUpdate )
-    } else {
-      console.log("No changes to submit.")
     }
   }
 
@@ -51,31 +49,38 @@ function DataTable({ data, mapConfig, handleDelete, handleUpdate }) {
   };
 
   const getCorrectFormInput = (dbObject, objProperty, mapConfigOfProperty) => {
-    if (mapConfigOfProperty.type === 'select' && mapConfigOfProperty.entryName === 'role') {
-      if (dbObject.role === 'admin')
-        return ( // If user role is admin, render disabled input
-          <td key={`${dbObject._id}_${objProperty}`}>
-            <Form.Control
-              defaultValue={mapConfigOfProperty.options.find(roleOpt => roleOpt.name === 'admin').displayName}
-              type="text"
-              disabled
-            />
-          </td>
+    if (mapConfigOfProperty.type === 'select') {
+      if (mapConfigOfProperty.entryName === 'role'){
+        return (
+            <td key={`${dbObject._id}_${objProperty}`}>
+              <Form.Select
+                  disabled={dbObject.role === 'admin'}
+                  required={true}
+                  defaultValue={dbObject[objProperty]}
+                  onChange={e => handleEdit(dbObject._id, objProperty, e.target.value)}
+              >
+                {mapConfigOfProperty.options.map(role =>
+                    <option key={role._id} value={role.name} hidden={role.name === 'admin'}>{role.displayName}</option>)}
+              </Form.Select>
+            </td>
         );
-      return (
-        <td key={`${dbObject._id}_${objProperty}`}>
-          <Form.Select
-            required={true}
-            defaultValue={dbObject[objProperty]}
-            onChange={e => handleEdit(dbObject._id, objProperty, e.target.value)}
-          >
-            {mapConfigOfProperty.options.map(role =>
-                <option key={role._id} value={role.name} hidden={role.name === 'admin'}>{role.displayName}</option>)}
-          </Form.Select>
-        </td>
-      );
+      }
+      else {
+        return (
+            <td key={`${dbObject._id}_${objProperty}`}>
+              <Form.Select
+                  required={true}
+                  defaultValue={dbObject[objProperty]}
+                  onChange={e => handleEdit(dbObject._id, objProperty, e.target.value)}
+                  disabled={!!mapConfigOfProperty.disabled}
+              >
+                {mapConfigOfProperty.options.map(opt =>
+                    <option key={opt.value} value={opt.value}>{opt.displayName}</option>)}
+              </Form.Select>
+            </td>
+        );
+      }
     }
-    console.log(dbObject)
     return (
       <td key={`${dbObject._id}_${objProperty}`}>
         <Form.Control

@@ -51,7 +51,7 @@ function ProfilePage({ user, login }) {
     const dtoIn = {
       _id: user._id,
       phoneNumber: `420${phoneNumber}`,
-      role: user.isAdmin ? selectedRole._id : undefined
+      role: selectedRole.name
     }
     axios.put(`/user/update`, dtoIn)
       .then(response => {
@@ -78,8 +78,9 @@ function ProfilePage({ user, login }) {
     setShowToast(true);
   }
 
-  const handleSetRole = (roleId) => {
-    const roleObj = roleOptions.find(r => r._id === roleId);
+  const handleSetRole = (roleName) => {
+    console.log(roleOptions)
+    const roleObj = roleOptions.find(r => r.name === roleName);
     setSelectedRole(roleObj)
   }
 
@@ -117,12 +118,12 @@ function ProfilePage({ user, login }) {
                 <Form.Label as={"dt"}>Role</Form.Label>
                 <Col sm={12} md={3}>
                   <Form.Select
-                    defaultValue={roleOptions.find(r=> r.name === user.role)._id}
+                    defaultValue={user.role}
                     name='role'
                     onChange={e => handleSetRole(e.target.value)}
                     required
                   >
-                    {Children.toArray(roleOptions.map(role => <option key={role._id} value={role._id}>{role.displayName}</option>))}
+                    {Children.toArray(roleOptions.map(role => <option key={role._id} value={role.name}>{role.displayName}</option>))}
                   </Form.Select>
                 </Col>
               </Form.Group>

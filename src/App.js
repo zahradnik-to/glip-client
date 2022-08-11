@@ -33,6 +33,7 @@ function App() {
     try {
       const response = await axios.get('/auth/login/success', { withCredentials: true });
       setUser(response.data.user)
+      console.log(response.data.user)
     } catch (e) {
       console.error("Auth error.")
       setUser(null)
@@ -70,7 +71,7 @@ function App() {
 
             {Children.toArray(serviceList.map(service =>
               <>
-                <Route path={`/${service.name}`} element={<ReservationPage typeOfService={service.name} user={user} logout={logout}/>}/>
+                <Route path={`/${service.name}`} element={<ReservationPage typeOfService={service} user={user} logout={logout}/>}/>
                 {/* Administration */}
                 <Route path={`/${service.name}/prehled`} element={<AdminMenuPage typeOfService={service} page={'prehled'} user={user}/>}/>
                 <Route path={`/${service.name}/dovolena`} element={<AdminMenuPage typeOfService={service} page={'dovolena'} user={user}/>}/>

@@ -1,8 +1,9 @@
-const formatDateToLocaleString = (eventDateStr) => {
+const formatDateToLocaleString = (eventDateStr, options) => {
   return new Date(eventDateStr).toLocaleString('cs', {
     month: 'numeric',
     day: 'numeric',
     year: '2-digit',
+    ...options
   })
 }
 

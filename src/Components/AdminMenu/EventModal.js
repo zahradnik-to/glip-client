@@ -173,6 +173,15 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
               </Form.Group>
 
               <Form.Group className='mb-2'>
+                <Form.Label>Cena</Form.Label>
+                <Form.Control
+                    name='eventPrice'
+                    value={`${event.price + event.extraPrice}Kč`}
+                    readOnly
+                />
+              </Form.Group>
+
+              <Form.Group className='mb-2'>
                 <Form.Label>Poznámky zákazníka</Form.Label>
                 <Form.Control
                   placeholder='Poznámky zákazníka'
