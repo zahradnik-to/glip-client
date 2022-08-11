@@ -11,6 +11,7 @@ import isSameDay from 'date-fns/isSameDay';
 import InputGroup from "react-bootstrap/InputGroup";
 
 import "react-datepicker/dist/react-datepicker.css";
+import { formatTimeToLocaleString } from "../../Utils/DateTimeHelper";
 
 EventModal.propTypes = {
   isOpen: PropTypes.bool,
@@ -31,24 +32,24 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
   const [phoneNumber, setPhoneNumber] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const [freeTime, setFreeTime] = useState([]);
+  const [duration, setDuration] = useState(0);
+  const [extraDuration, setExtraDuration] = useState(0);
 
   useEffect(() => {
     if (Object.keys(event).length){
       setStartDate(new Date(event.start))
-      setOldEventTime(getEventTime());
+      setOldEventTime(formatTimeToLocaleString(event.start));
+      setNotes(event.notes)
+      setPhoneNumber(event.phoneNumber.slice(3))
       setTitle(event.title)
       setStaffNotes(event.staffNotes)
-      setNotes(event.notes)
-      setProcedureId(event.procedure)
+      setProcedureId(event.procedureId)
+      setPhoneNumber(event.phoneNumber.slice(3))
+      setDuration(event.duration)
+      setExtraDuration(event.extraDuration)
     }
   }, [event])
 
-  useEffect(() => {
-    getFreeTime(startDate)
-  }, [startDate, onSubmit])
-
-
-  // Todo Fixme on order update, tel number gets deleted
   const handleSubmit = (e) => {
     e.preventDefault();
     let modifiedEvent = {
@@ -59,7 +60,8 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
       phoneNumber: `420${phoneNumber}`,
       dateTimeChange: false,
     }
-    if (!isSelectedDateSameAsOriginal() || getEventTime() !== eventTime) {
+    console.log({ modifiedEvent })
+    if (!isSelectedDateSameAsOriginal() || formatTimeToLocaleString(event.start) !== eventTime) {
       modifiedEvent.dateTimeChange = true;
       console.log("Use this time: ", eventTime)
       modifiedEvent = {
@@ -68,6 +70,7 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
         time: eventTime,
       }
     }
+    console.log({ modifiedEvent })
     onSubmit(modifiedEvent);
   }
 
@@ -80,28 +83,32 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
     onEventCancel(dtoIn);
   }
 
-  const getEventTime = () => {
-    const eventDate = new Date(event.start);
-    const hours = makeTimeDoubleDigit(eventDate.getHours());
-    const minutes = makeTimeDoubleDigit(eventDate.getMinutes());
-    return `${hours}:${minutes}`
+  const handleSetProcedureId = (procId) => {
+    console.log(procId)
+    const proc = procedures.find(p => p._id === procId);
+    setDuration(proc.duration);
+    setProcedureId(procId)
   }
 
-  const makeTimeDoubleDigit = (time) => {
-    return ("0" + time).slice(-2);
-  }
 
   const getFreeTime = (date) => {
+    console.log("freeTime")
+    console.log({ duration })
     if (Object.keys(event).length){
       const dateObj = new Date(date)
-      axios.get(`/calendar/get-free-time?date=${dateObj.toISOString()}&typeOfService=${event.typeOfService}&procedureId=${event.procedureId}&eventId=${event._id}`)
-        .then( freeTime => {
-          setFreeTime(freeTime.data)
-          setEventTime(getEventTime)
+      axios.get(`/calendar/get-free-time?date=${dateObj.toISOString()}&procedureId=${procedureId}&eventId=${event._id}&duration=${duration+extraDuration}`)
+        .then( response => {
+          setFreeTime(response.data)
+          setEventTime(formatTimeToLocaleString(event.start))
         })
         .catch(err => console.log(err));
     }
   }
+
+  useEffect(() => {
+    console.log({ procedureId, duration })
+    if (procedureId && duration) getFreeTime(startDate)
+  }, [startDate, onSubmit, procedureId, duration])
 
   const isSelectedDateSameAsOriginal = () => {
     return isSameDay(new Date(event.start), new Date(startDate));
@@ -135,7 +142,7 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
                 <Form.Select
                   name='procedure'
                   defaultValue={event.procedureId}
-                  onChange={e => setProcedureId(e.target.value)}
+                  onChange={e => handleSetProcedureId(e.target.value)}
                   disabled={isEventInPast()}
                   required>
                   {Children.toArray(procedures.map(procedure =>

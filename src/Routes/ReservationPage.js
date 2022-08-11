@@ -7,7 +7,7 @@ import ToastNotification from "../Components/ToastNotification";
 import { formatDateToLocaleString } from "../Utils/DateTimeHelper";
 
 ReservationPage.propTypes = {
-  typeOfService: PropTypes.string.isRequired,
+  typeOfService: PropTypes.object.isRequired,
   logout: PropTypes.func,
   user: PropTypes.object,
 }
