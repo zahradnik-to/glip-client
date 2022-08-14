@@ -9,19 +9,32 @@ import Button from "react-bootstrap/Button";
 import Spinner from 'react-bootstrap/Spinner';
 import DataTable from "./DataTable";
 import PropTypes from "prop-types";
+import ErrorPage from "../../Routes/ErrorPage";
 
 
 RoleList.propTypes = {
   reloadRoles: PropTypes.func,
   roleList: PropTypes.array,
+  user: PropTypes.object,
 }
 
-function RoleList({ reloadRoles, roleList }) {
+function RoleList({ reloadRoles, roleList, user }) {
   const [showToast, setShowToast] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [toastContent, setToastContent] = useState({});
   const [name, setName] = useState("");
   const [displayName, setDisplayName] = useState("");
+
+  useEffect(() => {
+    (async function(){
+      await reloadRoles();
+      setDataLoaded(true)
+    })();
+  }, []);
+
+  if (!user.isAdmin) {
+    return <ErrorPage err={{ status:403 }}/>
+  }
 
   const dataInfo = {
     headerNames: [
@@ -39,13 +52,6 @@ function RoleList({ reloadRoles, roleList }) {
       }
     ],
   }
-
-  useEffect(() => {
-    (async function(){
-      await reloadRoles();
-      setDataLoaded(true)
-    })();
-  }, []);
 
   const renderToastError = (err = "") => {
     setToastContent({
@@ -77,7 +83,6 @@ function RoleList({ reloadRoles, roleList }) {
   }
 
   const handleDelete = (id) => {
-    console.log(id)
     axios.delete(`/role/delete`, { data: { _id: id } })
       .then(response => {
         if (response.status === 200) {
@@ -95,7 +100,6 @@ function RoleList({ reloadRoles, roleList }) {
   }
 
   const handleUpdate = (object) => {
-    console.log(object)
     axios.put(`/role/update`, object)
       .then(response => {
         if (response.status === 200) {

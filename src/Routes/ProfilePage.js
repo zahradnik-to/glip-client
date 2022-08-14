@@ -8,6 +8,7 @@ import Row from "react-bootstrap/Row"
 import Button from "react-bootstrap/Button"
 import InputGroup from "react-bootstrap/InputGroup";
 import ToastNotification from "../Components/ToastNotification";
+import ErrorPage from "./ErrorPage";
 
 ProfilePage.propTypes = {
   user: PropTypes.object,
@@ -27,9 +28,7 @@ function ProfilePage({ user, login }) {
     else return setDataLoaded(true)
   }, []);
 
-  if (!user) {
-    return <HomePage/>
-  }
+  if (!user) return <ErrorPage err={{ status:403 }}/>
 
   const getRoles = () => {
     axios.get(`/role/get`)
@@ -79,7 +78,6 @@ function ProfilePage({ user, login }) {
   }
 
   const handleSetRole = (roleName) => {
-    console.log(roleOptions)
     const roleObj = roleOptions.find(r => r.name === roleName);
     setSelectedRole(roleObj)
   }

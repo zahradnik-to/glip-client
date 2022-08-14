@@ -33,7 +33,6 @@ function App() {
     try {
       const response = await axios.get('/auth/login/success', { withCredentials: true });
       setUser(response.data.user)
-      console.log(response.data.user)
     } catch (e) {
       console.error("Auth error.")
       setUser(null)
@@ -65,8 +64,8 @@ function App() {
             <Route path='/rezervace/kalendar' element={<UserOverviewPage user={user} page={'/rezervace/kalendar'}/>}/>
             <Route path="/error" element={<ErrorPage/>}/>
 
-            <Route path='/admin/uzivatele' element={<DataEditPage contentForm={<UserList/>} user={user}/>}/>
-            <Route path='/admin/role' element={<DataEditPage contentForm={<RoleList reloadRoles={getGlipServices} roleList={serviceList}/>} user={user}/>}/>
+            <Route path='/admin/uzivatele' element={<DataEditPage contentForm={<UserList user={user}/>} user={user}/>}/>
+            <Route path='/admin/role' element={<DataEditPage contentForm={<RoleList reloadRoles={getGlipServices} roleList={serviceList} user={user}/>} user={user}/>}/>
             {/* Pass roles here */}
 
             {Children.toArray(serviceList.map(service =>
@@ -75,7 +74,7 @@ function App() {
                 {/* Administration */}
                 <Route path={`/${service.name}/prehled`} element={<AdminMenuPage typeOfService={service} page={'prehled'} user={user}/>}/>
                 <Route path={`/${service.name}/dovolena`} element={<AdminMenuPage typeOfService={service} page={'dovolena'} user={user}/>}/>
-                <Route path={`/${service.name}/procedury`} element={<AdminMenuPage typeOfService={service} page={'procedury'} user={user}/>}/>
+                <Route path={`/${service.name}/sluzby`} element={<AdminMenuPage typeOfService={service} page={'sluzby'} user={user}/>}/>
               </>))
             }
 

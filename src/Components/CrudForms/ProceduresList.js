@@ -63,7 +63,6 @@ function ProceduresList({ typeOfService }) {
 
   const handleCreate = (event) => {
     event.preventDefault();
-    console.log({ name, duration, price ,type , typeOfService })
     axios.post(`/procedure/create`, { name, duration, price ,type , typeOfService })
       .then(response => {
         if (response.status === 201) {
@@ -118,13 +117,13 @@ function ProceduresList({ typeOfService }) {
       .then(response => {
         if (response.status === 200) {
           return response.data
-        } else throw new Error("Nepovedlo se získat procedury.")
+        } else throw new Error("Nepovedlo se získat služby.")
       })
       .then(data => {
         setProcedures(data)
         getAdditionalProcedures();
       })
-      .catch(err => renderToastError(err, "Nepovedlo se získat procedury."))
+      .catch(err => renderToastError(err, "Nepovedlo se získat služby."))
   }
 
   const getAdditionalProcedures = () => {
@@ -132,12 +131,12 @@ function ProceduresList({ typeOfService }) {
     .then(response => {
       if (response.status === 200) {
         return response.data
-      } else throw new Error("Nepovedlo se získat procedury.")
+      } else throw new Error("Nepovedlo se získat služby.")
     })
     .then(data => {
       setAdditionalProcedures(data)
     })
-    .catch(err => renderToastError(err, "Nepovedlo se získat procedury."))
+    .catch(err => renderToastError(err, "Nepovedlo se získat služby."))
   }
 
   const renderToastError = (err, message = 'Při provádění operace se objevila chyba.') => {
@@ -212,11 +211,11 @@ function ProceduresList({ typeOfService }) {
         </Button>
       </Form>
       <Row>
-        <h1>Procedury</h1>
+        <h1>Služby</h1>
         <DataTable mapConfig={dataInfo} data={procedures} handleDelete={handleDelete} handleUpdate={handleUpdate}/>
       </Row>
       <Row>
-        <h1>Doplňkové Procedury</h1>
+        <h1>Doplňkové služby</h1>
         <DataTable mapConfig={dataInfo} data={additionalProcedures} handleDelete={handleDelete} handleUpdate={handleUpdate}/>
       </Row>
       <ToastNotification showToast={showToast} setShowToast={setShowToast} toastContent={toastContent}/>

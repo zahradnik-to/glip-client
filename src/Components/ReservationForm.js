@@ -1,4 +1,4 @@
-import React, { useState, Children, useEffect, useRef } from "react";
+import React, { Children, useEffect, useRef, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
@@ -9,7 +9,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from '@fullcalendar/interaction';
 import Spinner from 'react-bootstrap/Spinner';
-import { isPast, addDays, addMinutes, addMonths, subMonths, startOfMonth, endOfMonth, startOfToday }  from 'date-fns';
+import { addDays, addMinutes, isPast, isToday, startOfMonth, endOfMonth } from 'date-fns';
 import InputGroup from "react-bootstrap/InputGroup";
 import AdditionalProceduresAccordion from "./AdditionalProceduresAccordion";
 import { formatTimeToLocaleString } from "../Utils/DateTimeHelper";
@@ -54,11 +54,14 @@ function ReservationForm({ typeOfService, saveEvent, eventTime ,setEventTime, us
       .then(response => {
         if (response.status === 200) {
           return response.data
-        } else throw new Error("Nepovedlo se získat procedury.")
+        } else throw new Error("Nepovedlo se získat služby.")
       })
       .then(data => {
         setProcedures(data)
         getAdditionalProcedures()
+        // Set calendar to current date to force rerender and vacation fetch
+        const calendarApi = calendarRef.current.getApi();
+        calendarApi.gotoDate( new Date() )
       })
       .catch(err => console.log(err))
   }, [typeOfService, user]);
@@ -72,7 +75,7 @@ function ReservationForm({ typeOfService, saveEvent, eventTime ,setEventTime, us
     .then(response => {
       if (response.status === 200) {
         return response.data
-      } else throw new Error("Nepovedlo se získat procedury.")
+      } else throw new Error("Nepovedlo se získat služby.")
     })
     .then(data => {
       setAdditionalProcedures(data)
@@ -82,7 +85,7 @@ function ReservationForm({ typeOfService, saveEvent, eventTime ,setEventTime, us
 
   const getFreeTime = () => {
     setFreeTime(null);
-    axios.get(`/calendar/get-free-time?date=${eventDate.toISOString()}&typeOfService=${typeOfService}&procedureId=${procedureId}&duration=${totalDuration}`)
+    axios.get(`/calendar/get-free-time?date=${eventDate.toISOString()}&procedureId=${procedureId}&duration=${totalDuration}`)
       .then(response => {
         setFreeTime(response.data)
         setEventTime('')
@@ -147,7 +150,7 @@ function ReservationForm({ typeOfService, saveEvent, eventTime ,setEventTime, us
       typeOfService,
       notes,
       eventDate: eventDate.toISOString(),
-      selectedAddProcList
+      additionalProcedures: selectedAddProcList
     })
     const calendarApi = calendarRef.current.getApi();
     calendarApi.unselect();
@@ -220,12 +223,22 @@ function ReservationForm({ typeOfService, saveEvent, eventTime ,setEventTime, us
     if (selectedIsNotInPast(event) && selectedIsNotToday(event)){
       highlightDateOnMobile(calendarApi, event.dateStr)
       setEventDate(event.date)
-      setEventEndTime("--:--")
-      return;
+      resetEventEndTime()
+    } else {
+      calendarApi.unselect();
     }
-    // If in past, unselect
-    const calendarApi = calendarRef.current.getApi();
-    calendarApi.unselect();
+  }
+
+  function selectedIsNotInPast(event) {
+    return !isPast(addDays(new Date(event.date), 1));
+  }
+
+  function selectedIsNotToday (event) {
+    return !isToday(new Date(event.date));
+  }
+
+  const highlightDateOnMobile = (calendarApi, dateStr) => {
+    calendarApi.select(dateStr)
   }
 
   const handleSetProcedureId = (procedureId) => {
@@ -237,7 +250,6 @@ function ReservationForm({ typeOfService, saveEvent, eventTime ,setEventTime, us
   }
 
   const resetEventEndTime = () => {
-    console.log("reseting")
     setEventEndTime("--:--");
   }
 

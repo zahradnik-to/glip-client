@@ -73,9 +73,16 @@ function Vacation({ typeOfService }) {
     calendarApi.addEvent(event)
   }
 
-  /* Forbid selecting range in the past */
   const handleSelectAllow = (data) => {
-    return !(isPast(data.start) || isPast(data.end));
+    /* Forbid selecting range in the past */
+    const isNotInPast = !(isPast(data.start) || isPast(data.end))
+    /* Forbid selecting range of more than 1 day */
+    const utc1 = Date.UTC(data.start.getFullYear(), data.start.getMonth(), data.start.getDate());
+    const utc2 = Date.UTC(data.end.getFullYear(), data.end.getMonth(), data.end.getDate());
+    const dayMilliseconds = 1000 * 60 * 60 * 24;
+    const isInRange = Math.floor((utc2 - utc1) / dayMilliseconds) <= 7
+
+    return isInRange && isNotInPast;
   }
 
   return(
@@ -85,13 +92,14 @@ function Vacation({ typeOfService }) {
           <FullCalendar
             ref={calendarRef}
             events={events}
-            plugins={[interactionPlugin, timeGridPlugin, dayGridPlugin]}
+            plugins={[interactionPlugin, timeGridPlugin]}
             initialView='timeGridWeek'
             datesSet={date => handleDatesSet(date)}
             contentHeight='auto'
             locale='cs'
             selectAllow={(e) => handleSelectAllow(e)}
             firstDay={1}
+            weekends={false}
             slotDuration="00:15:00"
             slotMinTime="07:00:00"
             slotMaxTime="17:00:00"
@@ -111,7 +119,7 @@ function Vacation({ typeOfService }) {
             headerToolbar={{
               left: 'prev,next today createVacationBtn',
               center: 'title',
-              right: 'timeGridWeek,dayGridMonth'
+              right: 'timeGridWeek'
             }}
             selectable={true}
             selectMirror={true}

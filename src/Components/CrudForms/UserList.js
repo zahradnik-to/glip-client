@@ -3,13 +3,29 @@ import axios from "axios";
 import Toast from "react-bootstrap/Toast";
 import ToastContainer from "react-bootstrap/ToastContainer";
 import DataTable from "./DataTable";
+import ErrorPage from "../../Routes/ErrorPage";
+import PropTypes from "prop-types";
 
-function UserList() {
+UserList.propTypes = {
+  user: PropTypes.object,
+}
+
+function UserList({ user }) {
   const [users, setUsers] = useState([]);
   const [showToast, setShowToast] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [toastContent, setToastContent] = useState({});
   const [roleOptions, setRoleOptions] = useState([]);
+
+  useEffect(() => {
+    getUsers();
+    getRoles();
+  }, []);
+
+  if (!user.isAdmin) {
+    return <ErrorPage err={{ status:403 }}/>
+  }
+
   const dataInfo = {
     headerNames: [
       {
@@ -32,11 +48,6 @@ function UserList() {
       },
     ],
   }
-
-  useEffect(() => {
-    getUsers();
-    getRoles();
-  }, []);
 
   const getUsers = () => {
     axios.get(`/user/get-many`)
@@ -122,6 +133,7 @@ function UserList() {
 
   return (
     <>
+      <h1>Uživatelé</h1>
       {dataLoaded
         ?
         <DataTable mapConfig={dataInfo} data={users} handleDelete={handleDelete} handleUpdate={handleUpdate}/>

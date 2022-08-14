@@ -12,25 +12,27 @@ AdditionalProceduresAccordion.propTypes = {
 
 function AdditionalProceduresAccordion({ addProcList, handleAddProcedureSelect }) {
 
-  return (
-      <Accordion>
-        <Accordion.Item eventKey="additional">
-          <Accordion.Header>Doplňkové služby...</Accordion.Header>
-          <Accordion.Body>
-            <Row>
-              {Children.toArray(addProcList
-                .map(p =>
-                  <Col xs={4} key={p._id}>
-                    <Form.Group className="mb-3 pull" controlId={`${p._id}`}>
-                      <Form.Check onChange={e => handleAddProcedureSelect(e.target)} type="checkbox" label={`${p.name} (${p.duration}min) - ${p.price} Kč`}/>
-                    </Form.Group>
-                  </Col>
-              ))}
-            </Row>
-          </Accordion.Body>
-        </Accordion.Item>
-      </Accordion>
-  );
+  if (addProcList.length > 0)
+    return (
+        <Accordion>
+          <Accordion.Item eventKey="additional">
+            <Accordion.Header>Doplňkové služby...</Accordion.Header>
+            <Accordion.Body>
+              <Row>
+                {Children.toArray(addProcList
+                  .map(p =>
+                    <Col xs={12} sm={6} md={4} key={p._id}>
+                      <Form.Group className="mb-3 pull" controlId={`${p._id}`}>
+                        <Form.Check onChange={e => handleAddProcedureSelect(e.target)} type="checkbox" label={`${p.name} (${p.duration}min) - ${p.price} Kč`}/>
+                      </Form.Group>
+                    </Col>
+                ))}
+              </Row>
+            </Accordion.Body>
+          </Accordion.Item>
+        </Accordion>
+    );
+  else return <></>
 }
 
 export default AdditionalProceduresAccordion;

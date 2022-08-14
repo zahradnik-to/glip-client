@@ -5,13 +5,19 @@ import Button from "react-bootstrap/Button";
 import PropTypes from 'prop-types';
 import Spinner from 'react-bootstrap/Spinner';
 import axios from 'axios';
-import DatePicker from "react-datepicker";
+import DatePicker, { registerLocale } from "react-datepicker";
+import cs from 'date-fns/locale/cs';
 import { isPast }  from 'date-fns';
 import isSameDay from 'date-fns/isSameDay';
 import InputGroup from "react-bootstrap/InputGroup";
+import Accordion from 'react-bootstrap/Accordion';
+import Col from "react-bootstrap/Col"
+import Row from "react-bootstrap/Row"
 
 import "react-datepicker/dist/react-datepicker.css";
 import { formatTimeToLocaleString } from "../../Utils/DateTimeHelper";
+registerLocale('cs', cs)
+
 
 EventModal.propTypes = {
   isOpen: PropTypes.bool,
@@ -26,7 +32,7 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
   const [title, setTitle] = useState("")
   const [notes, setNotes] = useState("")
   const [staffNotes, setStaffNotes] = useState("")
-  const [eventTime, setEventTime] = useState('00:00')
+  const [eventTime, setEventTime] = useState(formatTimeToLocaleString(event.start))
   const [oldEventTime, setOldEventTime] = useState('11:11')
   const [procedureId, setProcedureId] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -38,6 +44,7 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
   useEffect(() => {
     if (Object.keys(event).length){
       setStartDate(new Date(event.start))
+      setEventTime(formatTimeToLocaleString(event.start));
       setOldEventTime(formatTimeToLocaleString(event.start));
       setNotes(event.notes)
       setPhoneNumber(event.phoneNumber.slice(3))
@@ -60,17 +67,14 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
       phoneNumber: `420${phoneNumber}`,
       dateTimeChange: false,
     }
-    console.log({ modifiedEvent })
     if (!isSelectedDateSameAsOriginal() || formatTimeToLocaleString(event.start) !== eventTime) {
       modifiedEvent.dateTimeChange = true;
-      console.log("Use this time: ", eventTime)
       modifiedEvent = {
         ...modifiedEvent,
         date: startDate,
         time: eventTime,
       }
     }
-    console.log({ modifiedEvent })
     onSubmit(modifiedEvent);
   }
 
@@ -78,13 +82,11 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
     e.preventDefault();
     const dtoIn = {
       _id: event._id,
-      canceled: true,
     }
     onEventCancel(dtoIn);
   }
 
   const handleSetProcedureId = (procId) => {
-    console.log(procId)
     const proc = procedures.find(p => p._id === procId);
     setDuration(proc.duration);
     setProcedureId(procId)
@@ -92,21 +94,18 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
 
 
   const getFreeTime = (date) => {
-    console.log("freeTime")
-    console.log({ duration })
     if (Object.keys(event).length){
       const dateObj = new Date(date)
       axios.get(`/calendar/get-free-time?date=${dateObj.toISOString()}&procedureId=${procedureId}&eventId=${event._id}&duration=${duration+extraDuration}`)
         .then( response => {
           setFreeTime(response.data)
-          setEventTime(formatTimeToLocaleString(event.start))
+          // setEventTime("")
         })
         .catch(err => console.log(err));
     }
   }
 
   useEffect(() => {
-    console.log({ procedureId, duration })
     if (procedureId && duration) getFreeTime(startDate)
   }, [startDate, onSubmit, procedureId, duration])
 
@@ -129,6 +128,7 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
             <Modal.Body>
               <Form.Group className='mb-2'>
                 <Form.Label>Název objenávky</Form.Label>
+                <span className={"text-muted"}> (Viditelný zákazníkovi)</span>
                 <Form.Control
                   placeholder='Title'
                   defaultValue={event.title}
@@ -147,11 +147,28 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
                   required>
                   {Children.toArray(procedures.map(procedure =>
                     <option key={procedure._id} value={procedure._id}>
-                      {procedure.name}
+                      {procedure.name} - {procedure.duration}min
                     </option>
                   ))}
                 </Form.Select>
               </Form.Group>
+
+              { event.additionalProcedures.length !== 0
+                  ? <Accordion className='mb-2'>
+                    <Accordion.Item eventKey="additional">
+                      <Accordion.Header>Doplňkové služby...</Accordion.Header>
+                      <Accordion.Body>
+                        <Row>
+                          {Children.toArray(event.additionalProcedures
+                          .map(p =>
+                              <Col xs={6} key={p._id}>• {p.name}</Col>
+                          ))}
+                        </Row>
+                      </Accordion.Body>
+                    </Accordion.Item>
+                  </Accordion>
+                  : <></>
+              }
 
               <Form.Group className='mb-2'>
                 <Form.Label>Email</Form.Label>
@@ -216,6 +233,7 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
                   onChange={(date) => setStartDate(date)}
                   className="form-control"
                   dateFormat="dd/MM/yyyy"
+                  locale="cs"
                   disabled={isEventInPast()}
                 />
               </Form.Group>
@@ -225,15 +243,19 @@ function EventModal({ isOpen, event, onClose, procedures, onSubmit, onEventCance
                 <Form.Select
                   name='eventTime'
                   onChange={e => setEventTime(e.target.value)}
-                  defaultValue={'sameTime'}
+                  value={eventTime}
                   disabled={isEventInPast()}
                   required
                 >
-                  { isSelectedDateSameAsOriginal()
-                    ? <option value="sameTime">{oldEventTime} (původní)</option>
-                    : <option value="">Vyberte čas</option>
+                  <option value="">Vyberte čas</option>
+                  {Children.toArray(freeTime.map(time =>
+                    {
+                      if (time === oldEventTime && isSelectedDateSameAsOriginal()){
+                        return (<option key={time} value={time}>{time} (původní)</option>)
+                      }
+                      return(<option key={time} value={time}>{time}</option>)
+                    }))
                   }
-                  {Children.toArray(freeTime.map(time => <option key={time} value={time}>{time}</option>))}
                 </Form.Select>
               </Form.Group>
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Children } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -7,6 +7,9 @@ import Spinner from 'react-bootstrap/Spinner';
 import DatePicker from "react-datepicker";
 import { isPast, subHours } from 'date-fns';
 import InputGroup from "react-bootstrap/InputGroup";
+import Accordion from 'react-bootstrap/Accordion';
+import Col from "react-bootstrap/Col"
+import Row from "react-bootstrap/Row"
 
 import "react-datepicker/dist/react-datepicker.css";
 import { formatTimeToLocaleString } from "../Utils/DateTimeHelper";
@@ -85,6 +88,23 @@ function UserEventModal({ isOpen, event, onClose, onSubmit, onEventCancel }) {
                   disabled
                   required/>
               </Form.Group>
+
+              { event.additionalProcedures.length !== 0
+                ? <Accordion className='mb-2'>
+                  <Accordion.Item eventKey="additional">
+                    <Accordion.Header>Doplňkové služby...</Accordion.Header>
+                    <Accordion.Body>
+                      <Row>
+                        {Children.toArray(event.additionalProcedures
+                        .map(p =>
+                            <Col xs={6} key={p._id}>• {p.name}</Col>
+                        ))}
+                      </Row>
+                    </Accordion.Body>
+                  </Accordion.Item>
+                </Accordion>
+                : <></>
+              }
 
               <Form.Group className='mb-2'>
                 <Form.Label>Email</Form.Label>

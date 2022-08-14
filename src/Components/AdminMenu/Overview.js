@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react";
 import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -27,6 +27,12 @@ function Overview({ typeOfService, user }) {
   const [showToast, setShowToast] = useState(false);
   const [toastContent, setToastContent] = useState({});
 
+  useEffect(() => {
+    // Set calendar to current date to force rerender and vacation fetch
+    const calendarApi = calendarRef.current.getApi();
+    calendarApi.gotoDate( new Date() )
+  }, [typeOfService, user]);
+
 
   const handleDatesSet = (data) => {
     axios.get(`/calendar/get-events?start=${data.start.toISOString()}&end=${data.end.toISOString()}&typeOfService=${typeOfService}`)
@@ -37,7 +43,6 @@ function Overview({ typeOfService, user }) {
       })
       .catch( err => {
         console.log('Getting events failed');
-        console.log(err);
       })
   }
 
@@ -101,7 +106,6 @@ function Overview({ typeOfService, user }) {
 
   const handleStaffEventUpdate = (data) => {
     setShowStaffEventModal(false)
-    console.log(data)
     axios.put(`/calendar/update-staff-event`, data)
       .then(response => {
         if (response.status === 200) {
@@ -120,7 +124,7 @@ function Overview({ typeOfService, user }) {
   }
 
   const getProcedures = () => {
-    axios.get(`/procedure/get?typeOfService=${typeOfService}`)
+    axios.get(`/procedure/get?typeOfService=${typeOfService}&type=full`)
       .then(response => {
         if (response.status === 200) {
           return response.data

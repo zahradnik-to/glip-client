@@ -16,7 +16,11 @@ function ReservationPage({ typeOfService, user, logout }) {
   const [events, setEvents] = useState([]);
   const [eventTime, setEventTime] = useState('')
   const [showToast, setShowToast] = useState(false);
-  const [toastContent, setToastContent] = useState({});
+  const [toastContent, setToastContent] = useState({
+    header: "Chyba!",
+    message: `Při provádění operace se objevila chyba.`,
+    variant: "danger"
+  });
 
   /* Saves event to database. Triggered by form. */
   const handleSaveEvent = (data) => {
@@ -57,7 +61,7 @@ function ReservationPage({ typeOfService, user, logout }) {
   }
 
   const handleDatesSet = (data) => {
-    axios.get(`/calendar/get-bg-events?start=${data.start.toISOString()}&end=${data.end.toISOString()}&typeOfService=${typeOfService}`)
+    axios.get(`/calendar/get-bg-events?start=${data.start.toISOString()}&end=${data.end.toISOString()}&typeOfService=${typeOfService.displayName}`)
       .then( dates => setEvents(dates.data))
       .catch( () => renderToastError())
   }

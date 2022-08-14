@@ -36,7 +36,6 @@ function UserEventCalendar({ openEventModal, update, setUpdate }) {
   }, [update])
 
   const getEvents = () => {
-    console.log("Get Cal")
     axios.get(`/calendar/get-events?start=${datesStart.toISOString()}&end=${datesEnd.toISOString()}`)
       .then( dates => {
         setEvents(dates.data)

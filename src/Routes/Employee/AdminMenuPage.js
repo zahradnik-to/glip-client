@@ -28,7 +28,7 @@ function AdminMenuPage({ typeOfService, page, user }) {
         return (<Overview typeOfService={typeOfService.name} user={user}/>);
       case 'dovolena':
         return (<Vacation typeOfService={typeOfService.name}/>);
-      case 'procedury':
+      case 'sluzby':
         return (<ProceduresList typeOfService={typeOfService.name}/>);
     }
   }
@@ -46,7 +46,7 @@ function AdminMenuPage({ typeOfService, page, user }) {
               <Nav.Link as={Link} active={page === "dovolena"} to={`/${typeOfService.name}/dovolena`}>Dovolená</Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link as={Link} active={page === "procedury"} to={`/${typeOfService.name}/procedury`}>Procedury</Nav.Link>
+              <Nav.Link as={Link} active={page === "sluzby"} to={`/${typeOfService.name}/sluzby`}>Služby</Nav.Link>
             </Nav.Item>
           </Nav>
         </Col>

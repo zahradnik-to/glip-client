@@ -22,6 +22,7 @@ function UserOverviewPage({ user, page }) {
   const [updateRequired, setUpdateRequired] = useState(false);
 
   if (!user) return <ErrorPage err={{ status:403 }}/>
+
   const openEventModal = (event) => {
     const procedureName = event.procedureName
     axios.get(`/calendar/get-event?_id=${event._id}`)
@@ -65,7 +66,7 @@ function UserOverviewPage({ user, page }) {
           setSelectedEvent({})
           setToastContent({
             header: "Stornováno!",
-            message: `Událost byla stornována.`,
+            message: `Rezervace byla stornována.`,
             variant: "warning"
           })
           setShowToast(true);
