@@ -216,7 +216,9 @@ function ReservationForm({ typeOfService, saveEvent, eventTime ,setEventTime, us
   }
 
   const handleDateClick = (event) => {
-    if (!isPast(addDays(new Date(event.date), 1))){
+    const calendarApi = calendarRef.current.getApi();
+    if (selectedIsNotInPast(event) && selectedIsNotToday(event)){
+      highlightDateOnMobile(calendarApi, event.dateStr)
       setEventDate(event.date)
       setEventEndTime("--:--")
       return;
