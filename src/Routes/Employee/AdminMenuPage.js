@@ -17,7 +17,7 @@ function AdminMenuPage({ typeOfService, page, user }) {
   if (!user) {
     return <ErrorPage err={{ status:403 }}/>
   } else {
-    if (user.role !== typeOfService && !user.isAdmin) {
+    if (user.role !== typeOfService.name && !user.isAdmin) {
       return <ErrorPage err={{ status:403 }}/>
     }
   }
